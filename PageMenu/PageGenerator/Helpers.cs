@@ -15,7 +15,10 @@ namespace PageGenerator
         {
             sb.AppendLine(@"<!DOCTYPE html>");
             sb.AppendLine(@"<html>");
-            sb.AppendLine(@"<head><link rel=""stylesheet"" href=""style.css""></head>");
+            sb.AppendLine(@"<head>");
+            sb.AppendLine(@"<link rel=""stylesheet"" href=""style.css"">");
+            sb.AppendLine(@"<link rel=""stylesheet"" href=""formmenu.css"">");
+            sb.AppendLine(@"</head>");
             sb.AppendLine(@"<body>");
             sb.AppendLine(@"<div class=""inner"">");
         }
