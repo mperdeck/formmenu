@@ -47,11 +47,22 @@ namespace FormMenu {
     }
 
     function domElementsToMenuElements(domElements: NodeListOf<Element>): MenuElementInfo[] {
+        let menuElementInfos: MenuElementInfo[] = [];
+
+        domElements.forEach((value: Element)=>{
+            menuElementInfos.push(domElementToMenuElement(value as HTMLElement));
+        });
+
+        return menuElementInfos;
+    }
+
+    function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
         return null;
     }
 
-    function domElementToMenuElement(domElement: HTMLElement): HTMLElement {
+    function createMenuElement(caption: string, cssClass: string): HTMLElement {
         return null;
+
     }
 
     function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
