@@ -72,7 +72,7 @@ namespace FormMenu {
     }
 
     function createMenuElement(caption: string, cssClass: string): HTMLElement {
-        let menuElement: HTMLElement = document.createElement("SPAN");
+        let menuElement: HTMLElement = document.createElement("div");
         menuElement.innerText = caption;
         menuElement.className = cssClass;
 
@@ -80,15 +80,22 @@ namespace FormMenu {
     }
 
     function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
-        return null;
+        let menuElement: HTMLElement = document.createElement("div");
+        menuElement.className = 'formmenu';
+        menuElement.id = 'formmenu';
+
+        menuElementInfos.map((menuElementInfo: MenuElementInfo)=> {
+            menuElement.appendChild(menuElementInfo.menuElement);
+        });
+
+        return menuElement;
     }
 
     export function pageLoadedHandler(): void {
             console.log(555);
 
-        let x = domElementsToMenuElements(getAllDomElements());
-
-
+        let menuElement:HTMLElement = createMenu(domElementsToMenuElements(getAllDomElements()));
+        let bodyElement = document.getElementsByTagName("BODY")[0];
+        bodyElement.appendChild(menuElement);
     }
-
 }
