@@ -74,7 +74,8 @@ namespace FormMenu {
     function createMenuElement(caption: string, cssClass: string): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
         menuElement.innerText = caption;
-        menuElement.className = cssClass;
+        menuElement.classList.add(cssClass);
+        menuElement.classList.add("formmenu-item");
 
         return menuElement;
     }
