@@ -29,14 +29,17 @@ document.addEventListener("DOMContentLoaded", function(){
 
 namespace FormMenu {
     class MenuElementInfo {
-        // The item in the menu
-        menuElement: HTMLElement;
 
-        // The heading, etc. in the actual DOM (not in the menu)
-        domElement: HTMLElement;
+        constructor(
+            // The item in the menu
+            public menuElement: HTMLElement,
 
-        // Caption of the menu element
-        caption: string;
+            // The heading, etc. in the actual DOM (not in the menu)
+            public domElement: HTMLElement,
+
+            // Caption of the menu element
+            public caption: string
+        ) {}
     }
 
     let menuElementInfos: MenuElementInfo[];
@@ -57,12 +60,23 @@ namespace FormMenu {
     }
 
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
-        return null;
+        let menuElementClass = 'formmenu-' + domElement.tagName;
+        let caption = domElement.innerText;
+
+        let menuElementInfo = new MenuElementInfo(
+            createMenuElement(caption, menuElementClass),
+            domElement,
+            caption);
+
+        return menuElementInfo;
     }
 
     function createMenuElement(caption: string, cssClass: string): HTMLElement {
-        return null;
+        let menuElement: HTMLElement = document.createElement("SPAN");
+        menuElement.innerText = caption;
+        menuElement.className = cssClass;
 
+        return menuElement;
     }
 
     function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
