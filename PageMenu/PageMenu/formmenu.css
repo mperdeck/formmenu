@@ -1,6 +1,14 @@
 .formmenu {
-    position: absolute;
+    position: fixed;
   right: 10px;
   top: 10px;
   border: 1px solid red;
+}
+
+.formmenu-item {
+    cursor: pointer;
+}
+
+.formmenu-highlighted-dom-item {
+    background-color: yellow;
 }

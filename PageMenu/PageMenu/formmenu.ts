@@ -43,6 +43,7 @@ namespace FormMenu {
     }
 
     let menuElementInfos: MenuElementInfo[];
+    const domItemHighlightPeriodMS: number = 500;
 
     function getAllDomElements(): NodeListOf<Element> {
         let allDomElements = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
@@ -64,7 +65,14 @@ namespace FormMenu {
         let caption = domElement.innerText;
 
         // If a menu item gets clicked, scroll the associated dom element into view
-        let onClickHandler = (e:MouseEvent)=>{domElement.scrollIntoView()};
+        // Also give it the formmenu-highlighted-dom-item for a short time, to point out where
+        // it is.
+        let onClickHandler = (e:MouseEvent)=>{
+            domElement.scrollIntoView();
+            domElement.classList.add('formmenu-highlighted-dom-item');
+            setTimeout(function(){ domElement.classList.remove('formmenu-highlighted-dom-item'); }, domItemHighlightPeriodMS);
+        };
+
         let menuElementInfo = new MenuElementInfo(
             createMenuElement(caption, menuElementClass, onClickHandler),
             domElement,
