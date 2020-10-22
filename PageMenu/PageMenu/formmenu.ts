@@ -63,19 +63,22 @@ namespace FormMenu {
         let menuElementClass = 'formmenu-' + domElement.tagName;
         let caption = domElement.innerText;
 
+        // If a menu item gets clicked, scroll the associated dom element into view
+        let onClickHandler = (e:MouseEvent)=>{domElement.scrollIntoView()};
         let menuElementInfo = new MenuElementInfo(
-            createMenuElement(caption, menuElementClass),
+            createMenuElement(caption, menuElementClass, onClickHandler),
             domElement,
             caption);
 
         return menuElementInfo;
     }
 
-    function createMenuElement(caption: string, cssClass: string): HTMLElement {
+    function createMenuElement(caption: string, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
         menuElement.innerText = caption;
         menuElement.classList.add(cssClass);
         menuElement.classList.add("formmenu-item");
+        menuElement.onclick = onClickHandler;
 
         return menuElement;
     }
