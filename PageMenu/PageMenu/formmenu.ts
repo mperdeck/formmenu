@@ -5,20 +5,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     FormMenu.pageLoadedHandler();
 
-    console.log('page has loaded');
-
-    var list = document.querySelector('#list')
-    var fruits = ['Apple', 'Orange', 'Banana', 'Melon']
-    
-    var fragment = new DocumentFragment()
-    
-    fruits.forEach(function (fruit) {
-      var li = document.createElement('li')
-      li.innerHTML = fruit
-      fragment.appendChild(li)
-    })
-    
-    list.appendChild(fragment)
+ 
 
 
 
@@ -38,12 +25,17 @@ namespace FormMenu {
             public domElement: HTMLElement,
 
             // Caption of the menu element
-            public caption: string
+            public caption: string,
+
+            // Level of the menu item. For example, a H1 has level 1, H2 has level 2.
+            // Menu items that are not associated with a heading have a very high level.
+            public level: number
         ) {}
     }
 
     let menuElementInfos: MenuElementInfo[];
     const domItemHighlightPeriodMS: number = 500;
+    const levelNonHeadingMenuItem: number = 9000;
 
     function getAllDomElements(): NodeListOf<Element> {
         let allDomElements = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
@@ -74,14 +66,27 @@ namespace FormMenu {
         };
 
         let menuElementInfo = new MenuElementInfo(
-            createMenuElement(caption, menuElementClass, onClickHandler),
+            createMenuElementDiv(caption, menuElementClass, onClickHandler),
             domElement,
-            caption);
+            caption,
+            tagNameToLevel(domElement.tagName));
 
         return menuElementInfo;
     }
 
-    function createMenuElement(caption: string, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
+    function tagNameToLevel(tagName: string): number {
+        switch (tagName.toLowerCase()) {
+            case 'h1': return 1;
+            case 'h2': return 2;
+            case 'h3': return 3;
+            case 'h4': return 4;
+            case 'h5': return 5;
+            case 'h6': return 6;
+            default: return levelNonHeadingMenuItem;
+          }
+    }
+
+    function createMenuElementDiv(caption: string, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
         menuElement.innerText = caption;
         menuElement.classList.add(cssClass);
@@ -91,14 +96,58 @@ namespace FormMenu {
         return menuElement;
     }
 
+    // Creates a <ul> tag containing a <li> tag for items in menuElementInfos.
+    // The first li is for the item in menuElementInfos with index i.
+    //
+    // It goes forward through menuElementInfos until
+    // 1) menuElementInfos is exhaused; or
+    // 2) it finds an with the same level or lower as the one passed in. That item then won't be added to the ul.
+    //
+    // Note that i is an object containing a number. When the method returns, that number will have been
+    // updated to the index + 1 of the last item in the list.
+    function createList(level: number, i: { value:number}, menuElementInfos: MenuElementInfo[]): HTMLUListElement {
+        let listElement: HTMLUListElement = document.createElement("ul");
+
+        while((i.value < menuElementInfos.length) && (menuElementInfos[i.value].level > level)) {
+            let liElement = createListItem(i, menuElementInfos);
+            listElement.appendChild(liElement);
+        }
+
+        return listElement;
+    }
+
+    // Creates a <li> item for the item in menuElementInfos that is pointed at by index i.
+    //
+    // Note that i is an object containing a number. When the method returns, that number will have been
+    // updated to the index + 1 of the last child of the item (or index + 1 of the item itself
+    // if it doesn't have children).
+    function createListItem(i: { value:number}, menuElementInfos: MenuElementInfo[]): HTMLLIElement {
+        let currentMenuElementInfo = menuElementInfos[i.value];
+        let listItemElement: HTMLLIElement = document.createElement("li");
+        listItemElement.appendChild(currentMenuElementInfo.menuElement);
+        let currentLevel = currentMenuElementInfo.level;
+
+        // Point to first child item
+        i.value = i.value + 1;
+
+        let listElement: HTMLUListElement = createList(
+            currentLevel, i, menuElementInfos);
+        
+        // Only append the ul with children if there actually are children
+        if (listElement.children.length > 0) {
+            listItemElement.appendChild(listElement);
+        }
+
+        return listItemElement;
+    }
+
     function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
         menuElement.className = 'formmenu';
         menuElement.id = 'formmenu';
 
-        menuElementInfos.map((menuElementInfo: MenuElementInfo)=> {
-            menuElement.appendChild(menuElementInfo.menuElement);
-        });
+        let topList: HTMLUListElement = createList(0, { value:0}, menuElementInfos);
+        menuElement.appendChild(topList);
 
         return menuElement;
     }
