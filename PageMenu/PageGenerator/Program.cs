@@ -35,10 +35,15 @@ namespace PageGenerator
 
             sb.AddHeading(2);
 
-            for (i = 0; i < 3; i++)
+            for (int i2 = 0; i2 < 3; i2++)
             {
                 sb.AddHeading(3);
-                sb.AddLoremIpsum(4);
+                sb.AddLoremIpsum(1);
+                for (int j = 0; j < 4; j++)
+                {
+                    sb.AddHeading(4);
+                    sb.AddLoremIpsum(2);
+                }
             }
 
             sb.AddHeading(2);
