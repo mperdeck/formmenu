@@ -86,12 +86,37 @@ namespace FormMenu {
           }
     }
 
+    function onExpandClicked(e:MouseEvent) {
+        // See https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget
+        // currentTarget will return the span containing the caption.
+        // Its parent is the div that also contains the span with the open/close icon.
+        let parentDiv:HTMLElement = (<any>(e.currentTarget)).parentNode;
+
+        if (parentDiv.classList.contains('formmenu-closed')) {
+            parentDiv.classList.remove('formmenu-closed');
+            parentDiv.classList.add('formmenu-open');
+        } else if (parentDiv.classList.contains('formmenu-open')) {
+            parentDiv.classList.remove('formmenu-open');
+            parentDiv.classList.add('formmenu-closed');
+        }
+    }
+
     function createMenuElementDiv(caption: string, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
-        menuElement.innerText = caption;
+
+        let expandElement: HTMLElement = document.createElement("span");
+        expandElement.classList.add("formmenu-expand");
+        expandElement.onclick = onExpandClicked;
+        menuElement.appendChild(expandElement);
+
+        let captionElement: HTMLElement = document.createElement("span");
+        captionElement.classList.add("formmenu-caption");
+        captionElement.innerText = caption;
+        captionElement.onclick = onClickHandler;
+        menuElement.appendChild(captionElement);
+
         menuElement.classList.add(cssClass);
         menuElement.classList.add("formmenu-item");
-        menuElement.onclick = onClickHandler;
 
         return menuElement;
     }
@@ -136,6 +161,10 @@ namespace FormMenu {
         // Only append the ul with children if there actually are children
         if (listElement.children.length > 0) {
             listItemElement.appendChild(listElement);
+
+            // If you appended the list (as in, the element has children), then also set
+            // the formmenu-closed class, so the element will have open/close icons.
+            currentMenuElementInfo.menuElement.classList.add("formmenu-closed");
         }
 
         return listItemElement;
