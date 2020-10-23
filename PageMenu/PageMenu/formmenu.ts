@@ -2,17 +2,8 @@
 // "load" fires when the entire page has loaded, including stylesheets, etc.
 
 document.addEventListener("DOMContentLoaded", function(){
-
     FormMenu.pageLoadedHandler();
-
- 
-
-
-
 });
-
-
-
 
 namespace FormMenu {
     class MenuElementInfo {
