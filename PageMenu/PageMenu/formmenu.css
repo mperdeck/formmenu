@@ -3,7 +3,13 @@
   right: 10px;
   top: 10px;
   border: 1px solid red;
+  background-color: white;
 }
+
+.formmenu ul {
+    list-style-type: none;
+    margin-left: -15px;
+  }
 
 .formmenu-item {
     cursor: pointer;
@@ -11,4 +17,27 @@
 
 .formmenu-highlighted-dom-item {
     background-color: yellow;
+}
+
+
+
+.formmenu-expand {
+    float: left;
+    width: 10px;
+}
+
+.formmenu-caption {
+
+}
+
+.formmenu-closed .formmenu-expand::after {
+    content: "+ ";
+}
+
+.formmenu-closed + ul {
+    display: none;
+}
+
+.formmenu-open .formmenu-expand::after {
+    content: "- ";
 }
