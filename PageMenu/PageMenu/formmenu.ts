@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function(){
 namespace FormMenu {
     let defaultConfiguration: any = {
         skipFirstHeading: false,
-        defaultOpenAtLevel: 1
+        defaultOpenAtLevel: 1,
+        domItemHighlightPeriodMS: 500
     }
 
     class MenuElementInfo {
@@ -29,7 +30,6 @@ namespace FormMenu {
         ) {}
     }
 
-    const domItemHighlightPeriodMS: number = 500;
     const levelNonHeadingMenuItem: number = 9000;
 
     function getConfigValue(itemName: string): any {
@@ -67,6 +67,7 @@ namespace FormMenu {
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
         let menuElementClass = 'formmenu-' + domElement.tagName;
         let caption = domElement.innerText;
+        let domItemHighlightPeriodMS: number = getConfigValue("domItemHighlightPeriodMS");
 
         // If a menu item gets clicked, scroll the associated dom element into view
         // Also give it the formmenu-highlighted-dom-item for a short time, to point out where
