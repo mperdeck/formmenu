@@ -30,6 +30,7 @@ namespace FormMenu {
         ) {}
     }
 
+    let menuElementInfos: MenuElementInfo[];
     const levelNonHeadingMenuItem: number = 9000;
 
     function getConfigValue(itemName: string): any {
@@ -203,8 +204,60 @@ namespace FormMenu {
         return menuElement;
     }
 
+    function elementIsVisible(element: HTMLElement): boolean {
+        const boundingRectangle = element.getBoundingClientRect();
+        return (
+            (boundingRectangle.top >= 0) &&
+            (boundingRectangle.left >= 0) &&
+            (boundingRectangle.bottom <= (window.innerHeight || document.documentElement.clientHeight)) &&
+            (boundingRectangle.right <= (window.innerWidth || document.documentElement.clientWidth))
+        );
+    }
+
+    // Sets the formmenu-is-visible of an item, and the formmenu-is-parent-of-visible
+    // class on its parents.
+    // Note that this doesn't reset the formmenu-is-visible etc. classes of items that are not visible.
+    function setVisibility(menuElement:HTMLElement): void {
+        menuElement.classList.add('formmenu-is-visible');
+
+    }
+
+    function removeVisibilityForMenu(): void {
+        let count = menuElementInfos.length;
+        for(let i = 0; i < count; i++) {
+            menuElementInfos[i].menuElement.classList.remove('formmenu-is-visible');
+            menuElementInfos[i].menuElement.classList.remove('formmenu-is-parent-of-visible');
+        }
+    }
+
+    function setVisibilityForMenu(): void {
+        if (!menuElementInfos) { return; }
+
+        removeVisibilityForMenu();
+
+        let count = menuElementInfos.length;
+        let lastWasVisible = false;
+
+        for(let i = 0; i < count; i++) {
+            let currrentMenuElementInfo = menuElementInfos[i];
+            let isVisible = elementIsVisible(currrentMenuElementInfo.domElement);
+
+            // If we just got past the items that were visible, then the rest will be invisible,
+            // so no need to visit any more items.
+            if (lastWasVisible && !isVisible) { break; }
+            lastWasVisible = isVisible;
+            
+            if (isVisible) {
+                setVisibility(currrentMenuElementInfo.menuElement);
+            }
+        }
+    }
+
     export function pageLoadedHandler(): void {
-        let menuElement:HTMLElement = createMenu(domElementsToMenuElements(getAllDomElements()));
+        menuElementInfos = domElementsToMenuElements(getAllDomElements());
+        let menuElement:HTMLElement = createMenu(menuElementInfos);
+        setVisibilityForMenu();
+
         let bodyElement = document.getElementsByTagName("BODY")[0];
         bodyElement.appendChild(menuElement);
     }

@@ -58,3 +58,10 @@ See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-
 .formmenu-open .formmenu-expand::after {
     content: "- ";
 }
+
+.formmenu-is-visible .formmenu-caption {
+    color: darkgoldenrod;
+}
+
+.formmenu-is-parent-of-visible {
+}
