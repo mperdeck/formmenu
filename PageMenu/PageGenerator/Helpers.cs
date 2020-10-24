@@ -27,6 +27,7 @@ namespace PageGenerator
         {
             sb.AppendLine(@"</div>");
             sb.AppendLine(@"<script src=""formmenu.js""></script>");
+            sb.AppendLine(@"<script src=""formmenu.config.js""></script>");
             sb.AppendLine(@"</body>");
             sb.AppendLine(@"</html>");
         }
