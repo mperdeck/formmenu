@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 namespace FormMenu {
+    let defaultConfiguration: any = {
+        skipFirstHeading: false,
+        defaultOpenAtLevel: 1
+    }
+
     class MenuElementInfo {
 
         constructor(
@@ -28,16 +33,33 @@ namespace FormMenu {
     const domItemHighlightPeriodMS: number = 500;
     const levelNonHeadingMenuItem: number = 9000;
 
+    function getConfigValue(itemName: string): any {
+        // formMenuConfiguration may have been merged in (by loading the formmenu.config.js file)
+        // First try to get the value from there. Otherwise get it from the default config.
+        if (formMenuConfiguration && formMenuConfiguration[itemName]) {
+            return formMenuConfiguration[itemName];
+        }
+
+        return defaultConfiguration[itemName]; 
+    }
+
+    // Returns all heading tags
     function getAllDomElements(): NodeListOf<Element> {
+        // Note that HTML only has these heading tags. There is no h7, etc.
         let allDomElements = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
         return allDomElements;
     }
 
+    // Converts a list of heading tags to MenuElements.
+    // Skips the first heading if config item skipFirstHeading is true.
     function domElementsToMenuElements(domElements: NodeListOf<Element>): MenuElementInfo[] {
         let menuElementInfos: MenuElementInfo[] = [];
 
+        let includeElement: boolean = !getConfigValue("skipFirstHeading");
+
         domElements.forEach((value: Element)=>{
-            menuElementInfos.push(domElementToMenuElement(value as HTMLElement));
+            if (includeElement) { menuElementInfos.push(domElementToMenuElement(value as HTMLElement)); }
+            includeElement = true;
         });
 
         return menuElementInfos;
@@ -56,11 +78,12 @@ namespace FormMenu {
             setTimeout(function(){ domElement.classList.remove('formmenu-highlighted-dom-item'); }, domItemHighlightPeriodMS);
         };
 
+        let level:number = tagNameToLevel(domElement.tagName);
         let menuElementInfo = new MenuElementInfo(
             createMenuElementDiv(caption, menuElementClass, onClickHandler),
             domElement,
             caption,
-            tagNameToLevel(domElement.tagName));
+            level);
 
         return menuElementInfo;
     }
@@ -154,8 +177,16 @@ namespace FormMenu {
             listItemElement.appendChild(listElement);
 
             // If you appended the list (as in, the element has children), then also set
-            // the formmenu-closed class, so the element will have open/close icons.
-            currentMenuElementInfo.menuElement.classList.add("formmenu-closed");
+            // the formmenu-closed or formmenu-open class, so the element will have open/close icons.
+
+            let openCloseClass = "formmenu-closed";
+            let defaultOpenAtLevel: number = getConfigValue("defaultOpenAtLevel");
+
+            if (currentMenuElementInfo.level <= defaultOpenAtLevel) {
+                openCloseClass = "formmenu-open";
+            }
+
+            currentMenuElementInfo.menuElement.classList.add(openCloseClass);
         }
 
         return listItemElement;
