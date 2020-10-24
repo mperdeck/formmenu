@@ -29,7 +29,6 @@ namespace FormMenu {
         ) {}
     }
 
-    let menuElementInfos: MenuElementInfo[];
     const domItemHighlightPeriodMS: number = 500;
     const levelNonHeadingMenuItem: number = 9000;
 
@@ -204,8 +203,6 @@ namespace FormMenu {
     }
 
     export function pageLoadedHandler(): void {
-            console.log(555);
-
         let menuElement:HTMLElement = createMenu(domElementsToMenuElements(getAllDomElements()));
         let bodyElement = document.getElementsByTagName("BODY")[0];
         bodyElement.appendChild(menuElement);
