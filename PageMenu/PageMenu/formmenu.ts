@@ -5,6 +5,16 @@ document.addEventListener("DOMContentLoaded", function(){
     FormMenu.pageLoadedHandler();
 });
 
+document.addEventListener('scroll', function () {
+    FormMenu.scrollHandler();
+}, {
+    passive: true
+});
+
+document.addEventListener("resize", function(){
+    FormMenu.resizeHandler();
+});
+
 namespace FormMenu {
     let defaultConfiguration: any = {
         skipFirstHeading: false,
@@ -251,6 +261,14 @@ namespace FormMenu {
                 setVisibility(currrentMenuElementInfo.menuElement);
             }
         }
+    }
+
+    export function scrollHandler(): void {
+        setVisibilityForMenu();
+    }
+
+    export function resizeHandler(): void {
+        setVisibilityForMenu();
     }
 
     export function pageLoadedHandler(): void {
