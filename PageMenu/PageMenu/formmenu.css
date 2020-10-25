@@ -63,5 +63,10 @@ See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-
     color: darkgoldenrod;
 }
 
-.formmenu-is-parent-of-visible {
+/* Make menu item open if one its children is visible (in the main page), even if 
+it was closed by the close button (-). 
+Give this definition higher specificity by adding .formmenu, so it overrides .formmenu-closed.
+*/
+.formmenu .formmenu-is-parent-of-visible + ul {
+    display: block;
 }

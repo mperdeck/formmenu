@@ -38,6 +38,10 @@ namespace FormMenu {
             // Menu items that are not associated with a heading have a very high level.
             public level: number
         ) {}
+
+        // Headings constitute a hierarchy. An H2 below an H1 is the child of that H1.
+        // non-headings are children of the heading they sit under.
+        public parent: MenuElementInfo;
     }
 
     let menuElementInfos: MenuElementInfo[];
@@ -151,15 +155,19 @@ namespace FormMenu {
     //
     // It goes forward through menuElementInfos until
     // 1) menuElementInfos is exhaused; or
-    // 2) it finds an with the same level or lower as the one passed in. That item then won't be added to the ul.
+    // 2) it finds an with the same level or lower as the level of the parent. That item then won't be added to the ul.
+    //
+    // parent is the menu item that is the parent of the list items. Will be null when the very top level of menu items
+    // is generated.
     //
     // Note that i is an object containing a number. When the method returns, that number will have been
     // updated to the index + 1 of the last item in the list.
-    function createList(level: number, i: { value:number}, menuElementInfos: MenuElementInfo[]): HTMLUListElement {
+    function createList(parent: MenuElementInfo, i: { value:number}, menuElementInfos: MenuElementInfo[]): HTMLUListElement {
+        const level: number = parent ? parent.level : 0;
         let listElement: HTMLUListElement = document.createElement("ul");
 
         while((i.value < menuElementInfos.length) && (menuElementInfos[i.value].level > level)) {
-            let liElement = createListItem(i, menuElementInfos);
+            let liElement = createListItem(parent, i, menuElementInfos);
             listElement.appendChild(liElement);
         }
 
@@ -171,17 +179,18 @@ namespace FormMenu {
     // Note that i is an object containing a number. When the method returns, that number will have been
     // updated to the index + 1 of the last child of the item (or index + 1 of the item itself
     // if it doesn't have children).
-    function createListItem(i: { value:number}, menuElementInfos: MenuElementInfo[]): HTMLLIElement {
+    function createListItem(parent: MenuElementInfo, i: { value:number}, menuElementInfos: MenuElementInfo[]): HTMLLIElement {
         let currentMenuElementInfo = menuElementInfos[i.value];
+        currentMenuElementInfo.parent = parent;
+
         let listItemElement: HTMLLIElement = document.createElement("li");
         listItemElement.appendChild(currentMenuElementInfo.menuElement);
-        let currentLevel = currentMenuElementInfo.level;
 
         // Point to first child item
         i.value = i.value + 1;
 
         let listElement: HTMLUListElement = createList(
-            currentLevel, i, menuElementInfos);
+            currentMenuElementInfo, i, menuElementInfos);
         
         // Only append the ul with children if there actually are children
         if (listElement.children.length > 0) {
@@ -208,7 +217,7 @@ namespace FormMenu {
         menuElement.className = 'formmenu';
         menuElement.id = 'formmenu';
 
-        let topList: HTMLUListElement = createList(0, { value:0}, menuElementInfos);
+        let topList: HTMLUListElement = createList(null, { value:0}, menuElementInfos);
         menuElement.appendChild(topList);
 
         return menuElement;
@@ -224,12 +233,32 @@ namespace FormMenu {
         );
     }
 
+    // Sets a class on this menu item, and another class on the parent of the item, its parents, etc.
+    function setClassOnMenuItem(menuElement:MenuElementInfo, classThisItem: string, classParents: string): void {
+        menuElement.menuElement.classList.add(classThisItem);
+
+console.log('########## 1');
+
+
+        let parent = menuElement.parent;
+        while(parent) {
+            // If the class for parents has already been set on a parent, it will have been set on that
+            // parent's parents as well. So can stop here.
+
+            console.log('########## 2');
+
+            //#######          if (parent.menuElement.classList.contains(classParents)) { break; }
+            parent.menuElement.classList.add(classParents);
+            
+            parent = menuElement.parent;
+        }
+    }
+
     // Sets the formmenu-is-visible of an item, and the formmenu-is-parent-of-visible
     // class on its parents.
     // Note that this doesn't reset the formmenu-is-visible etc. classes of items that are not visible.
-    function setVisibility(menuElement:HTMLElement): void {
-        menuElement.classList.add('formmenu-is-visible');
-
+    function setVisibility(menuElement:MenuElementInfo): void {
+        setClassOnMenuItem(menuElement, 'formmenu-is-visible', 'formmenu-is-parent-of-visible');
     }
 
     function removeVisibilityForMenu(): void {
@@ -258,7 +287,7 @@ namespace FormMenu {
             lastWasVisible = isVisible;
             
             if (isVisible) {
-                setVisibility(currrentMenuElementInfo.menuElement);
+                setVisibility(currrentMenuElementInfo);
             }
         }
     }
