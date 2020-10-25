@@ -1,28 +1,17 @@
 // "DOMContentLoaded" fires when the html has loaded, even if the stylesheets, javascript, etc are still being loaded.
 // "load" fires when the entire page has loaded, including stylesheets, etc.
 
-console.log(0)
-
 document.addEventListener("DOMContentLoaded", function(){
-
-console.log(1)
-
     FormMenu.pageLoadedHandler();
 });
 
 document.addEventListener('scroll', function () {
-
-    console.log(2)
-
     FormMenu.scrollHandler();
 }, {
     passive: true
 });
 
 document.addEventListener("resize", function(){
-
-    console.log(3)
-
     FormMenu.resizeHandler();
 });
 
@@ -248,33 +237,15 @@ namespace FormMenu {
     function setClassOnMenuItem(menuElement:MenuElementInfo, classThisItem: string, classParents: string): void {
         menuElement.menuElement.classList.add(classThisItem);
 
-        console.log('########## 1 ' + menuElement.caption);
-
-
         let currentElement = menuElement.parent;
         while(currentElement) {
             // If the class for parents has already been set on a parent, it will have been set on that
             // parent's parents as well. So can stop here.
 
-            console.log('########## 2 ' + currentElement.caption);
-
             if (currentElement.menuElement.classList.contains(classParents)) { break; }
             currentElement.menuElement.classList.add(classParents);
-
-            console.log('########## 3 ' + currentElement.caption);
-
             
             currentElement = currentElement.parent;
- 
-            console.log('########## 3.5');
-            if (currentElement) {
-                console.log('########## 4 ' + currentElement.caption);
-            }
-            else {
-                console.log('########## 4 not is null');
-            }
-
-            
         }
     }
 
@@ -282,9 +253,6 @@ namespace FormMenu {
     // class on its parents.
     // Note that this doesn't reset the formmenu-is-visible etc. classes of items that are not visible.
     function setVisibility(menuElement:MenuElementInfo): void {
-
-        console.log('############## b4');
-
         setClassOnMenuItem(menuElement, 'formmenu-is-visible', 'formmenu-is-parent-of-visible');
     }
 
@@ -297,16 +265,9 @@ namespace FormMenu {
     }
 
     function setVisibilityForMenu(): void {
-
-console.log('############## b1');
-
         if (!menuElementInfos) { return; }
 
         removeVisibilityForMenu();
-
-        console.log('############## b2');
-
-
         let count = menuElementInfos.length;
         let lastWasVisible = false;
 
@@ -318,9 +279,6 @@ console.log('############## b1');
             // so no need to visit any more items.
             if (lastWasVisible && !isVisible) { break; }
             lastWasVisible = isVisible;
-
-            console.log('############## b3');
-
             
             if (isVisible) {
                 setVisibility(currrentMenuElementInfo);
@@ -329,9 +287,6 @@ console.log('############## b1');
     }
 
     export function scrollHandler(): void {
-
-console.log('############ c1');
-
         setVisibilityForMenu();
     }
 
