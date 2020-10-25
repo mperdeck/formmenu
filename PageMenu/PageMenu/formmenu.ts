@@ -124,12 +124,12 @@ namespace FormMenu {
         // Its parent is the div that also contains the span with the open/close icon.
         let parentDiv:HTMLElement = (<any>(e.currentTarget)).parentNode;
 
-        if (parentDiv.classList.contains('formmenu-closed')) {
-            parentDiv.classList.remove('formmenu-closed');
-            parentDiv.classList.add('formmenu-open');
-        } else if (parentDiv.classList.contains('formmenu-open')) {
-            parentDiv.classList.remove('formmenu-open');
-            parentDiv.classList.add('formmenu-closed');
+        if (parentDiv.classList.contains('formmenu-item-closed')) {
+            parentDiv.classList.remove('formmenu-item-closed');
+            parentDiv.classList.add('formmenu-item-open');
+        } else if (parentDiv.classList.contains('formmenu-item-open')) {
+            parentDiv.classList.remove('formmenu-item-open');
+            parentDiv.classList.add('formmenu-item-closed');
         }
     }
 
@@ -208,13 +208,13 @@ namespace FormMenu {
             listItemElement.appendChild(listElement);
 
             // If you appended the list (as in, the element has children), then also set
-            // the formmenu-closed or formmenu-open class, so the element will have open/close icons.
+            // the formmenu-item-closed or formmenu-item-open class, so the element will have open/close icons.
 
-            let openCloseClass = "formmenu-closed";
+            let openCloseClass = "formmenu-item-closed";
             let defaultOpenAtLevel: number = getConfigValue("defaultOpenAtLevel");
 
             if (currentMenuElementInfo.level <= defaultOpenAtLevel) {
-                openCloseClass = "formmenu-open";
+                openCloseClass = "formmenu-item-open";
             }
 
             currentMenuElementInfo.menuElement.classList.add(openCloseClass);
