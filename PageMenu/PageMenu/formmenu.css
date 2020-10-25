@@ -47,15 +47,15 @@ See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-
     content: "\00a0";
 }
 
-.formmenu-closed .formmenu-expand::after {
+.formmenu-item-closed .formmenu-expand::after {
     content: "+ ";
 }
 
-.formmenu-closed + ul {
+.formmenu-item-closed + ul {
     display: none;
 }
 
-.formmenu-open .formmenu-expand::after {
+.formmenu-item-open .formmenu-expand::after {
     content: "- ";
 }
 
@@ -65,7 +65,7 @@ See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-
 
 /* Make menu item open if one its children is visible (in the main page), even if 
 it was closed by the close button (-). 
-Give this definition higher specificity by adding .formmenu, so it overrides .formmenu-closed.
+Give this definition higher specificity by adding .formmenu, so it overrides .formmenu-item-closed.
 */
 .formmenu .formmenu-is-parent-of-visible + ul {
     display: block;
@@ -81,4 +81,33 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
 
 .formmenu-matching-search-text {
     background-color: yellow;
+}
+
+.formmenu-search-bar {
+
+}
+
+.formmenu-hidden {
+
+}
+
+.formmenu-hidden ul, 
+.formmenu-hidden .formmenu-search-bar {
+    display: none;
+}
+
+.formmenu-shown {
+
+}
+
+.formmenu-menu-hide-show {
+    cursor: pointer;
+}
+
+.formmenu-hidden .formmenu-menu-hide-show::after {
+    content: "<< ";
+}
+
+.formmenu-shown .formmenu-menu-hide-show::after {
+    content: ">> ";
 }

@@ -23,6 +23,7 @@ namespace FormMenu {
         showSearchInput: true,
         searchPlaceholder: 'search',
         searchMinimumCharacters: '2',
+        showMenuHideShow: true
     }
 
     class MenuElementInfo {
@@ -118,19 +119,32 @@ namespace FormMenu {
           }
     }
 
-    function onExpandClicked(e:MouseEvent) {
+    // If the element has class1, sets class2 instead. And vice versa.
+    function toggleClass(htmlElement:HTMLElement, class1: string, class2: string): void {
+        if (htmlElement.classList.contains(class1)) {
+            htmlElement.classList.remove(class1);
+            htmlElement.classList.add(class2);
+        } else if (htmlElement.classList.contains(class2)) {
+            htmlElement.classList.remove(class2);
+            htmlElement.classList.add(class1);
+        }
+    }
+
+    function parentOfEventTarget(e:MouseEvent): HTMLElement {
         // See https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget
         // currentTarget will return the span containing the caption.
-        // Its parent is the div that also contains the span with the open/close icon.
-        let parentDiv:HTMLElement = (<any>(e.currentTarget)).parentNode;
 
-        if (parentDiv.classList.contains('formmenu-item-closed')) {
-            parentDiv.classList.remove('formmenu-item-closed');
-            parentDiv.classList.add('formmenu-item-open');
-        } else if (parentDiv.classList.contains('formmenu-item-open')) {
-            parentDiv.classList.remove('formmenu-item-open');
-            parentDiv.classList.add('formmenu-item-closed');
-        }
+        let parent:HTMLElement = (<any>(e.currentTarget)).parentNode;
+        return parent;
+    }
+
+    function onExpandClicked(e:MouseEvent) {
+        // The span with the open/close icon element will have been clicked.
+        // Its parent is the div that also contains the caption.
+
+        let parentDiv:HTMLElement = parentOfEventTarget(e);
+
+        toggleClass(parentDiv, 'formmenu-item-closed', 'formmenu-item-open');
     }
 
     function createMenuElementDiv(caption: string, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
@@ -297,16 +311,48 @@ namespace FormMenu {
         return menuElement;
     }
 
+    function onMenuHideShowButtonClicked(e: MouseEvent): void {
+        // The span with the hide/show will have been clicked.
+        // Its parent is the formmenu div.
+
+        let parentDiv:HTMLElement = parentOfEventTarget(e);
+
+        toggleClass(parentDiv, 'formmenu-hidden', 'formmenu-shown');
+    }
+
+    function createMenuHideShowButton(): HTMLElement {
+        let menuHideShowButton: HTMLElement = document.createElement("span");
+        menuHideShowButton.className = 'formmenu-menu-hide-show';
+
+        // onChange only fires after you've clicked outside the input box.
+        // onKeypress fires before the value has been updated, so you get the old value, not the latest value
+        menuHideShowButton.onclick = onMenuHideShowButtonClicked;
+
+        return menuHideShowButton;
+    }
+
     function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
-        menuElement.className = 'formmenu';
+        menuElement.classList.add('formmenu');
+        menuElement.classList.add('formmenu-shown');
         menuElement.id = 'formmenu';
+
+        let showMenuHideShow: boolean = getConfigValue("showMenuHideShow");
+        if (showMenuHideShow) {
+            let menuHideShowButton = createMenuHideShowButton();
+            menuElement.appendChild(menuHideShowButton);
+        }
+
+        let searchBar: HTMLElement = document.createElement("span");
+        searchBar.classList.add('formmenu-search-bar');
 
         let showSearchInput: boolean = getConfigValue("showSearchInput");
         if (showSearchInput) {
             let searchInput = createSearchInput();
-            menuElement.appendChild(searchInput);
+            searchBar.appendChild(searchInput);
         }
+
+        menuElement.appendChild(searchBar);
 
         let topList: HTMLUListElement = createList(null, { value:0}, menuElementInfos);
         menuElement.appendChild(topList);
