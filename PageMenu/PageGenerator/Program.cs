@@ -42,6 +42,15 @@ namespace PageGenerator
                 for (int j = 0; j < 4; j++)
                 {
                     sb.AddHeading(4);
+                    sb.AddLoremIpsum(1);
+
+                    sb.AddHeading(5);
+                    sb.AddLoremIpsum(1);
+
+                    sb.AddHeading(6);
+                    sb.AddLoremIpsum(2);
+
+                    sb.AddHeading(6);
                     sb.AddLoremIpsum(2);
                 }
             }
