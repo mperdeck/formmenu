@@ -70,3 +70,15 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
 .formmenu .formmenu-is-parent-of-visible + ul {
     display: block;
 }
+
+.formmenu-is-search-result {
+    
+}
+
+.formmenu .formmenu-is-parent-of-search-result + ul {
+    display: block;
+}
+
+.formmenu-matching-search-text {
+    background-color: yellow;
+}

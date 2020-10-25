@@ -19,7 +19,10 @@ namespace FormMenu {
     let defaultConfiguration: any = {
         skipFirstHeading: false,
         defaultOpenAtLevel: 1,
-        domItemHighlightPeriodMS: 500
+        domItemHighlightPeriodMS: 500,
+        showSearchInput: true,
+        searchPlaceholder: 'search',
+        searchMinimumCharacters: '2',
     }
 
     class MenuElementInfo {
@@ -140,7 +143,7 @@ namespace FormMenu {
 
         let captionElement: HTMLElement = document.createElement("span");
         captionElement.classList.add("formmenu-caption");
-        captionElement.innerText = caption;
+        captionElement.innerHTML = caption;
         captionElement.onclick = onClickHandler;
         menuElement.appendChild(captionElement);
 
@@ -148,6 +151,14 @@ namespace FormMenu {
         menuElement.classList.add("formmenu-item");
 
         return menuElement;
+    }
+
+    // Gets the span with the caption from a MenuElementInfo
+    function getCaptionElement(menuElementInfo: MenuElementInfo): HTMLElement {
+        const divElement: HTMLElement = menuElementInfo.menuElement;
+        const captionSpanElement: HTMLElement = <HTMLElement>(divElement.children[1]);
+
+        return captionSpanElement;
     }
 
     // Creates a <ul> tag containing a <li> tag for items in menuElementInfos.
@@ -212,10 +223,90 @@ namespace FormMenu {
         return listItemElement;
     }
 
+    // Inserts span tags into a string. The start tag will be at startIndex and the end tag
+    // spanLength characters later.
+    // For example:
+    // s: abcdefgi, startIndex: 2, spanLength: 3
+    // Result:
+    // ab<span class='formmenu-matching-search-text'>cde</span>fgi
+    function insertMatchingSearchTextSpan(s: string, startIndex: number, spanLength: number): string {
+        const part1 = s.substring(0, startIndex);
+        const part2 = s.substring(startIndex, startIndex + spanLength);
+        const part3 = s.substring(startIndex + spanLength);
+
+        const result = part1 + "<span class='formmenu-matching-search-text'>" + part2 + "</span>" + part3;
+        return result;
+    }
+
+    function onChangeSearch(e: Event): void {
+        const searchValue = (<HTMLInputElement>(e.currentTarget)).value;
+        const searchMinimumCharacters: number = getConfigValue("searchMinimumCharacters");
+
+        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+            const captionElement = getCaptionElement(menuElementInfo);
+
+            // Restore the caption to its original state
+            captionElement.innerHTML = menuElementInfo.caption;
+            menuElementInfo.menuElement.classList.remove('formmenu-is-search-result');
+            menuElementInfo.menuElement.classList.remove('formmenu-is-parent-of-search-result');
+
+            // If there is no search term (user just removed it), nothing more to do
+            if (!searchValue) {
+                return;
+            }
+
+            // If not enough search characters have been typed in, nothing more to do
+            if (searchValue.length < searchMinimumCharacters) {
+                return;
+            }
+
+            const searchValueLc = searchValue.toLowerCase();
+            const foundIndex = menuElementInfo.caption.toLowerCase().indexOf(searchValueLc);
+
+            // If there is no match, return
+            if (foundIndex === -1) {
+                return;
+            }
+
+            const captionWithSearchTextSpan = insertMatchingSearchTextSpan(
+                menuElementInfo.caption, foundIndex, searchValueLc.length);
+
+            captionElement.innerHTML = captionWithSearchTextSpan;
+
+            setClassOnMenuItem(menuElementInfo, 'formmenu-is-search-result', 'formmenu-is-parent-of-search-result');
+        });
+    }
+
+    function createSearchInput(): HTMLInputElement {
+        let menuElement: HTMLInputElement = document.createElement("input");
+        menuElement.type = "search";
+        menuElement.className = 'formmenu-search';
+
+        let searchPlaceholder = getConfigValue("searchPlaceholder");
+        if (searchPlaceholder) {
+            menuElement.placeholder = searchPlaceholder;
+        }
+
+        // onChange only fires after you've clicked outside the input box.
+        // onKeypress fires before the value has been updated, so you get the old value, not the latest value
+        menuElement.onkeyup = onChangeSearch;
+
+        // onsearch fires when the little clear icon is clicked
+        (<any>menuElement).onsearch = onChangeSearch;
+
+        return menuElement;
+    }
+
     function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
         menuElement.className = 'formmenu';
         menuElement.id = 'formmenu';
+
+        let showSearchInput: boolean = getConfigValue("showSearchInput");
+        if (showSearchInput) {
+            let searchInput = createSearchInput();
+            menuElement.appendChild(searchInput);
+        }
 
         let topList: HTMLUListElement = createList(null, { value:0}, menuElementInfos);
         menuElement.appendChild(topList);
