@@ -59,6 +59,8 @@ See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-
     content: "- ";
 }
 
+/******************************************************/
+
 .formmenu-is-visible .formmenu-caption {
     color: darkgoldenrod;
 }
@@ -71,21 +73,7 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
     display: block;
 }
 
-.formmenu-is-filter-result {
-    
-}
-
-.formmenu .formmenu-is-parent-of-filter-result + ul {
-    display: block;
-}
-
-.formmenu-matching-filter-text {
-    background-color: yellow;
-}
-
-.formmenu-filter-bar {
-
-}
+/******************************************************/
 
 .formmenu-hidden {
 
@@ -110,6 +98,22 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
 
 .formmenu-shown .formmenu-menu-hide-show::after {
     content: ">> ";
+}
+
+.formmenu-is-filter-result {
+    
+}
+
+.formmenu .formmenu-is-parent-of-filter-result + ul {
+    display: block;
+}
+
+.formmenu-matching-filter-text {
+    background-color: yellow;
+}
+
+.formmenu-filter-bar {
+
 }
 
 /* If filter is active, only show selected items and their parents */
