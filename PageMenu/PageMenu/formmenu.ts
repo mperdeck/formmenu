@@ -18,12 +18,20 @@ document.addEventListener("resize", function(){
 namespace FormMenu {
     let defaultConfiguration: any = {
         skipFirstHeading: false,
+
+        // Items with level equal or lower than this will be open initially. -1 to open everything. 0 to open nothing.
         defaultOpenAtLevel: 1,
+
+        // Same as defaultOpenAtLevel, but applies when user clicks the collapse filter button.
+        collapseOpenAtLevel: 1,
+
         domItemHighlightPeriodMS: 500,
         showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: '2',
-        showMenuHideShowButton: true
+        showMenuHideShowButton: true,
+        showExpandAllMenuButton: true,
+        showCollapseAllMenuButton: true
     }
 
     class MenuElementInfo {
@@ -144,6 +152,42 @@ namespace FormMenu {
         return parent;
     }
 
+    function hasChildren(menuElementInfo: MenuElementInfo): boolean {
+        const classList:DOMTokenList = menuElementInfo.menuElement.classList;
+        const result:boolean = (classList.contains('formmenu-item-closed') || classList.contains('formmenu-item-open'));
+        return result;
+    }
+
+    // Returns if by default the menu item should be open, false otherwise.
+    // levelConfigItemName - name of config item that has the level at which the item should be open
+    function openByDefault(menuElementInfo: MenuElementInfo, levelConfigItemName: string): boolean {
+        const levelConfig: number = getConfigValue(levelConfigItemName);
+        const result = ((menuElementInfo.level <= levelConfig) || (levelConfig == -1));
+
+        return result;
+    }
+
+    // If the menu item has oldClass, then replace that with newClass.
+    // Otherwise to nothing.
+    function transitionMenuItemHasClass(menuElementInfo: MenuElementInfo, oldClass: string, newClass: string): void {
+        const classList:DOMTokenList = menuElementInfo.menuElement.classList;
+
+        // Only do this if the item actually has this class!
+        // Otherwise you may treat for example menu items that are not parents as parents.
+        if (classList.contains(oldClass)) {
+            classList.remove(oldClass);
+            classList.add(newClass);
+        }
+    }
+
+    function openMenuItem(menuElementInfo: MenuElementInfo): void {
+        transitionMenuItemHasClass(menuElementInfo, 'formmenu-item-closed', 'formmenu-item-open');
+    }
+
+    function closeMenuItem(menuElementInfo: MenuElementInfo): void {
+        transitionMenuItemHasClass(menuElementInfo, 'formmenu-item-open', 'formmenu-item-closed');
+    }
+
     function onExpandClicked(e:MouseEvent) {
         // The span with the open/close icon element will have been clicked.
         // Its parent is the div that also contains the caption.
@@ -230,12 +274,8 @@ namespace FormMenu {
             // If you appended the list (as in, the element has children), then also set
             // the formmenu-item-closed or formmenu-item-open class, so the element will have open/close icons.
 
-            let openCloseClass = "formmenu-item-closed";
-            let defaultOpenAtLevel: number = getConfigValue("defaultOpenAtLevel");
-
-            if (currentMenuElementInfo.level <= defaultOpenAtLevel) {
-                openCloseClass = "formmenu-item-open";
-            }
+            let defaultOpen: boolean = openByDefault(currentMenuElementInfo, "defaultOpenAtLevel");
+            let openCloseClass = defaultOpen ? "formmenu-item-open" : "formmenu-item-closed";
 
             currentMenuElementInfo.menuElement.classList.add(openCloseClass);
         }
@@ -330,6 +370,27 @@ namespace FormMenu {
         toggleClass(parentDiv, 'formmenu-hidden', 'formmenu-shown');
     }
 
+    function onExpandAllMenuClicked(e: MouseEvent): void {
+        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+            openMenuItem(menuElementInfo);
+        });
+    }
+
+    function onCollapseAllMenuClicked(e: MouseEvent): void {
+        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+            let defaultOpen: boolean = openByDefault(menuElementInfo, "collapseOpenAtLevel");
+
+            // Close the items above the "collapseOpenAtLevel" level
+            // Leave alone those items that could be opened. That way, if the user has closed
+            // more items than this method would close, clicking collapse won't lead to actually
+            // items being opened.
+
+            if (!defaultOpen) {
+                closeMenuItem(menuElementInfo);
+            }
+        });
+    }
+
     // Add a filter button to the filter bar (the bit of space left of the filter).
     // cssClass - css class of the span representing the button.
     // onClickHandler - runs when button is clicked.
@@ -363,6 +424,12 @@ namespace FormMenu {
 
         let filterBar: HTMLElement = document.createElement("span");
         filterBar.classList.add('formmenu-filter-bar');
+
+        createFilterButton('formmenu-expand-all-menu-button', onExpandAllMenuClicked,
+            "showExpandAllMenuButton", filterBar);
+
+        createFilterButton('formmenu-collapse-all-menu-button', onCollapseAllMenuClicked,
+            "showCollapseAllMenuButton", filterBar);
 
         let showFilterInput: boolean = getConfigValue("showFilterInput");
         if (showFilterInput) {

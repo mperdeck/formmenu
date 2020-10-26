@@ -1,9 +1,12 @@
 .formmenu {
     position: fixed;
-  right: 10px;
-  top: 10px;
-  border: 1px solid red;
-  background-color: white;
+    right: 10px;
+    top: 10px;
+    border: 1px solid red;
+    background-color: white;
+
+    max-height: 98%; 
+    overflow-y: scroll;
 }
 
 /* Remove bullets and reduce indent of the items. */
@@ -126,3 +129,19 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
  {
     display: block;
 }
+
+/******************************************************/
+
+.formmenu-filter-button {
+    cursor: pointer;
+}
+
+.formmenu-expand-all-menu-button::after {
+    content: "+";
+}
+
+.formmenu-collapse-all-menu-button::after {
+    content: "-";
+}
+
+
