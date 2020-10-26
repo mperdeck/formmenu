@@ -23,7 +23,7 @@ namespace FormMenu {
         showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: '2',
-        showMenuHideShow: true
+        showMenuHideShowButton: true
     }
 
     class MenuElementInfo {
@@ -58,7 +58,9 @@ namespace FormMenu {
     function getConfigValue(itemName: string): any {
         // formMenuConfiguration may have been merged in (by loading the formmenu.config.js file)
         // First try to get the value from there. Otherwise get it from the default config.
-        if (formMenuConfiguration && formMenuConfiguration[itemName]) {
+        // Note that you want to check against undefined specifically, because for example false
+        // is a valid value.
+        if (formMenuConfiguration && (typeof formMenuConfiguration[itemName] !== 'undefined')) {
             return formMenuConfiguration[itemName];
         }
 
@@ -328,15 +330,26 @@ namespace FormMenu {
         toggleClass(parentDiv, 'formmenu-hidden', 'formmenu-shown');
     }
 
-    function createMenuHideShowButton(): HTMLElement {
-        let menuHideShowButton: HTMLElement = document.createElement("span");
-        menuHideShowButton.className = 'formmenu-menu-hide-show';
+    // Add a filter button to the filter bar (the bit of space left of the filter).
+    // cssClass - css class of the span representing the button.
+    // onClickHandler - runs when button is clicked.
+    // showHideConfigName - name of a config item. Only if this is true will the button be created.
+    // parent - filter button will be added to this element.
+    //
+    function createFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void,
+        showHideConfigName: string, parent: HTMLElement) {
 
-        // onChange only fires after you've clicked outside the input box.
-        // onKeypress fires before the value has been updated, so you get the old value, not the latest value
-        menuHideShowButton.onclick = onMenuHideShowButtonClicked;
+        let showButton: boolean = getConfigValue(showHideConfigName);
+        if (!showButton) {
+            return;
+        }
 
-        return menuHideShowButton;
+        let filterButton: HTMLElement = document.createElement("span");
+        filterButton.classList.add(cssClass);
+        filterButton.classList.add('formmenu-filter-button');
+        filterButton.onclick = onClickHandler;
+
+        parent.appendChild(filterButton);
     }
 
     function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
@@ -345,11 +358,8 @@ namespace FormMenu {
         menuElement.classList.add('formmenu-shown');
         menuElement.id = 'formmenu';
 
-        let showMenuHideShow: boolean = getConfigValue("showMenuHideShow");
-        if (showMenuHideShow) {
-            let menuHideShowButton = createMenuHideShowButton();
-            menuElement.appendChild(menuHideShowButton);
-        }
+        createFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
+            "showMenuHideShowButton", menuElement);
 
         let filterBar: HTMLElement = document.createElement("span");
         filterBar.classList.add('formmenu-filter-bar');
