@@ -71,19 +71,19 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
     display: block;
 }
 
-.formmenu-is-search-result {
+.formmenu-is-filter-result {
     
 }
 
-.formmenu .formmenu-is-parent-of-search-result + ul {
+.formmenu .formmenu-is-parent-of-filter-result + ul {
     display: block;
 }
 
-.formmenu-matching-search-text {
+.formmenu-matching-filter-text {
     background-color: yellow;
 }
 
-.formmenu-search-bar {
+.formmenu-filter-bar {
 
 }
 
@@ -92,7 +92,7 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
 }
 
 .formmenu-hidden ul, 
-.formmenu-hidden .formmenu-search-bar {
+.formmenu-hidden .formmenu-filter-bar {
     display: none;
 }
 
@@ -110,4 +110,15 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
 
 .formmenu-shown .formmenu-menu-hide-show::after {
     content: ">> ";
+}
+
+/* If filter is active, only show selected items and their parents */
+.formmenu-filter-is-active li div {
+    display: none;
+}
+
+.formmenu-filter-is-active .formmenu-is-filter-result,
+.formmenu-filter-is-active .formmenu-is-parent-of-filter-result
+ {
+    display: block;
 }

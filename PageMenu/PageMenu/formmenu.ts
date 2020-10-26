@@ -20,9 +20,9 @@ namespace FormMenu {
         skipFirstHeading: false,
         defaultOpenAtLevel: 1,
         domItemHighlightPeriodMS: 500,
-        showSearchInput: true,
-        searchPlaceholder: 'search',
-        searchMinimumCharacters: '2',
+        showFilterInput: true,
+        filterPlaceholder: 'filter',
+        filterMinimumCharacters: '2',
         showMenuHideShow: true
     }
 
@@ -49,6 +49,10 @@ namespace FormMenu {
     }
 
     let menuElementInfos: MenuElementInfo[];
+
+    // The div that contains the entire menu
+    let mainMenuElement:HTMLElement;
+
     const levelNonHeadingMenuItem: number = 9000;
 
     function getConfigValue(itemName: string): any {
@@ -242,71 +246,75 @@ namespace FormMenu {
     // For example:
     // s: abcdefgi, startIndex: 2, spanLength: 3
     // Result:
-    // ab<span class='formmenu-matching-search-text'>cde</span>fgi
-    function insertMatchingSearchTextSpan(s: string, startIndex: number, spanLength: number): string {
+    // ab<span class='formmenu-matching-filter-text'>cde</span>fgi
+    function insertMatchingFilterTextSpan(s: string, startIndex: number, spanLength: number): string {
         const part1 = s.substring(0, startIndex);
         const part2 = s.substring(startIndex, startIndex + spanLength);
         const part3 = s.substring(startIndex + spanLength);
 
-        const result = part1 + "<span class='formmenu-matching-search-text'>" + part2 + "</span>" + part3;
+        const result = part1 + "<span class='formmenu-matching-filter-text'>" + part2 + "</span>" + part3;
         return result;
     }
 
-    function onChangeSearch(e: Event): void {
-        const searchValue = (<HTMLInputElement>(e.currentTarget)).value;
-        const searchMinimumCharacters: number = getConfigValue("searchMinimumCharacters");
+    function onChangeFilter(e: Event): void {
+        const filterValue = (<HTMLInputElement>(e.currentTarget)).value;
+        const filterMinimumCharacters: number = getConfigValue("filterMinimumCharacters");
+
+        // Filter is active if there is a filter value, and there are enough filter characters.
+        const filterIsActive = (filterValue && (filterValue.length >= filterMinimumCharacters));
+
+        if (filterIsActive) {
+            mainMenuElement.classList.add('formmenu-filter-is-active');
+        } else {
+            mainMenuElement.classList.remove('formmenu-filter-is-active');
+        }
 
         menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             const captionElement = getCaptionElement(menuElementInfo);
 
             // Restore the caption to its original state
             captionElement.innerHTML = menuElementInfo.caption;
-            menuElementInfo.menuElement.classList.remove('formmenu-is-search-result');
-            menuElementInfo.menuElement.classList.remove('formmenu-is-parent-of-search-result');
+            menuElementInfo.menuElement.classList.remove('formmenu-is-filter-result');
+            menuElementInfo.menuElement.classList.remove('formmenu-is-parent-of-filter-result');
 
-            // If there is no search term (user just removed it), nothing more to do
-            if (!searchValue) {
+            // If filter is not active, nothing more to do
+            if (!filterIsActive) {
                 return;
             }
 
-            // If not enough search characters have been typed in, nothing more to do
-            if (searchValue.length < searchMinimumCharacters) {
-                return;
-            }
-
-            const searchValueLc = searchValue.toLowerCase();
-            const foundIndex = menuElementInfo.caption.toLowerCase().indexOf(searchValueLc);
+            const filterValueLc = filterValue.toLowerCase();
+            const foundIndex = menuElementInfo.caption.toLowerCase().indexOf(filterValueLc);
 
             // If there is no match, return
             if (foundIndex === -1) {
                 return;
             }
 
-            const captionWithSearchTextSpan = insertMatchingSearchTextSpan(
-                menuElementInfo.caption, foundIndex, searchValueLc.length);
+            const captionWithFilterTextSpan = insertMatchingFilterTextSpan(
+                menuElementInfo.caption, foundIndex, filterValueLc.length);
 
-            captionElement.innerHTML = captionWithSearchTextSpan;
+            captionElement.innerHTML = captionWithFilterTextSpan;
 
-            setClassOnMenuItem(menuElementInfo, 'formmenu-is-search-result', 'formmenu-is-parent-of-search-result');
+            setClassOnMenuItem(menuElementInfo, 'formmenu-is-filter-result', 'formmenu-is-parent-of-filter-result');
         });
     }
 
-    function createSearchInput(): HTMLInputElement {
+    function createFilterInput(): HTMLInputElement {
         let menuElement: HTMLInputElement = document.createElement("input");
-        menuElement.type = "search";
-        menuElement.className = 'formmenu-search';
+        menuElement.type = "filter";
+        menuElement.className = 'formmenu-filter';
 
-        let searchPlaceholder = getConfigValue("searchPlaceholder");
-        if (searchPlaceholder) {
-            menuElement.placeholder = searchPlaceholder;
+        let filterPlaceholder = getConfigValue("filterPlaceholder");
+        if (filterPlaceholder) {
+            menuElement.placeholder = filterPlaceholder;
         }
 
         // onChange only fires after you've clicked outside the input box.
         // onKeypress fires before the value has been updated, so you get the old value, not the latest value
-        menuElement.onkeyup = onChangeSearch;
+        menuElement.onkeyup = onChangeFilter;
 
-        // onsearch fires when the little clear icon is clicked
-        (<any>menuElement).onsearch = onChangeSearch;
+        // onfilter fires when the little clear icon is clicked
+        (<any>menuElement).onfilter = onChangeFilter;
 
         return menuElement;
     }
@@ -343,16 +351,16 @@ namespace FormMenu {
             menuElement.appendChild(menuHideShowButton);
         }
 
-        let searchBar: HTMLElement = document.createElement("span");
-        searchBar.classList.add('formmenu-search-bar');
+        let filterBar: HTMLElement = document.createElement("span");
+        filterBar.classList.add('formmenu-filter-bar');
 
-        let showSearchInput: boolean = getConfigValue("showSearchInput");
-        if (showSearchInput) {
-            let searchInput = createSearchInput();
-            searchBar.appendChild(searchInput);
+        let showFilterInput: boolean = getConfigValue("showFilterInput");
+        if (showFilterInput) {
+            let filterInput = createFilterInput();
+            filterBar.appendChild(filterInput);
         }
 
-        menuElement.appendChild(searchBar);
+        menuElement.appendChild(filterBar);
 
         let topList: HTMLUListElement = createList(null, { value:0}, menuElementInfos);
         menuElement.appendChild(topList);
@@ -433,10 +441,10 @@ namespace FormMenu {
 
     export function pageLoadedHandler(): void {
         menuElementInfos = domElementsToMenuElements(getAllDomElements());
-        let menuElement:HTMLElement = createMenu(menuElementInfos);
+        mainMenuElement = createMenu(menuElementInfos);
         setVisibilityForMenu();
 
         let bodyElement = document.getElementsByTagName("BODY")[0];
-        bodyElement.appendChild(menuElement);
+        bodyElement.appendChild(mainMenuElement);
     }
 }
