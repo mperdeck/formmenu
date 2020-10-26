@@ -11,7 +11,9 @@ document.addEventListener('scroll', function () {
     passive: true
 });
 
-document.addEventListener("resize", function(){
+// The resize event only gets triggered on the window object, and doesn't bubble.
+// See https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event
+window.addEventListener("resize", function(){
     FormMenu.resizeHandler();
 });
 
