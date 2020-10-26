@@ -343,7 +343,7 @@ namespace FormMenu {
 
     function createFilterInput(): HTMLInputElement {
         let menuElement: HTMLInputElement = document.createElement("input");
-        menuElement.type = "filter";
+        menuElement.type = "search";
         menuElement.className = 'formmenu-filter';
 
         let filterPlaceholder = getConfigValue("filterPlaceholder");
@@ -356,7 +356,7 @@ namespace FormMenu {
         menuElement.onkeyup = onChangeFilter;
 
         // onfilter fires when the little clear icon is clicked
-        (<any>menuElement).onfilter = onChangeFilter;
+        (<any>menuElement).onsearch = onChangeFilter;
 
         return menuElement;
     }
