@@ -1,7 +1,11 @@
+///<reference path="formmenu.d.ts" />
+
 namespace FormMenu {
-    export let formMenuConfiguration: any = {
+    export let formMenuConfiguration: iFormMenuConfiguration = {
         skipFirstHeading: false,
-        defaultOpenAtLevel: 1,
-        domItemHighlightPeriodMS: 500
+        defaultOpenAtLevel: 2,
+        collapseOpenAtLevel: 1,
+        domItemHighlightPeriodMS: 500,
+        showMenuHideShowButton: true
     }
 }

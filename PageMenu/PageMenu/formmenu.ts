@@ -1,3 +1,5 @@
+///<reference path="formmenu.d.ts" />
+
 // "DOMContentLoaded" fires when the html has loaded, even if the stylesheets, javascript, etc are still being loaded.
 // "load" fires when the entire page has loaded, including stylesheets, etc.
 
@@ -18,7 +20,7 @@ window.addEventListener("resize", function(){
 });
 
 namespace FormMenu {
-    let defaultConfiguration: any = {
+    let defaultConfiguration: iFormMenuConfiguration = {
         skipFirstHeading: false,
 
         // Items with level equal or lower than this will be open initially. -1 to open everything. 0 to open nothing.
@@ -30,7 +32,7 @@ namespace FormMenu {
         domItemHighlightPeriodMS: 500,
         showFilterInput: true,
         filterPlaceholder: 'filter',
-        filterMinimumCharacters: '2',
+        filterMinimumCharacters: 2,
         showMenuHideShowButton: true,
         showExpandAllMenuButton: true,
         showCollapseAllMenuButton: true
