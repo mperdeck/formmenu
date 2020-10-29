@@ -17,7 +17,7 @@ namespace PageGenerator
             sb.AppendLine(@"<html>");
             sb.AppendLine(@"<head>");
             sb.AppendLine(@"<link rel=""stylesheet"" href=""style.css"">");
-            sb.AppendLine(@"<link rel=""stylesheet"" href=""formmenu.css"">");
+            sb.AppendLine(@"<link rel=""stylesheet"" href=""..\..\PageMenu\PageMenu\formmenu.css"">");
             sb.AppendLine(@"</head>");
             sb.AppendLine(@"<body>");
             sb.AppendLine(@"<div class=""inner"">");
@@ -26,8 +26,8 @@ namespace PageGenerator
         public static void AddPageEnd(this StringBuilder sb)
         {
             sb.AppendLine(@"</div>");
-            sb.AppendLine(@"<script src=""formmenu.js""></script>");
-            sb.AppendLine(@"<script src=""formmenu.config.js""></script>");
+            sb.AppendLine(@"<script src=""..\..\PageMenu\PageMenu\formmenu.js""></script>");
+            sb.AppendLine(@"<script src=""..\..\PageMenu\PageMenu\formmenu.config.js""></script>");
             sb.AppendLine(@"</body>");
             sb.AppendLine(@"</html>");
         }
