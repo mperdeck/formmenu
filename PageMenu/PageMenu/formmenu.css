@@ -4,9 +4,6 @@
     top: 10px;
     border: 1px solid red;
     background-color: white;
-
-    max-height: 98%; 
-    overflow-y: scroll;
 }
 
 /* Remove bullets and reduce indent of the items. */
@@ -14,6 +11,21 @@
     list-style-type: none;
     margin-left: -25px;
   }
+
+  /* 
+  Only applies to very first ul. Place this after the .formmenu ul, so it overrides
+  the margin-left.
+  Note that the overflow-y scroll is on this ul, so the filter box doesn't scroll.
+  Otherwise it could scroll up and out of sight.
+   */
+.formmenu > ul {
+    padding: 0 10px 0 10px; 
+    margin: 5px 0 0 0; 
+
+    /* If you use a percentage here, the ul box breaks out of its containing div box and you can't get to lower menu items. */
+    max-height: 500px; 
+    overflow-y: scroll;
+}
 
 .formmenu-item {
     cursor: pointer;
