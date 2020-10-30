@@ -53,10 +53,10 @@ namespace PageGenerator
 
             sb.AddIndentedLine("<p>");
 
-            string asteriskString = required ? " *" : "";
+            string requiredClassString = required ? " class=\"required\"" : "";
             string emailString = isEmail ? " Email" : "";
             sb.Append(new String(' ', CurrentIndent + 4));
-            sb.AppendLine($"<label for=\"{id}\">{caption}{emailString}{asteriskString}</label>");
+            sb.AppendLine($"<label{requiredClassString} for=\"{id}\">{caption}{emailString}</label>");
 
             sb.Append(new String(' ', CurrentIndent + 4));
             string requiredString = required ? " required" : "";
