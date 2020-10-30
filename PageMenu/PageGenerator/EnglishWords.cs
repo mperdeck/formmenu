@@ -8,7 +8,7 @@ namespace PageGenerator
     {
         public static readonly List<string> LongList = new List<string>()
         {
-"obsolete",
+"payment",
 "thread",
 "eye",
 "safe",
@@ -33,7 +33,7 @@ namespace PageGenerator
 "alcoholic",
 "obtain",
 "spray",
-"payment",
+"obsolete",
 "natural",
 "identify",
 "burly",

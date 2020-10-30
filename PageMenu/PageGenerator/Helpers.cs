@@ -45,6 +45,27 @@ namespace PageGenerator
             CurrentIndent = level * 4;
         }
 
+        public static void AddInput(this StringBuilder sb, bool required, bool isEmail)
+        {
+            sb.AppendLine(@"");
+            string caption = GetRandomWord().Humanize(LetterCasing.Title);
+            string id = caption.ToLower().Replace(" ", "");
+
+            sb.AddIndentedLine("<p>");
+
+            string asteriskString = required ? " *" : "";
+            string emailString = isEmail ? " Email" : "";
+            sb.Append(new String(' ', CurrentIndent + 4));
+            sb.AppendLine($"<label for=\"{id}\">{caption}{emailString}{asteriskString}</label>");
+
+            sb.Append(new String(' ', CurrentIndent + 4));
+            string requiredString = required ? " required" : "";
+            string typeString = isEmail ? "email" : "text";
+            sb.AppendLine($"<input type=\"{typeString}\" id=\"{id}\"{requiredString}>");
+
+            sb.AddIndentedLine("</p>");
+        }
+
         public static void AddLoremIpsum(this StringBuilder sb, int numParagraphs)
         {
             LoremIpsum(sb, 5, 40, 1, 5, numParagraphs);
