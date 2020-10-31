@@ -14,8 +14,8 @@ namespace PageGenerator
     {
         static void Main(string[] args)
         {
-            TestPage.LongPageNoForm();
-            TestPage.LongFormOneLevel();
+            Helpers.WriteTestPage(TestPage.LongPageNoForm, "test1", "");
+            Helpers.WriteTestPage(TestPage.LongFormOneLevel, "longform1", "html5form");
         }
     }
 }

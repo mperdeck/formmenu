@@ -6,14 +6,9 @@ namespace PageGenerator
 {
     public class TestPage
     {
-        const string _basePath = @"C:\Dev\pagemenu\background\testfiles\";
-
-        public static void LongPageNoForm()
+        public static void LongPageNoForm(StringBuilder sb)
         {
             int i;
-            var sb = new StringBuilder();
-
-            sb.AddPageStart();
             sb.AddHeading(1);
 
             sb.AddLoremIpsum(1);
@@ -48,17 +43,11 @@ namespace PageGenerator
 
             sb.AddHeading(2);
             sb.AddLoremIpsum(4);
-
-            sb.AddPageEnd();
-            sb.WriteToFile(_basePath + "test1.html");
         }
 
-        public static void LongFormOneLevel()
+        public static void LongFormOneLevel(StringBuilder sb)
         {
             int i;
-            var sb = new StringBuilder();
-
-            sb.AddPageStart();
             sb.AddHeading(1);
 
             sb.AddLoremIpsum(1);
@@ -80,9 +69,6 @@ namespace PageGenerator
                 sb.AddInput(false, false);
                 sb.AddInput(false, false);
             }
-
-            sb.AddPageEnd();
-            sb.WriteToFile(_basePath + "longform1.html");
         }
     }
 }

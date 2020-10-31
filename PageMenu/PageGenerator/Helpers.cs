@@ -17,19 +17,39 @@ namespace PageGenerator
             sb.AppendLine(@"<html>");
             sb.AppendLine(@"<head>");
             sb.AppendLine(@"<link rel=""stylesheet"" href=""style.css"">");
-            sb.AppendLine(@"<link rel=""stylesheet"" href=""..\..\PageMenu\PageMenu\formmenu.css"">");
+            sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}formmenu.css"">");
             sb.AppendLine(@"</head>");
             sb.AppendLine(@"<body>");
             sb.AppendLine(@"<div class=""inner"">");
         }
 
-        public static void AddPageEnd(this StringBuilder sb)
+        public static void AddPageEnd(this StringBuilder sb, string outFileName, string configFileName)
         {
             sb.AppendLine(@"</div>");
-            sb.AppendLine(@"<script src=""..\..\PageMenu\PageMenu\formmenu.js""></script>");
-            sb.AppendLine(@"<script src=""..\..\PageMenu\PageMenu\formmenu.config.js""></script>");
+            sb.AppendLine(@$"<script src=""{PathConstants.DevFromTest}formmenu.js""></script>");
+
+            // Write script tag for page specific config file
+            sb.AppendLine(@$"<script src=""{outFileName}.formmenu.config.js""></script>");
+
+            // Write script tag for developed config file to be tested
+            if (!string.IsNullOrEmpty(configFileName))
+            {
+                sb.AppendLine(@$"<script src=""{PathConstants.DevFromTest}{configFileName}.formmenu.config.js""></script>");
+            }
+
             sb.AppendLine(@"</body>");
             sb.AppendLine(@"</html>");
+        }
+
+        public static void WriteTestPage(Action<StringBuilder> buildPage, string outFileName, string configFileName)
+        {
+            var sb = new StringBuilder();
+
+            sb.AddPageStart();
+            buildPage(sb);
+
+            sb.AddPageEnd(outFileName, configFileName);
+            sb.WriteToFile(PathConstants.Test + outFileName + ".html");
         }
 
         public static void AddHeading(this StringBuilder sb, int level)
