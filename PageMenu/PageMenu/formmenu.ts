@@ -35,7 +35,10 @@ namespace FormMenu {
         filterMinimumCharacters: 2,
         showMenuHideShowButton: true,
         showExpandAllMenuButton: true,
-        showCollapseAllMenuButton: true
+        showCollapseAllMenuButton: true,
+
+        // Note that HTML only has these heading tags. There is no h7, etc.
+        querySelector: "h1,h2,h3,h4,h5,h6"
     }
 
     class MenuElementInfo {
@@ -79,10 +82,11 @@ namespace FormMenu {
         return defaultConfiguration[itemName]; 
     }
 
-    // Returns all heading tags
+    // Returns all dom elements to be represented in the menu
     function getAllDomElements(): NodeListOf<Element> {
-        // Note that HTML only has these heading tags. There is no h7, etc.
-        let allDomElements = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
+        let querySelector: string = getConfigValue("querySelector");
+
+        let allDomElements = document.querySelectorAll(querySelector);
         return allDomElements;
     }
 

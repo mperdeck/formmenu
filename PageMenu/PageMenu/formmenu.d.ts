@@ -14,6 +14,9 @@ interface iFormMenuConfiguration {
     showMenuHideShowButton?: boolean;
     showExpandAllMenuButton?: boolean;
     showCollapseAllMenuButton?: boolean;
+
+    // Query selector used to select the tags that will be represented in the menu
+    querySelector?: string;
 }
     
 // You can have a form menu reflect the state of the associated dom elements.
