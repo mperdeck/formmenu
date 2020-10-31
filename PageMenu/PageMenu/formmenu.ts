@@ -142,11 +142,17 @@ namespace FormMenu {
         let caption = domElement.innerText;
         let domItemHighlightPeriodMS: number = getConfigValue("domItemHighlightPeriodMS");
 
-        // If a menu item gets clicked, scroll the associated dom element into view
+        // If a menu item gets clicked, scroll the associated dom element into view if it is not already
+        // visible. If it is already visible, do not scroll it.
+        //
         // Also give it the formmenu-highlighted-dom-item for a short time, to point out where
         // it is.
         let onClickHandler = (e:MouseEvent)=>{
-            domElement.scrollIntoView();
+
+            if (!elementIsVisible(domElement)) {
+                domElement.scrollIntoView();
+            }
+
             domElement.classList.add('formmenu-highlighted-dom-item');
             setTimeout(function(){ domElement.classList.remove('formmenu-highlighted-dom-item'); }, domItemHighlightPeriodMS);
         };
