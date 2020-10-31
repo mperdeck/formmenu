@@ -22,6 +22,14 @@ interface iFormMenuConfiguration {
     // Level determines position in the menu (whether it is a child or a sibling).
     // Items with lower levels are parents of items with higher levels.
     tagNameToLevelMethod?: (tagName: string) => number;
+
+    // Used to do additional processing for each menu item. See iItemStateInfo.
+    // key: name of the iItemStateInfo. Pretty much a dummy.
+    // value: the iItemStateInfo
+    //
+    // This structure makes it possible to add item state infos to this structure
+    // in multiple ...formmenu.config.js files
+    itemStateInfos?: { [key: string]: iItemStateInfo};
 }
 
 declare let formMenuConfiguration: iFormMenuConfiguration;
