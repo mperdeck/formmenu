@@ -40,7 +40,8 @@ namespace FormMenu {
         // Note that HTML only has these heading tags. There is no h7, etc.
         querySelector: "h1,h2,h3,h4,h5,h6",
 
-        tagNameToLevelMethod: tagNameToLevelDefaultMethod
+        tagNameToLevelMethod: tagNameToLevelDefaultMethod,
+        itemStateInfos: {}
     }
 
     // Create empty formMenuConfiguration here, to make it easier to write
@@ -428,23 +429,34 @@ namespace FormMenu {
     // Add a filter button to the filter bar (the bit of space left of the filter).
     // cssClass - css class of the span representing the button.
     // onClickHandler - runs when button is clicked.
-    // showHideConfigName - name of a config item. Only if this is true will the button be created.
+    // showHideConfigName - name of a config item. If blank, button is always created.
+    //                      If not blank, config item has to be true for button to be created.
     // parent - filter button will be added to this element.
     //
-    function createFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void,
+    function addFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void,
         showHideConfigName: string, parent: HTMLElement) {
 
-        let showButton: boolean = getConfigValue(showHideConfigName);
+        let showButton: boolean = true;
+        
+        if (showHideConfigName) {
+            showButton = getConfigValue(showHideConfigName);
+        }
+        
         if (!showButton) {
             return;
         }
 
+        let filterButton: HTMLElement = createFilterButton(cssClass, onClickHandler);
+        parent.appendChild(filterButton);
+    }
+
+    function createFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void): HTMLElement {
         let filterButton: HTMLElement = document.createElement("span");
         filterButton.classList.add(cssClass);
         filterButton.classList.add('formmenu-filter-button');
         filterButton.onclick = onClickHandler;
 
-        parent.appendChild(filterButton);
+        return filterButton;
     }
 
     function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
@@ -453,16 +465,16 @@ namespace FormMenu {
         menuElement.classList.add('formmenu-shown');
         menuElement.id = 'formmenu';
 
-        createFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
+        addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
             "showMenuHideShowButton", menuElement);
 
         let filterBar: HTMLElement = document.createElement("span");
         filterBar.classList.add('formmenu-filter-bar');
 
-        createFilterButton('formmenu-expand-all-menu-button', onExpandAllMenuClicked,
+        addFilterButton('formmenu-expand-all-menu-button', onExpandAllMenuClicked,
             "showExpandAllMenuButton", filterBar);
 
-        createFilterButton('formmenu-collapse-all-menu-button', onCollapseAllMenuClicked,
+        addFilterButton('formmenu-collapse-all-menu-button', onCollapseAllMenuClicked,
             "showCollapseAllMenuButton", filterBar);
 
         let showFilterInput: boolean = getConfigValue("showFilterInput");
@@ -477,6 +489,51 @@ namespace FormMenu {
         menuElement.appendChild(topList);
 
         return menuElement;
+    }
+
+    // Visits all item sate infos, processes the menu element infos for each
+    // and adds a filter button for each to the passed in filter bar. 
+    function processAllItemStateInfos(filterBar: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
+        let itemStateInfos: { [key: string]: iItemStateInfo} = getConfigValue("itemStateInfos");
+
+        Object.keys(itemStateInfos).forEach(key => {
+            processItemStateInfo(itemStateInfos[key], filterBar, menuElementInfos);
+        });
+    }
+
+    function onItemStateFilterButtonClicked(e: MouseEvent): void {
+    }
+
+    function setItemStateActive(itemStateCssClass: string, filterButton: HTMLElement, 
+        menuElementInfo: MenuElementInfo): void {
+
+        menuElementInfo.menuElement.classList.add(itemStateCssClass);
+        filterButton.classList.remove('formmenu-filter-button-disabled');
+    }
+
+    function setItemStateInactive(itemStateCssClass: string, filterButton: HTMLElement, 
+        menuElementInfo: MenuElementInfo): void {
+
+        menuElementInfo.menuElement.classList.remove(itemStateCssClass);
+
+        let allMenuItemsWithItemStateClass = mainMenuElement.querySelectorAll('.formmenu-item.' + itemStateCssClass);
+        if (allMenuItemsWithItemStateClass.length === 0) {
+            filterButton.classList.add('formmenu-filter-button-disabled');
+        }
+    }
+
+    function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
+        menuElementInfos: MenuElementInfo[]): void {
+
+        let itemStateCssClass: string = itemStateInfo.cssClass;
+        let filterButton: HTMLElement = createFilterButton(itemStateCssClass, onItemStateFilterButtonClicked);
+        filterButton.classList.add('formmenu-filter-button-disabled');
+
+        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+            itemStateInfo.wireUp(menuElementInfo.domElement,
+                ()=>setItemStateActive(itemStateCssClass, filterButton, menuElementInfo),
+                ()=>setItemStateInactive(itemStateCssClass, filterButton, menuElementInfo));
+        });
     }
 
     function elementIsVisible(element: HTMLElement): boolean {

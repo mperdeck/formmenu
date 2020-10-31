@@ -155,6 +155,10 @@ input.formmenu-filter {
     cursor: pointer;
 }
 
+.formmenu-filter-button-disabled {
+    
+}
+
 .formmenu-expand-all-menu-button::after {
     content: "+";
 }
