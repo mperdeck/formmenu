@@ -1,0 +1,24 @@
+.inner {
+    width: 800px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+label.required::after {
+    content: " *";
+    color: red;
+}
+
+input {
+    display: block;
+    width: 200px;
+}
+
+input:invalid {
+    border: 1px red solid;
+}
+
