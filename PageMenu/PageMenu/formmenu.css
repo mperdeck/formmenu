@@ -115,6 +115,13 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
     content: ">> ";
 }
 
+/******************************************************/
+
+input.formmenu-filter {
+    display: inline;
+    width: auto;
+}
+
 .formmenu-is-filter-result {
     
 }
