@@ -91,12 +91,17 @@ namespace FormMenu {
     }
 
     function getConfigValue(itemName: string): any {
-        // formMenuConfiguration may have been merged in (by loading the formmenu.config.js file)
+        // formMenuConfiguration may have been created by loading .js file that defines that variable.
         // First try to get the value from there. Otherwise get it from the default config.
         // Note that you want to check against undefined specifically, because for example false
         // is a valid value.
-        if (formMenuConfiguration && (typeof formMenuConfiguration[itemName] !== 'undefined')) {
-            return formMenuConfiguration[itemName];
+
+        // Do not use "if (formMenuConfiguration)", because then you'll get a run time reference error
+        // if the variable does not exist already.
+        if (typeof formMenuConfiguration !== 'undefined') {
+            if (typeof formMenuConfiguration[itemName] !== 'undefined') {
+                return formMenuConfiguration[itemName];
+            }
         }
 
         return defaultConfiguration[itemName]; 
