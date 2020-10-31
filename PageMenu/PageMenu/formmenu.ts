@@ -43,6 +43,13 @@ namespace FormMenu {
         tagNameToLevelMethod: tagNameToLevelDefaultMethod
     }
 
+    // Create empty formMenuConfiguration here, to make it easier to write
+    // ...formmenu.config.js files that set properties on this object.
+    //
+    // Do not use let here, because that doesn't allow you to declare a variable 
+    // multiple times.
+    export var formMenuConfiguration: iFormMenuConfiguration = {};
+
     class MenuElementInfo {
 
         constructor(
