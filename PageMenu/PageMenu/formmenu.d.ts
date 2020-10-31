@@ -17,6 +17,11 @@ interface iFormMenuConfiguration {
 
     // Query selector used to select the tags that will be represented in the menu
     querySelector?: string;
+
+    // Method that takes a tag name and works out the level of that tag.
+    // Level determines position in the menu (whether it is a child or a sibling).
+    // Items with lower levels are parents of items with higher levels.
+    tagNameToLevelMethod?: (tagName: string) => number;
 }
     
 // You can have a form menu reflect the state of the associated dom elements.

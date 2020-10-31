@@ -38,7 +38,9 @@ namespace FormMenu {
         showCollapseAllMenuButton: true,
 
         // Note that HTML only has these heading tags. There is no h7, etc.
-        querySelector: "h1,h2,h3,h4,h5,h6"
+        querySelector: "h1,h2,h3,h4,h5,h6",
+
+        tagNameToLevelMethod: tagNameToLevelDefaultMethod
     }
 
     class MenuElementInfo {
@@ -69,6 +71,24 @@ namespace FormMenu {
     let mainMenuElement:HTMLElement;
 
     const levelNonHeadingMenuItem: number = 9000;
+
+    function tagNameToLevelDefaultMethod(tagName: string): number {
+        switch (tagName.toLowerCase()) {
+            case 'h1': return 1;
+            case 'h2': return 2;
+            case 'h3': return 3;
+            case 'h4': return 4;
+            case 'h5': return 5;
+            case 'h6': return 6;
+            default: return levelNonHeadingMenuItem;
+          }
+    }
+
+    function tagNameToLevel(tagName: string): number {
+        let tagNameToLevelMethod: (tagName: string) => number = getConfigValue("tagNameToLevelMethod");
+        let level:number = tagNameToLevelMethod(tagName);
+        return level;
+    }
 
     function getConfigValue(itemName: string): any {
         // formMenuConfiguration may have been merged in (by loading the formmenu.config.js file)
@@ -127,18 +147,6 @@ namespace FormMenu {
             level);
 
         return menuElementInfo;
-    }
-
-    function tagNameToLevel(tagName: string): number {
-        switch (tagName.toLowerCase()) {
-            case 'h1': return 1;
-            case 'h2': return 2;
-            case 'h3': return 3;
-            case 'h4': return 4;
-            case 'h5': return 5;
-            case 'h6': return 6;
-            default: return levelNonHeadingMenuItem;
-          }
     }
 
     // If the element has class1, sets class2 instead. And vice versa.
