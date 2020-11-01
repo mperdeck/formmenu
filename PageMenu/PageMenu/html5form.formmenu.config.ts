@@ -13,7 +13,7 @@ namespace FormMenu {
             public hasChildWithActiveStateClass: string,
             public stateFilterActiveClass: string,
             public stateFilterButtonClass: string,
-            public wireUp: (domElement: HTMLElement, setActive: ()=>void, setInactive: ()=>void)=>void
+            public wireUp: (domElement: HTMLElement, setActive: (active: boolean)=>void)=>void
         ) {}
     }
 
@@ -21,17 +21,13 @@ namespace FormMenu {
     formMenuConfiguration.itemStateInfos["html5required"] = new Html5ItemStateInfo(
         'formmenu-is-required', 'formmenu-is-parent-of-required', 
         'formmenu-required-filter-is-active', 'formmenu-required-filter-button', 
-        (domElement: HTMLElement, setActive: ()=>void, setInactive: ()=>void)=> {
+        (domElement: HTMLElement, setActive: (active: boolean)=>void)=> {
             if (domElement.tagName.toLowerCase() !== 'label') { return; }
 
             let labelElement: HTMLLabelElement = domElement as HTMLLabelElement;
             let inputElementId = labelElement.htmlFor;
-            let inputElement: HTMLInputElement  = document.getElementById(inputElementId) as HTMLInputElement;
-            if (inputElement.required) {
-                setActive
-            } else {
-
-            }
+            let inputElement: HTMLInputElement = document.getElementById(inputElementId) as HTMLInputElement;
+            setActive(inputElement.required);
         });
 }
 

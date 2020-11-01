@@ -520,15 +520,14 @@ namespace FormMenu {
         toggleClass(parentDiv, itemStateInfo.stateFilterActiveClass);
     }
 
-    function setItemStateActive(itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
+    function setItemStateActive(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
         menuElementInfo: MenuElementInfo): void {
 
-        setClassOnMenuItem(menuElementInfo, itemStateInfo.hasActiveStateClass, itemStateInfo.hasChildWithActiveStateClass);
-        filterButton.classList.remove('formmenu-filter-button-disabled');
-    }
-
-    function setItemStateInactive(itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
-        menuElementInfo: MenuElementInfo): void {
+        if (active) {
+            setClassOnMenuItem(menuElementInfo, itemStateInfo.hasActiveStateClass, itemStateInfo.hasChildWithActiveStateClass);
+            filterButton.classList.remove('formmenu-filter-button-disabled');
+            return;    
+        }
 
         removeClassFromMenuItem(menuElementInfo, itemStateInfo.hasActiveStateClass, itemStateInfo.hasChildWithActiveStateClass);
 
@@ -550,8 +549,7 @@ namespace FormMenu {
 
         menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             itemStateInfo.wireUp(menuElementInfo.domElement,
-                ()=>setItemStateActive(itemStateInfo, filterButton, menuElementInfo),
-                ()=>setItemStateInactive(itemStateInfo, filterButton, menuElementInfo));
+                (active: boolean)=>setItemStateActive(active, itemStateInfo, filterButton, menuElementInfo));
         });
     }
 

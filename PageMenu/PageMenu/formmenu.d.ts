@@ -51,12 +51,11 @@ interface iItemStateInfo {
     // When the menu loads, for each DOM element represented in the menu,
     // it calls the wireUp method of each iItemStateInfo.
     // domElement - the DOM element
-    // setActive - a method to call when the DOM element is "active". For example, when it is invalid.
-    // setInactive - a method to call when the DOM element is "inactive". For example, when it is not invalid.
+    // setActive - a method to call when the DOM element switches from "active" to "inactive" or vice versa.
     //
     // In the body of the wireUp method, call one of these methods to set the initial state of the menu item.
 
-    wireUp: (domElement: HTMLElement, setActive: ()=>void, setInactive: ()=>void)=>void;
+    wireUp: (domElement: HTMLElement, setActive: (active: boolean)=>void)=>void;
 
     // Menu items associated with a dom element that has active state will have this class
     hasActiveStateClass: string;
