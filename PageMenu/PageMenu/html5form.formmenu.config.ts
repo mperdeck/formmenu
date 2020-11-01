@@ -18,6 +18,10 @@ namespace FormMenu {
     }
 
     formMenuConfiguration.querySelector = "h1,h2,h3,h4,h5,h6,label";
+
+    // if itemStateInfos is undefined, set it now
+    if (!formMenuConfiguration.itemStateInfos) { formMenuConfiguration.itemStateInfos = {}; }
+
     formMenuConfiguration.itemStateInfos["html5required"] = new Html5ItemStateInfo(
         'formmenu-is-required', 'formmenu-is-parent-of-required', 
         'formmenu-required-filter-is-active', 'formmenu-required-filter-button', 
