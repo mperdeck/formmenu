@@ -3,13 +3,17 @@
     display: none;
 }
 
+.formmenu-is-required .formmenu-caption::after {
+    content: "*";
+}
+
 .formmenu-required-filter-is-active .formmenu-is-required,
 .formmenu-required-filter-is-active .formmenu-is-parent-of-required {
     display: block;
 }
 
 .formmenu-required-filter-is-active .formmenu-required-filter-button {
-    border: 1px black solid;
+    border: 2px black solid;
 }
 
 .formmenu-required-filter-button::after {
