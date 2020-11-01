@@ -188,6 +188,13 @@ namespace FormMenu {
         }
     }
 
+    // Removes the given class from all given menu elements
+    function removeClass(menuElementInfos: MenuElementInfo[], cssClass: string): void {
+        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+            menuElementInfo.menuElement.classList.remove(cssClass);
+        });
+    }
+
     function parentOfEventTarget(e:MouseEvent): HTMLElement {
         // See https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget
         // currentTarget will return the span containing the caption.
@@ -526,17 +533,29 @@ namespace FormMenu {
         menuElementInfo: MenuElementInfo): void {
 
         if (active) {
-            setClassOnMenuItem(menuElementInfo, itemStateInfo.hasActiveStateClass, itemStateInfo.hasChildWithActiveStateClass);
-            filterButton.classList.remove('formmenu-filter-button-disabled');
-            return;    
+            menuElementInfo.menuElement.classList.add(itemStateInfo.hasActiveStateClass);
+        } else {
+            menuElementInfo.menuElement.classList.remove(itemStateInfo.hasActiveStateClass);
         }
 
-        removeClassFromMenuItem(menuElementInfo, itemStateInfo.hasActiveStateClass, itemStateInfo.hasChildWithActiveStateClass);
+        // Always redo the parent classes each time an item is set active/inactive.
+        // You cannot do this for one item, because the parent of a newly inactive item may
+        // also be the parent of another item that is still active.
 
-        let allMenuItemsWithItemStateClass = mainMenuElement.querySelectorAll(
-            '.formmenu-item.' + itemStateInfo.stateFilterActiveClass);
+        removeClass(menuElementInfos, itemStateInfo.hasChildWithActiveStateClass);
 
-        if (allMenuItemsWithItemStateClass.length === 0) {
+        let existsActiveItem = false;
+
+        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+            if (menuElementInfo.menuElement.classList.contains(itemStateInfo.hasActiveStateClass)) {
+                existsActiveItem = true;
+                setClassOnMenuItemParents(menuElementInfo, itemStateInfo.hasChildWithActiveStateClass);
+            }
+        });
+
+        if (existsActiveItem) {
+            filterButton.classList.remove('formmenu-filter-button-disabled');
+        } else {
             filterButton.classList.add('formmenu-filter-button-disabled');
             mainMenuElement.classList.remove(itemStateInfo.stateFilterActiveClass);
         }
@@ -569,6 +588,11 @@ namespace FormMenu {
     // Sets a class on this menu item, and another class on the parent of the item, its parents, etc.
     function setClassOnMenuItem(menuElement:MenuElementInfo, classThisItem: string, classParents: string): void {
         menuElement.menuElement.classList.add(classThisItem);
+        setClassOnMenuItemParents(menuElement, classParents);
+    }
+
+    // Sets a class on the parent of the given item, its parents, etc.
+    function setClassOnMenuItemParents(menuElement:MenuElementInfo, classParents: string): void {
 
         let currentElement = menuElement.parent;
         while(currentElement) {
