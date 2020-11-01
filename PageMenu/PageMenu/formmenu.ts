@@ -548,6 +548,7 @@ namespace FormMenu {
         let filterButton: HTMLElement = createFilterButton(
             itemStateInfo.stateFilterButtonClass, (e: MouseEvent) => { onItemStateFilterButtonClicked(e, itemStateInfo); });
         filterButton.classList.add('formmenu-filter-button-disabled');
+        filterBar.appendChild(filterButton);
 
         menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             itemStateInfo.wireUp(menuElementInfo.domElement,
