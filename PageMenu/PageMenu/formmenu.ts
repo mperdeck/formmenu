@@ -468,14 +468,18 @@ namespace FormMenu {
         return filterButton;
     }
 
-    function createMenu(menuElementInfos: MenuElementInfo[]): HTMLElement {
+    function createMainMenuElement(): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
         menuElement.classList.add('formmenu');
         menuElement.classList.add('formmenu-shown');
         menuElement.id = 'formmenu';
 
+        return menuElement;
+    }
+
+    function addMenuBody(mainMenuElement: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
         addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
-            "showMenuHideShowButton", menuElement);
+            "showMenuHideShowButton", mainMenuElement);
 
         let filterBar: HTMLElement = document.createElement("span");
         filterBar.classList.add('formmenu-filter-bar');
@@ -494,12 +498,10 @@ namespace FormMenu {
             filterBar.appendChild(filterInput);
         }
 
-        menuElement.appendChild(filterBar);
+        mainMenuElement.appendChild(filterBar);
 
         let topList: HTMLUListElement = createList(null, { value:0}, menuElementInfos);
-        menuElement.appendChild(topList);
-
-        return menuElement;
+        mainMenuElement.appendChild(topList);
     }
 
     // Visits all item sate infos, processes the menu element infos for each
@@ -637,7 +639,13 @@ namespace FormMenu {
 
     export function pageLoadedHandler(): void {
         menuElementInfos = domElementsToMenuElements(getAllDomElements());
-        mainMenuElement = createMenu(menuElementInfos);
+
+        // Set mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
+        // setActive may be called while the menu is being created.
+        mainMenuElement = createMainMenuElement();
+
+        addMenuBody(mainMenuElement, menuElementInfos);
+
         setVisibilityForMenu();
 
         let bodyElement = document.getElementsByTagName("BODY")[0];
