@@ -485,6 +485,11 @@ namespace FormMenu {
     }
 
     function addMenuBody(mainMenuElement: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
+
+        // Create topList first, because this also sets the parent properties on the menuElementInfos,
+        // which is needed probably for the setActive method called when Item State Infos are processed.
+        let topList: HTMLUListElement = createList(null, { value:0}, menuElementInfos);
+
         addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
             "showMenuHideShowButton", mainMenuElement);
 
@@ -506,8 +511,6 @@ namespace FormMenu {
         }
 
         mainMenuElement.appendChild(filterBar);
-
-        let topList: HTMLUListElement = createList(null, { value:0}, menuElementInfos);
         mainMenuElement.appendChild(topList);
     }
 
@@ -525,8 +528,7 @@ namespace FormMenu {
         let clickedElement:HTMLElement = (<any>(e.currentTarget));
         if (clickedElement.classList.contains('formmenu-filter-button-disabled')) { return; }
 
-        let parentDiv:HTMLElement = parentOfEventTarget(e);
-        toggleClass(parentDiv, itemStateInfo.stateFilterActiveClass);
+        toggleClass(mainMenuElement, itemStateInfo.stateFilterActiveClass);
     }
 
     function setItemStateActive(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
