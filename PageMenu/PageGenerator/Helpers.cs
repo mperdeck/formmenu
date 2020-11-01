@@ -11,13 +11,14 @@ namespace PageGenerator
         static int WordIndex = 0;
         static int CurrentIndent = 0;
 
-        public static void AddPageStart(this StringBuilder sb)
+        public static void AddPageStart(this StringBuilder sb, string configFileName)
         {
             sb.AppendLine(@"<!DOCTYPE html>");
             sb.AppendLine(@"<html>");
             sb.AppendLine(@"<head>");
             sb.AppendLine(@"<link rel=""stylesheet"" href=""style.css"">");
             sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}formmenu.css"">");
+            sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}{configFileName}.formmenu.css"">");
             sb.AppendLine(@"</head>");
             sb.AppendLine(@"<body>");
             sb.AppendLine(@"<div class=""inner"">");
@@ -45,7 +46,7 @@ namespace PageGenerator
         {
             var sb = new StringBuilder();
 
-            sb.AddPageStart();
+            sb.AddPageStart(configFileName);
             buildPage(sb);
 
             sb.AddPageEnd(outFileName, configFileName);
