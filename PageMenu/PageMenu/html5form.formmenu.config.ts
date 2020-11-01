@@ -8,13 +8,31 @@ namespace FormMenu {
     export var formMenuConfiguration: iFormMenuConfiguration;
 
     class Html5ItemStateInfo implements  iItemStateInfo {
-        wireUp: (domElement: HTMLElement, setActive: ()=>void, setInactive: ()=>void)=>void;
-
-        cssClass: string;
+        constructor(
+            public hasActiveStateClass: string,
+            public hasChildWithActiveStateClass: string,
+            public stateFilterActiveClass: string,
+            public stateFilterButtonClass: string,
+            public wireUp: (domElement: HTMLElement, setActive: ()=>void, setInactive: ()=>void)=>void
+        ) {}
     }
 
     formMenuConfiguration.querySelector = "h1,h2,h3,h4,h5,h6,label";
-    formMenuConfiguration.itemStateInfos["html5form"] = new Html5ItemStateInfo();
+    formMenuConfiguration.itemStateInfos["html5required"] = new Html5ItemStateInfo(
+        'formmenu-is-required', 'formmenu-is-parent-of-required', 
+        'formmenu-required-filter-is-active', 'formmenu-required-filter-button', 
+        (domElement: HTMLElement, setActive: ()=>void, setInactive: ()=>void)=> {
+            if (domElement.tagName.toLowerCase() !== 'label') { return; }
+
+            let labelElement: HTMLLabelElement = domElement as HTMLLabelElement;
+            let inputElementId = labelElement.htmlFor;
+            let inputElement: HTMLInputElement  = document.getElementById(inputElementId) as HTMLInputElement;
+            if (inputElement.required) {
+                setActive
+            } else {
+
+            }
+        });
 }
 
 

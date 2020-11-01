@@ -153,10 +153,16 @@ input.formmenu-filter {
 
 .formmenu-filter-button {
     cursor: pointer;
+    min-width: 10px;
+    display: inline-block;
+    border: 1px grey solid;
+    margin-right: 2px;
+    text-align: center;
 }
 
-.formmenu-filter-button-disabled {
-    
+.formmenu-filter-button-disabled.formmenu-filter-button {
+    background-color: #f0f0f0;
+    color: #808080;
 }
 
 .formmenu-expand-all-menu-button::after {

@@ -46,10 +46,6 @@ declare let formMenuConfiguration: iFormMenuConfiguration;
 // items with the given state.
 // This will have the disabled property when no item has the given state.
 //
-// The state is represented by the cssClass. Items with state "on" have the class,
-// those with state "off" do not have the class.
-// The filter button will be given the same class.
-//
 interface iItemStateInfo {
 
     // When the menu loads, for each DOM element represented in the menu,
@@ -62,5 +58,16 @@ interface iItemStateInfo {
 
     wireUp: (domElement: HTMLElement, setActive: ()=>void, setInactive: ()=>void)=>void;
 
-    cssClass: string;
+    // Menu items associated with a dom element that has active state will have this class
+    hasActiveStateClass: string;
+
+    // Parents of menu items associated with a dom element that has active state will have this class
+    hasChildWithActiveStateClass: string;
+
+    // If the user is filtering by active state, this class is added to the top level div.
+    stateFilterActiveClass: string;
+
+    // The filter button that allows the user to only show items with the active state
+    // will have this class.
+    stateFilterButtonClass: string;
 }

@@ -169,13 +169,22 @@ namespace FormMenu {
     }
 
     // If the element has class1, sets class2 instead. And vice versa.
-    function toggleClass(htmlElement:HTMLElement, class1: string, class2: string): void {
+    function toggleClasses(htmlElement:HTMLElement, class1: string, class2: string): void {
         if (htmlElement.classList.contains(class1)) {
             htmlElement.classList.remove(class1);
             htmlElement.classList.add(class2);
         } else if (htmlElement.classList.contains(class2)) {
             htmlElement.classList.remove(class2);
             htmlElement.classList.add(class1);
+        }
+    }
+
+    // If the element has cssClass, remove it. Otherwise add it.
+    function toggleClass(htmlElement:HTMLElement, cssClass: string): void {
+        if (htmlElement.classList.contains(cssClass)) {
+            htmlElement.classList.remove(cssClass);
+        } else {
+            htmlElement.classList.add(cssClass);
         }
     }
 
@@ -229,7 +238,7 @@ namespace FormMenu {
 
         let parentDiv:HTMLElement = parentOfEventTarget(e);
 
-        toggleClass(parentDiv, 'formmenu-item-closed', 'formmenu-item-open');
+        toggleClasses(parentDiv, 'formmenu-item-closed', 'formmenu-item-open');
     }
 
     function createMenuElementDiv(caption: string, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
@@ -402,7 +411,7 @@ namespace FormMenu {
 
         let parentDiv:HTMLElement = parentOfEventTarget(e);
 
-        toggleClass(parentDiv, 'formmenu-hidden', 'formmenu-shown');
+        toggleClasses(parentDiv, 'formmenu-hidden', 'formmenu-shown');
     }
 
     function onExpandAllMenuClicked(e: MouseEvent): void {
@@ -477,6 +486,8 @@ namespace FormMenu {
         addFilterButton('formmenu-collapse-all-menu-button', onCollapseAllMenuClicked,
             "showCollapseAllMenuButton", filterBar);
 
+        processAllItemStateInfos(filterBar, menuElementInfos);
+
         let showFilterInput: boolean = getConfigValue("showFilterInput");
         if (showFilterInput) {
             let filterInput = createFilterInput();
@@ -501,38 +512,46 @@ namespace FormMenu {
         });
     }
 
-    function onItemStateFilterButtonClicked(e: MouseEvent): void {
+    function onItemStateFilterButtonClicked(e: MouseEvent, itemStateInfo: iItemStateInfo): void {
+        let clickedElement:HTMLElement = (<any>(e.currentTarget));
+        if (clickedElement.classList.contains('formmenu-filter-button-disabled')) { return; }
+
+        let parentDiv:HTMLElement = parentOfEventTarget(e);
+        toggleClass(parentDiv, itemStateInfo.stateFilterActiveClass);
     }
 
-    function setItemStateActive(itemStateCssClass: string, filterButton: HTMLElement, 
+    function setItemStateActive(itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
         menuElementInfo: MenuElementInfo): void {
 
-        menuElementInfo.menuElement.classList.add(itemStateCssClass);
+        setClassOnMenuItem(menuElementInfo, itemStateInfo.hasActiveStateClass, itemStateInfo.hasChildWithActiveStateClass);
         filterButton.classList.remove('formmenu-filter-button-disabled');
     }
 
-    function setItemStateInactive(itemStateCssClass: string, filterButton: HTMLElement, 
+    function setItemStateInactive(itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
         menuElementInfo: MenuElementInfo): void {
 
-        menuElementInfo.menuElement.classList.remove(itemStateCssClass);
+        removeClassFromMenuItem(menuElementInfo, itemStateInfo.hasActiveStateClass, itemStateInfo.hasChildWithActiveStateClass);
 
-        let allMenuItemsWithItemStateClass = mainMenuElement.querySelectorAll('.formmenu-item.' + itemStateCssClass);
+        let allMenuItemsWithItemStateClass = mainMenuElement.querySelectorAll(
+            '.formmenu-item.' + itemStateInfo.stateFilterActiveClass);
+
         if (allMenuItemsWithItemStateClass.length === 0) {
             filterButton.classList.add('formmenu-filter-button-disabled');
+            mainMenuElement.classList.remove(itemStateInfo.stateFilterActiveClass);
         }
     }
 
     function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
         menuElementInfos: MenuElementInfo[]): void {
 
-        let itemStateCssClass: string = itemStateInfo.cssClass;
-        let filterButton: HTMLElement = createFilterButton(itemStateCssClass, onItemStateFilterButtonClicked);
+        let filterButton: HTMLElement = createFilterButton(
+            itemStateInfo.stateFilterButtonClass, (e: MouseEvent) => { onItemStateFilterButtonClicked(e, itemStateInfo); });
         filterButton.classList.add('formmenu-filter-button-disabled');
 
         menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             itemStateInfo.wireUp(menuElementInfo.domElement,
-                ()=>setItemStateActive(itemStateCssClass, filterButton, menuElementInfo),
-                ()=>setItemStateInactive(itemStateCssClass, filterButton, menuElementInfo));
+                ()=>setItemStateActive(itemStateInfo, filterButton, menuElementInfo),
+                ()=>setItemStateInactive(itemStateInfo, filterButton, menuElementInfo));
         });
     }
 
@@ -558,6 +577,17 @@ namespace FormMenu {
             if (currentElement.menuElement.classList.contains(classParents)) { break; }
             currentElement.menuElement.classList.add(classParents);
             
+            currentElement = currentElement.parent;
+        }
+    }
+
+    // Removes a class on this menu item, and another class on the parent of the item, its parents, etc.
+    function removeClassFromMenuItem(menuElement:MenuElementInfo, classThisItem: string, classParents: string): void {
+        menuElement.menuElement.classList.remove(classThisItem);
+
+        let currentElement = menuElement.parent;
+        while(currentElement) {
+            currentElement.menuElement.classList.remove(classParents);
             currentElement = currentElement.parent;
         }
     }

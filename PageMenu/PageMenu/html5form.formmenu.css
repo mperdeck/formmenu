@@ -1,0 +1,18 @@
+
+.formmenu-required-filter-is-active li div {
+    display: none;
+}
+
+.formmenu-required-filter-is-active .formmenu-is-required,
+.formmenu-required-filter-is-active .formmenu-is-parent-of-required {
+    display: block;
+}
+
+.formmenu-required-filter-is-active .formmenu-required-filter-button {
+    border: 1px black solid;
+}
+
+.formmenu-required-filter-button::after {
+    content: "*";
+}
+
