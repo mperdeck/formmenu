@@ -8,8 +8,9 @@
 }
 
 .formmenu-required-filter-is-active .formmenu-is-required,
-.formmenu-required-filter-is-active .formmenu-is-parent-of-required {
-    display: block;
+.formmenu-required-filter-is-active .formmenu-is-parent-of-required,
+.formmenu-required-filter-is-active .formmenu-is-parent-of-required + ul {
+        display: block;
 }
 
 .formmenu-required-filter-is-active .formmenu-required-filter-button {
