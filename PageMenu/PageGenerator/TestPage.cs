@@ -70,5 +70,29 @@ namespace PageGenerator
                 sb.AddInput(false, false);
             }
         }
+
+        public static void ShortFormOneLevel(StringBuilder sb)
+        {
+            int i;
+            sb.AddHeading(1);
+
+            sb.AddLoremIpsum(1);
+
+            for (i = 0; i < 2; i++)
+            {
+                sb.AddHeading(2);
+
+                sb.AddInput(true, false);
+
+                sb.AddInput(false, false);
+                sb.AddInput(false, false);
+
+                sb.AddInput(true, true);
+                sb.AddInput(false, false);
+
+                sb.AddInput(false, true);
+                sb.AddInput(false, false);
+            }
+        }
     }
 }
