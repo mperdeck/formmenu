@@ -163,6 +163,7 @@ input.formmenu-filter {
 .formmenu-filter-button-disabled.formmenu-filter-button {
     background-color: #f0f0f0;
     color: #808080;
+    cursor: auto;
 }
 
 .formmenu-expand-all-menu-button::after {
