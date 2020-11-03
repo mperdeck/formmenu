@@ -1,5 +1,6 @@
 
-.formmenu-required-filter-is-active li div {
+.formmenu-required-filter-is-active li div,
+.formmenu-invalid-filter-is-active li div {
     display: none;
 }
 
@@ -7,17 +8,30 @@
     content: "*";
 }
 
-.formmenu-required-filter-is-active .formmenu-is-required,
-.formmenu-required-filter-is-active .formmenu-is-parent-of-required,
-.formmenu-required-filter-is-active .formmenu-is-parent-of-required + ul {
-        display: block;
+.formmenu-is-invalid .formmenu-caption::after {
+    content: "!";
 }
 
-.formmenu-required-filter-is-active .formmenu-required-filter-button {
+.formmenu-required-filter-is-active .formmenu-is-required,
+.formmenu-required-filter-is-active .formmenu-is-parent-of-required,
+.formmenu-required-filter-is-active .formmenu-is-parent-of-required + ul,
+.formmenu-invalid-filter-is-active .formmenu-is-invalid,
+.formmenu-invalid-filter-is-active .formmenu-is-parent-of-invalid,
+.formmenu-invalid-filter-is-active .formmenu-is-parent-of-invalid + ul {
+    display: block;
+}
+
+.formmenu-required-filter-is-active .formmenu-required-filter-button,
+.formmenu-invalid-filter-is-active .formmenu-invalid-filter-button {
     border: 2px black solid;
 }
 
 .formmenu-required-filter-button::after {
     content: "*";
 }
+
+.formmenu-invalid-filter-button::after {
+    content: "!";
+}
+
 
