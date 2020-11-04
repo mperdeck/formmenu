@@ -78,7 +78,11 @@ namespace PageGenerator
 
             sb.AddLoremIpsum(1);
 
-            for (i = 0; i < 2; i++)
+            sb.AddHeading(2);
+
+            sb.AddOneOfEach();
+
+            for (i = 0; i < 1; i++)
             {
                 sb.AddHeading(2);
 

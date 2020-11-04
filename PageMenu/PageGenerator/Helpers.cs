@@ -66,6 +66,28 @@ namespace PageGenerator
             CurrentIndent = level * 4;
         }
 
+        public static void AddOneOfEach(this StringBuilder sb)
+        {
+            sb.AddInput(false, false);
+            sb.AddInput(true, false);
+            sb.AddInput(false, true);
+            sb.AddInput(true, true);
+
+            sb.AddSelect(false);
+            sb.AddSelect(true);
+
+            sb.Addtextarea(false);
+            sb.Addtextarea(true);
+
+            sb.AddCheckbox(false);
+            sb.AddCheckbox(true);
+
+            sb.AddRadiobutton();
+        }
+
+        // For a list of form elements, see
+        // https://www.w3schools.com/html/html_form_elements.asp
+
         public static void AddInput(this StringBuilder sb, bool required, bool isEmail)
         {
             sb.AppendLine(@"");
@@ -87,14 +109,101 @@ namespace PageGenerator
             sb.AddIndentedLine("</p>");
         }
 
+        public static void AddSelect(this StringBuilder sb, bool required)
+        {
+            sb.AppendLine(@"");
+            string caption = GetRandomWord().Humanize(LetterCasing.Title);
+            string id = caption.ToLower().Replace(" ", "");
+
+            sb.AddIndentedLine("<p>");
+
+            string requiredClassString = required ? " class=\"required\"" : "";
+            sb.AddIndentedLine($"<label{requiredClassString} for=\"{id}\">{caption}</label>", 4);
+
+            string requiredString = required ? " required" : "";
+            sb.AddIndentedLine($"<select id=\"{id}\"{requiredString}>", 4);
+
+            sb.AddIndentedLine($"<option value=\"\">Select</option>", 8);
+
+            for (int j = 0; j < 4; j++)
+            {
+                string optionCaption = GetRandomWord().Humanize(LetterCasing.Title);
+                string optionId = optionCaption.ToLower().Replace(" ", "");
+
+                sb.AddIndentedLine($"<option value=\"{optionId}\">{optionCaption}</option>", 8);
+            }
+
+            sb.AddIndentedLine("</select>", 4);
+
+            sb.AddIndentedLine("</p>");
+        }
+
+        public static void Addtextarea(this StringBuilder sb, bool required)
+        {
+            sb.AppendLine(@"");
+            string caption = GetRandomWord().Humanize(LetterCasing.Title);
+            string id = caption.ToLower().Replace(" ", "");
+
+            sb.AddIndentedLine("<p>");
+
+            string requiredClassString = required ? " class=\"required\"" : "";
+            sb.AddIndentedLine($"<label{requiredClassString} for=\"{id}\">{caption}</label>", 4);
+
+            string requiredString = required ? " required" : "";
+            sb.AddIndentedLine($"<textarea rows=\"4\" cols=\"50\" id=\"{id}\"{requiredString}></textarea>", 4);
+
+            sb.AddIndentedLine("</p>");
+        }
+
+        public static void AddCheckbox(this StringBuilder sb, bool required)
+        {
+            sb.AppendLine(@"");
+            string caption = GetRandomWord().Humanize(LetterCasing.Title);
+            string id = caption.ToLower().Replace(" ", "");
+
+            sb.AddIndentedLine("<p>");
+
+            string requiredString = required ? " required" : "";
+            sb.AddIndentedLine($"<input type=\"checkbox\" id=\"{id}\" value=\"{caption}\"{requiredString}>", 4);
+
+            string requiredClassString = required ? " class=\"required\"" : "";
+            sb.AddIndentedLine($"<label{requiredClassString} for=\"{id}\">{caption}</label>", 4);
+
+            sb.AddIndentedLine("</p>");
+        }
+
+        public static void AddRadiobutton(this StringBuilder sb)
+        {
+            sb.AppendLine(@"");
+
+            string s = GetRandomWord().Humanize(LetterCasing.Title);
+            string radioGroupName = s.ToLower().Replace(" ", "");
+
+            sb.AddIndentedLine("<p>");
+            sb.AddIndentedLine("<fieldset>", 4);
+            sb.AddIndentedLine($"<legend>{s}</legend>", 8);
+
+            for (int j = 0; j < 4; j++)
+            {
+                string caption = GetRandomWord().Humanize(LetterCasing.Title);
+                string id = caption.ToLower().Replace(" ", "");
+
+                sb.AddIndentedLine($"<input type=\"radio\" name=\"{radioGroupName}\" id=\"{id}\" value=\"{caption}\">", 8);
+                sb.AddIndentedLine($"<label for=\"{id}\">{caption}</label>", 8);
+            }
+
+            sb.AddIndentedLine("</fieldset>", 4);
+            sb.AddIndentedLine("</p>");
+        }
+
         public static void AddLoremIpsum(this StringBuilder sb, int numParagraphs)
         {
             LoremIpsum(sb, 5, 40, 1, 5, numParagraphs);
         }
 
-        public static void AddIndentedLine(this StringBuilder sb, string line)
+        public static void AddIndentedLine(this StringBuilder sb, string line, int extraIndent = 0)
         {
-            string indentedLine = (new String(' ', CurrentIndent)) + line;
+            string indentedLine = (new String(' ', CurrentIndent + extraIndent)) + line;
             sb.AppendLine(indentedLine);
         }
 
