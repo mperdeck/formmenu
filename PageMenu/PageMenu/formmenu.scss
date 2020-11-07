@@ -128,16 +128,16 @@ input.formmenu-filter {
     width: auto;
 }
 
+.formmenu-matching-filter-text {
+    background-color: yellow;
+}
+
 .formmenu-is-filter-result {
     
 }
 
 .formmenu .formmenu-is-parent-of-filter-result + ul {
     display: block;
-}
-
-.formmenu-matching-filter-text {
-    background-color: yellow;
 }
 
 /* If filter is active, only show selected items and their parents */
