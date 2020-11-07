@@ -5,23 +5,21 @@
     border: 1px solid red;
     background-color: white;
 
-    /* Remove bullets and reduce indent of the items. */
+    // Remove bullets and reduce indent of the items.
     ul {
         list-style-type: none;
         margin-left: -25px;
     }
 
-    /* 
-    Only applies to very first ul. Place this after the .formmenu ul, so it overrides
-    the margin-left.
-    Note that the overflow-y scroll is on this ul, so the filter box doesn't scroll.
-    Otherwise it could scroll up and out of sight.
-    */
+    // Only applies to very first ul. Place this after the .formmenu ul, so it overrides
+    // the margin-left.
+    // Note that the overflow-y scroll is on this ul, so the filter box doesn't scroll.
+    // Otherwise it could scroll up and out of sight.
     & > ul {
         padding: 0 10px 0 10px; 
         margin: 5px 0 0 0; 
 
-        /* If you use a percentage here, the ul box breaks out of its containing div box and you can't get to lower menu items. */
+        // If you use a percentage here, the ul box breaks out of its containing div box and you can't get to lower menu items. */
         max-height: 500px; 
         overflow-y: scroll;
     }
@@ -42,11 +40,10 @@
 /********************************************/
 /* Form menu expand / collapse */
 
-/* 
-Give formmenu-expand a width, so menu item captions align nicely even if one has an open/close
-and the other doesn't. 
-Because of this, formmenu-expand and formmenu-caption have to be floated lef.
-*/
+// Give formmenu-expand a width, so menu item captions align nicely even if one has an open/close
+// and the other doesn't. 
+// Because of this, formmenu-expand and formmenu-caption have to be floated lef.
+
 .formmenu-expand {
     float: left;
     display: block;
@@ -58,12 +55,11 @@ Because of this, formmenu-expand and formmenu-caption have to be floated lef.
     display: block;
 }
 
-/*
-Make sure there is a character in formmenu-expand even if you do not want to show an open/close,
-otherwise it won't be given the width.
-Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0. 
-See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
-*/
+// Make sure there is a character in formmenu-expand even if you do not want to show an open/close,
+// otherwise it won't be given the width.
+// Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0. 
+// See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
+
 .formmenu-expand::after {
     content: "\00a0";
 }
@@ -87,10 +83,10 @@ See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-
     color: darkgoldenrod;
 }
 
-/* Make menu item open if one its children is visible (in the main page), even if 
-it was closed by the close button (-). 
-Give this definition higher specificity by adding .formmenu, so it overrides .formmenu-item-closed.
-*/
+// Make menu item open if one its children is visible (in the main page), even if 
+// it was closed by the close button (-). 
+// Give this definition higher specificity by adding .formmenu, so it overrides .formmenu-item-closed.
+
 .formmenu .formmenu-is-parent-of-visible + ul {
     display: block;
 }
