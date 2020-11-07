@@ -27,6 +27,9 @@
     }
 }
 
+/********************************************/
+/* Form menu item */
+
 .formmenu-item {
     cursor: pointer;
     clear: both;
@@ -35,6 +38,9 @@
 .formmenu-highlighted-dom-item {
     background-color: yellow;
 }
+
+/********************************************/
+/* Form menu expand / collapse */
 
 /* 
 Give formmenu-expand a width, so menu item captions align nicely even if one has an open/close
@@ -75,6 +81,7 @@ See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-
 }
 
 /******************************************************/
+/* Visible */
 
 .formmenu-is-visible .formmenu-caption {
     color: darkgoldenrod;
@@ -89,6 +96,7 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
 }
 
 /********************************************************/
+/* Form menu hide/show */
 
 .formmenu-hidden {
 
@@ -116,6 +124,7 @@ Give this definition higher specificity by adding .formmenu, so it overrides .fo
 }
 
 /******************************************************/
+/* Filter */
 
 input.formmenu-filter {
     display: inline;
@@ -134,10 +143,6 @@ input.formmenu-filter {
     background-color: yellow;
 }
 
-.formmenu-filter-bar {
-
-}
-
 /* If filter is active, only show selected items and their parents */
 .formmenu-filter-is-active li div {
     display: none;
@@ -150,6 +155,11 @@ input.formmenu-filter {
 }
 
 /******************************************************/
+/* Filter bar */
+
+.formmenu-filter-bar {
+
+}
 
 .formmenu-filter-button {
     cursor: pointer;
