@@ -87,9 +87,10 @@
 // it was closed by the close button (-). 
 // Give this definition higher specificity by adding .formmenu, so it overrides .formmenu-item-closed.
 
-.formmenu .formmenu-is-parent-of-visible + ul {
-    display: block;
-}
+//#############################
+// .formmenu .formmenu-is-parent-of-visible + ul {
+//     display: block;
+// }
 
 /********************************************************/
 /* Form menu hide/show */
