@@ -4,7 +4,7 @@ Source code at:
 Doco at:
 */
 
-@use "definitions.formmenu" as formmenu;
+@import "_definitions.formmenu";
 
 .formmenu {
     position: fixed;

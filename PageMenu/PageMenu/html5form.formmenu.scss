@@ -1,9 +1,9 @@
-@use "definitions.formmenu" as formmenu;
+@import "_definitions.formmenu";
 
 .formmenu-required-filter-is-active li div,
 .formmenu-invalid-filter-is-active li div {
     display: none;
-}
+} 
 
 .formmenu-is-required .formmenu-caption::after {
     content: "*";
@@ -21,6 +21,13 @@
 .formmenu-invalid-filter-is-active .formmenu-is-parent-of-invalid + ul {
     display: block;
 }
+
+
+/****************************************/ 
+
+@include filter-showhide("xxxyyyy");
+
+/****************************************/
 
 .formmenu-required-filter-is-active .formmenu-required-filter-button,
 .formmenu-invalid-filter-is-active .formmenu-invalid-filter-button {
