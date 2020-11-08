@@ -1,10 +1,5 @@
 @import "_definitions.formmenu";
 
-.formmenu-required-filter-is-active li div,
-.formmenu-invalid-filter-is-active li div {
-    display: none;
-} 
-
 .formmenu-is-required .formmenu-caption::after {
     content: "*";
 }
@@ -13,21 +8,8 @@
     content: "!";
 }
 
-.formmenu-required-filter-is-active .formmenu-is-required,
-.formmenu-required-filter-is-active .formmenu-is-parent-of-required,
-.formmenu-required-filter-is-active .formmenu-is-parent-of-required + ul,
-.formmenu-invalid-filter-is-active .formmenu-is-invalid,
-.formmenu-invalid-filter-is-active .formmenu-is-parent-of-invalid,
-.formmenu-invalid-filter-is-active .formmenu-is-parent-of-invalid + ul {
-    display: block;
-}
-
-
-/****************************************/ 
-
-@include filter-showhide("xxxyyyy");
-
-/****************************************/
+@include filter-showhide("required");
+@include filter-showhide("invalid");
 
 .formmenu-required-filter-is-active .formmenu-required-filter-button,
 .formmenu-invalid-filter-is-active .formmenu-invalid-filter-button {
