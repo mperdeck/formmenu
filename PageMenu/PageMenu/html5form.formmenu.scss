@@ -23,12 +23,3 @@
 .formmenu-invalid-filter-button::after {
     content: "!";
 }
-
-
-
-
-
-
-.formmenu-invalid-filter-is-active  :not(.formmenu-is-invalid) > .formmenu-caption {
-    background-color: red;
-}
