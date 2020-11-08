@@ -4,6 +4,8 @@ Source code at:
 Doco at:
 */
 
+@use "definitions.formmenu" as formmenu;
+
 .formmenu {
     position: fixed;
     right: 10px;
@@ -138,21 +140,21 @@ input.formmenu-filter {
     background-color: yellow;
 }
 
-.formmenu-is-filter-result {
+.formmenu-is-textmatch {
     
 }
 
-.formmenu .formmenu-is-parent-of-filter-result + ul {
+.formmenu .formmenu-is-parent-of-textmatch + ul {
     display: block;
 }
 
 /* If filter is active, only show selected items and their parents */
-.formmenu-filter-is-active li div {
+.formmenu-textmatch-filter-is-active li div {
     display: none;
 }
 
-.formmenu-filter-is-active .formmenu-is-filter-result,
-.formmenu-filter-is-active .formmenu-is-parent-of-filter-result
+.formmenu-textmatch-filter-is-active .formmenu-is-textmatch,
+.formmenu-textmatch-filter-is-active .formmenu-is-parent-of-textmatch
  {
     display: block;
 }

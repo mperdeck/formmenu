@@ -357,9 +357,9 @@ namespace FormMenu {
         const filterIsActive = (filterValue && (filterValue.length >= filterMinimumCharacters));
 
         if (filterIsActive) {
-            mainMenuElement.classList.add('formmenu-filter-is-active');
+            mainMenuElement.classList.add('formmenu-textmatch-filter-is-active');
         } else {
-            mainMenuElement.classList.remove('formmenu-filter-is-active');
+            mainMenuElement.classList.remove('formmenu-textmatch-filter-is-active');
         }
 
         menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
@@ -367,8 +367,8 @@ namespace FormMenu {
 
             // Restore the caption to its original state
             captionElement.innerHTML = menuElementInfo.caption;
-            menuElementInfo.menuElement.classList.remove('formmenu-is-filter-result');
-            menuElementInfo.menuElement.classList.remove('formmenu-is-parent-of-filter-result');
+            menuElementInfo.menuElement.classList.remove('formmenu-is-textmatch');
+            menuElementInfo.menuElement.classList.remove('formmenu-is-parent-of-textmatch');
 
             // If filter is not active, nothing more to do
             if (!filterIsActive) {
@@ -388,7 +388,7 @@ namespace FormMenu {
 
             captionElement.innerHTML = captionWithFilterTextSpan;
 
-            setClassOnMenuItem(menuElementInfo, 'formmenu-is-filter-result', 'formmenu-is-parent-of-filter-result');
+            setClassOnMenuItem(menuElementInfo, 'formmenu-is-textmatch', 'formmenu-is-parent-of-textmatch');
         });
     }
 
