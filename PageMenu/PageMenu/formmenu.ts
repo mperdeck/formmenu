@@ -71,6 +71,13 @@ namespace FormMenu {
         // Headings constitute a hierarchy. An H2 below an H1 is the child of that H1.
         // non-headings are children of the heading they sit under.
         public parent: MenuElementInfo;
+        public children: MenuElementInfo[] = [];
+
+        // If this element has children, then if true the element is expanded
+        public isExpanded: boolean = false;
+
+        // Contains all item state infos that are active for this element
+        public itemStates: iItemStateInfo[] = [];
     }
 
     let menuElementInfos: MenuElementInfo[];
@@ -165,6 +172,9 @@ namespace FormMenu {
             caption,
             level);
 
+        let defaultOpen: boolean = openByDefault(menuElementInfo, "defaultOpenAtLevel");
+        menuElementInfo.isExpanded = defaultOpen;
+
         return menuElementInfo;
     }
 
@@ -178,6 +188,8 @@ namespace FormMenu {
 
             let currentMenuElementInfo = menuElementInfos[i.value];
             currentMenuElementInfo.parent = parent;
+
+            if (parent) { parent.children.push(currentMenuElementInfo); }
 
             // Point to first potential child item
             i.value = i.value + 1;
@@ -672,6 +684,10 @@ namespace FormMenu {
                 setVisibility(currrentMenuElementInfo);
             }
         }
+    }
+
+    function rebuildMenuList(): void {
+        
     }
 
     export function scrollHandler(): void {
