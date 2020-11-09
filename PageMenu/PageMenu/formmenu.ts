@@ -281,7 +281,7 @@ namespace FormMenu {
     //
     // It goes forward through menuElementInfos until
     // 1) menuElementInfos is exhaused; or
-    // 2) it finds an with the same level or lower as the level of the parent. That item then won't be added to the ul.
+    // 2) it finds a menuElementInfo with the same level or lower as the level of the parent. That item then won't be added to the ul.
     //
     // parent is the menu item that is the parent of the list items. Will be null when the very top level of menu items
     // is generated.
@@ -514,7 +514,7 @@ namespace FormMenu {
         mainMenuElement.appendChild(topList);
     }
 
-    // Visits all item sate infos, processes the menu element infos for each
+    // Visits all item state infos, processes the menu element infos for each
     // and adds a filter button for each to the passed in filter bar. 
     function processAllItemStateInfos(filterBar: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
         let itemStateInfos: { [key: string]: iItemStateInfo} = getConfigValue("itemStateInfos");
