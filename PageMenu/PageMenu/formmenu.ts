@@ -168,6 +168,24 @@ namespace FormMenu {
         return menuElementInfo;
     }
 
+    // Sets the parent property in all elements in menuElementInfos.
+    // parent: set to null
+    // i: set to 0
+    function setParents(parent: MenuElementInfo, i: { value:number}, menuElementInfos: MenuElementInfo[]): void {
+        const parentLevel: number = parent ? parent.level : 0;
+
+        while((i.value < menuElementInfos.length) && (menuElementInfos[i.value].level > parentLevel)) {
+
+            let currentMenuElementInfo = menuElementInfos[i.value];
+            currentMenuElementInfo.parent = parent;
+
+            // Point to first potential child item
+            i.value = i.value + 1;
+
+            setParents(currentMenuElementInfo, i, menuElementInfos);
+        }
+    }
+
     // If the element has class1, sets class2 instead. And vice versa.
     function toggleClasses(htmlElement:HTMLElement, class1: string, class2: string): void {
         if (htmlElement.classList.contains(class1)) {
@@ -666,6 +684,7 @@ namespace FormMenu {
 
     export function pageLoadedHandler(): void {
         menuElementInfos = domElementsToMenuElements(getAllDomElements());
+        setParents(null, { value:0}, menuElementInfos);
 
         // Set mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
         // setActive may be called while the menu is being created.
