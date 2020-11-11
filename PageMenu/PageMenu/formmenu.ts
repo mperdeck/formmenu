@@ -86,7 +86,10 @@ namespace FormMenu {
     let _mainMenuElement:HTMLElement;
 
     // The current content of the search box
-    let _searchTerm:string;
+    let _searchTerm:string = '';
+
+    // Holds references to all iItemStateInfos whose filers are active
+    let _itemStateInfoActiveFilters: iItemStateInfo[] = [];
 
     const _levelNonHeadingMenuItem: number = 9000;
 
@@ -375,46 +378,8 @@ namespace FormMenu {
     }
 
     function onChangeFilter(e: Event): void {
-        const filterValue = (<HTMLInputElement>(e.currentTarget)).value;
-        const filterMinimumCharacters: number = getConfigValue("filterMinimumCharacters");
-
-        // Filter is active if there is a filter value, and there are enough filter characters.
-        const filterIsActive = (filterValue && (filterValue.length >= filterMinimumCharacters));
-
-        if (filterIsActive) {
-            _mainMenuElement.classList.add('formmenu-textmatch-filter-is-active');
-        } else {
-            _mainMenuElement.classList.remove('formmenu-textmatch-filter-is-active');
-        }
-
-        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
-            const captionElement = getCaptionElement(menuElementInfo);
-
-            // Restore the caption to its original state
-            captionElement.innerHTML = menuElementInfo.caption;
-            menuElementInfo.menuElement.classList.remove('formmenu-is-textmatch');
-            menuElementInfo.menuElement.classList.remove('formmenu-is-parent-of-textmatch');
-
-            // If filter is not active, nothing more to do
-            if (!filterIsActive) {
-                return;
-            }
-
-            const filterValueLc = filterValue.toLowerCase();
-            const foundIndex = menuElementInfo.caption.toLowerCase().indexOf(filterValueLc);
-
-            // If there is no match, return
-            if (foundIndex === -1) {
-                return;
-            }
-
-            const captionWithFilterTextSpan = insertMatchingFilterTextSpan(
-                menuElementInfo.caption, foundIndex, filterValueLc.length);
-
-            captionElement.innerHTML = captionWithFilterTextSpan;
-
-            setClassOnMenuItem(menuElementInfo, 'formmenu-is-textmatch', 'formmenu-is-parent-of-textmatch');
-        });
+        _searchTerm = (<HTMLInputElement>(e.currentTarget)).value;
+        rebuildMenuList();
     }
 
     function createFilterInput(): HTMLInputElement {
@@ -448,8 +413,10 @@ namespace FormMenu {
 
     function onExpandAllMenuClicked(e: MouseEvent): void {
         _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
-            openMenuItem(menuElementInfo);
+            menuElementInfo.isExpanded = true;
         });
+
+        rebuildMenuList();
     }
 
     function onCollapseAllMenuClicked(e: MouseEvent): void {
@@ -462,9 +429,11 @@ namespace FormMenu {
             // items being opened.
 
             if (!defaultOpen) {
-                closeMenuItem(menuElementInfo);
+                menuElementInfo.isExpanded = false;
             }
         });
+
+        rebuildMenuList();
     }
 
     // Add a filter button to the filter bar (the bit of space left of the filter).
@@ -551,38 +520,53 @@ namespace FormMenu {
         if (clickedElement.classList.contains('formmenu-filter-button-disabled')) { return; }
 
         toggleClass(_mainMenuElement, itemStateInfo.stateFilterActiveClass);
+
+        // Update _itemStateInfoActiveFilters array
+
+        let idx:number = _itemStateInfoActiveFilters.indexOf(itemStateInfo);
+
+        // If the item state info was found in the array, remove it. Otherwise add it.
+        if (idx != -1) {
+            _itemStateInfoActiveFilters.splice(idx, 0);
+        } else {
+            _itemStateInfoActiveFilters.push(itemStateInfo);
+        }
+
+        rebuildMenuList();
     }
 
     function setItemStateActive(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
         menuElementInfo: MenuElementInfo): void {
 
-        if (active) {
-            menuElementInfo.menuElement.classList.add(itemStateInfo.hasActiveStateClass);
-        } else {
-            menuElementInfo.menuElement.classList.remove(itemStateInfo.hasActiveStateClass);
+        let itemStates = menuElementInfo.itemStates;
+        let idx:number = itemStates.indexOf(itemStateInfo);
+
+        if (idx != -1) {
+            itemStates.splice(idx, 0);
         }
+        
+        if (active) {
+            itemStates.push(itemStateInfo);
+        }
+    
+        // Update filter button style
 
-        // Always redo the parent classes each time an item is set active/inactive.
-        // You cannot do this for one item, because the parent of a newly inactive item may
-        // also be the parent of another item that is still active.
-
-        removeClass(_menuElementInfos, itemStateInfo.hasChildWithActiveStateClass);
-
-        let existsActiveItem = false;
-
-        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
-            if (menuElementInfo.menuElement.classList.contains(itemStateInfo.hasActiveStateClass)) {
-                existsActiveItem = true;
-                setClassOnMenuItemParents(menuElementInfo, itemStateInfo.hasChildWithActiveStateClass);
-            }
-        });
+        let existsActiveItem = active;
+        if (!existsActiveItem) {
+            _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+                if (menuElementInfo.itemStates.indexOf(itemStateInfo) != -1) {
+                    existsActiveItem = true;
+                }
+            });
+        }
 
         if (existsActiveItem) {
             filterButton.classList.remove('formmenu-filter-button-disabled');
         } else {
             filterButton.classList.add('formmenu-filter-button-disabled');
-            _mainMenuElement.classList.remove(itemStateInfo.stateFilterActiveClass);
         }
+
+        rebuildMenuList();
     }
 
     function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
