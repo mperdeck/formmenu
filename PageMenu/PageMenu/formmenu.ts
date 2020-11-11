@@ -82,6 +82,12 @@ namespace FormMenu {
 
     let _menuElementInfos: MenuElementInfo[];
 
+    // Acts as the parent of menu elements with the lowest level (typically the h1)
+    // Use the children property of this element to easily generate the ul tag
+    // containing the menu items.
+    // Must have a level lower than 1.
+    let _menuElementInfosRoot: MenuElementInfo = new MenuElementInfo(null, null, 0);
+
     // The div that contains the entire menu
     let _mainMenuElement:HTMLElement;
 
@@ -187,10 +193,10 @@ namespace FormMenu {
     }
 
     // Sets the parent property in all elements in _menuElementInfos.
-    // parent: set to null
+    // parent: set to _menuElementInfosRoot
     // i: set to 0
     function setParents(parent: MenuElementInfo, i: { value:number}, _menuElementInfos: MenuElementInfo[]): void {
-        const parentLevel: number = parent ? parent.level : 0;
+        const parentLevel: number = parent.level;
 
         while((i.value < _menuElementInfos.length) && (_menuElementInfos[i.value].level > parentLevel)) {
 
@@ -616,7 +622,7 @@ namespace FormMenu {
 
     export function pageLoadedHandler(): void {
         _menuElementInfos = domElementsToMenuElements(getAllDomElements());
-        setParents(null, { value:0}, _menuElementInfos);
+        setParents(_menuElementInfosRoot, { value:0}, _menuElementInfos);
 
         // Set _mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
         // setActive may be called while the menu is being created.
