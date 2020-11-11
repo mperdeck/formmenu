@@ -80,12 +80,15 @@ namespace FormMenu {
         public itemStates: iItemStateInfo[] = [];
     }
 
-    let menuElementInfos: MenuElementInfo[];
+    let _menuElementInfos: MenuElementInfo[];
 
     // The div that contains the entire menu
-    let mainMenuElement:HTMLElement;
+    let _mainMenuElement:HTMLElement;
 
-    const levelNonHeadingMenuItem: number = 9000;
+    // The current content of the search box
+    let _searchTerm:string;
+
+    const _levelNonHeadingMenuItem: number = 9000;
 
     function tagNameToLevelDefaultMethod(tagName: string): number {
         switch (tagName.toLowerCase()) {
@@ -95,7 +98,7 @@ namespace FormMenu {
             case 'h4': return 4;
             case 'h5': return 5;
             case 'h6': return 6;
-            default: return levelNonHeadingMenuItem;
+            default: return _levelNonHeadingMenuItem;
           }
     }
 
@@ -133,16 +136,16 @@ namespace FormMenu {
     // Converts a list of heading tags to MenuElements.
     // Skips the first heading if config item skipFirstHeading is true.
     function domElementsToMenuElements(domElements: NodeListOf<Element>): MenuElementInfo[] {
-        let menuElementInfos: MenuElementInfo[] = [];
+        let _menuElementInfos: MenuElementInfo[] = [];
 
         let includeElement: boolean = !getConfigValue("skipFirstHeading");
 
         domElements.forEach((value: Element)=>{
-            if (includeElement) { menuElementInfos.push(domElementToMenuElement(value as HTMLElement)); }
+            if (includeElement) { _menuElementInfos.push(domElementToMenuElement(value as HTMLElement)); }
             includeElement = true;
         });
 
-        return menuElementInfos;
+        return _menuElementInfos;
     }
 
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
@@ -178,15 +181,15 @@ namespace FormMenu {
         return menuElementInfo;
     }
 
-    // Sets the parent property in all elements in menuElementInfos.
+    // Sets the parent property in all elements in _menuElementInfos.
     // parent: set to null
     // i: set to 0
-    function setParents(parent: MenuElementInfo, i: { value:number}, menuElementInfos: MenuElementInfo[]): void {
+    function setParents(parent: MenuElementInfo, i: { value:number}, _menuElementInfos: MenuElementInfo[]): void {
         const parentLevel: number = parent ? parent.level : 0;
 
-        while((i.value < menuElementInfos.length) && (menuElementInfos[i.value].level > parentLevel)) {
+        while((i.value < _menuElementInfos.length) && (_menuElementInfos[i.value].level > parentLevel)) {
 
-            let currentMenuElementInfo = menuElementInfos[i.value];
+            let currentMenuElementInfo = _menuElementInfos[i.value];
             currentMenuElementInfo.parent = parent;
 
             if (parent) { parent.children.push(currentMenuElementInfo); }
@@ -194,7 +197,7 @@ namespace FormMenu {
             // Point to first potential child item
             i.value = i.value + 1;
 
-            setParents(currentMenuElementInfo, i, menuElementInfos);
+            setParents(currentMenuElementInfo, i, _menuElementInfos);
         }
     }
 
@@ -219,8 +222,8 @@ namespace FormMenu {
     }
 
     // Removes the given class from all given menu elements
-    function removeClass(menuElementInfos: MenuElementInfo[], cssClass: string): void {
-        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+    function removeClass(_menuElementInfos: MenuElementInfo[], cssClass: string): void {
+        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             menuElementInfo.menuElement.classList.remove(cssClass);
         });
     }
@@ -231,12 +234,6 @@ namespace FormMenu {
 
         let parent:HTMLElement = (<any>(e.currentTarget)).parentNode;
         return parent;
-    }
-
-    function hasChildren(menuElementInfo: MenuElementInfo): boolean {
-        const classList:DOMTokenList = menuElementInfo.menuElement.classList;
-        const result:boolean = (classList.contains('formmenu-item-closed') || classList.contains('formmenu-item-open'));
-        return result;
     }
 
     // Returns if by default the menu item should be open, false otherwise.
@@ -253,8 +250,6 @@ namespace FormMenu {
     function transitionMenuItemHasClass(menuElementInfo: MenuElementInfo, oldClass: string, newClass: string): void {
         const classList:DOMTokenList = menuElementInfo.menuElement.classList;
 
-        // Only do this if the item actually has this class!
-        // Otherwise you may treat for example menu items that are not parents as parents.
         if (classList.contains(oldClass)) {
             classList.remove(oldClass);
             classList.add(newClass);
@@ -306,11 +301,11 @@ namespace FormMenu {
         return captionSpanElement;
     }
 
-    // Creates a <ul> tag containing a <li> tag for items in menuElementInfos.
-    // The first li is for the item in menuElementInfos with index i.
+    // Creates a <ul> tag containing a <li> tag for items in _menuElementInfos.
+    // The first li is for the item in _menuElementInfos with index i.
     //
-    // It goes forward through menuElementInfos until
-    // 1) menuElementInfos is exhaused; or
+    // It goes forward through _menuElementInfos until
+    // 1) _menuElementInfos is exhaused; or
     // 2) it finds a menuElementInfo with the same level or lower as the level of the parent. That item then won't be added to the ul.
     //
     // parent is the menu item that is the parent of the list items. Will be null when the very top level of menu items
@@ -318,25 +313,25 @@ namespace FormMenu {
     //
     // Note that i is an object containing a number. When the method returns, that number will have been
     // updated to the index + 1 of the last item in the list.
-    function createList(parent: MenuElementInfo, i: { value:number}, menuElementInfos: MenuElementInfo[]): HTMLUListElement {
+    function createList(parent: MenuElementInfo, i: { value:number}, _menuElementInfos: MenuElementInfo[]): HTMLUListElement {
         const level: number = parent ? parent.level : 0;
         let listElement: HTMLUListElement = document.createElement("ul");
 
-        while((i.value < menuElementInfos.length) && (menuElementInfos[i.value].level > level)) {
-            let liElement = createListItem(parent, i, menuElementInfos);
+        while((i.value < _menuElementInfos.length) && (_menuElementInfos[i.value].level > level)) {
+            let liElement = createListItem(parent, i, _menuElementInfos);
             listElement.appendChild(liElement);
         }
 
         return listElement;
     }
 
-    // Creates a <li> item for the item in menuElementInfos that is pointed at by index i.
+    // Creates a <li> item for the item in _menuElementInfos that is pointed at by index i.
     //
     // Note that i is an object containing a number. When the method returns, that number will have been
     // updated to the index + 1 of the last child of the item (or index + 1 of the item itself
     // if it doesn't have children).
-    function createListItem(parent: MenuElementInfo, i: { value:number}, menuElementInfos: MenuElementInfo[]): HTMLLIElement {
-        let currentMenuElementInfo = menuElementInfos[i.value];
+    function createListItem(parent: MenuElementInfo, i: { value:number}, _menuElementInfos: MenuElementInfo[]): HTMLLIElement {
+        let currentMenuElementInfo = _menuElementInfos[i.value];
         currentMenuElementInfo.parent = parent;
 
         let listItemElement: HTMLLIElement = document.createElement("li");
@@ -346,7 +341,7 @@ namespace FormMenu {
         i.value = i.value + 1;
 
         let listElement: HTMLUListElement = createList(
-            currentMenuElementInfo, i, menuElementInfos);
+            currentMenuElementInfo, i, _menuElementInfos);
         
         // Only append the ul with children if there actually are children
         if (listElement.children.length > 0) {
@@ -387,12 +382,12 @@ namespace FormMenu {
         const filterIsActive = (filterValue && (filterValue.length >= filterMinimumCharacters));
 
         if (filterIsActive) {
-            mainMenuElement.classList.add('formmenu-textmatch-filter-is-active');
+            _mainMenuElement.classList.add('formmenu-textmatch-filter-is-active');
         } else {
-            mainMenuElement.classList.remove('formmenu-textmatch-filter-is-active');
+            _mainMenuElement.classList.remove('formmenu-textmatch-filter-is-active');
         }
 
-        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             const captionElement = getCaptionElement(menuElementInfo);
 
             // Restore the caption to its original state
@@ -452,13 +447,13 @@ namespace FormMenu {
     }
 
     function onExpandAllMenuClicked(e: MouseEvent): void {
-        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             openMenuItem(menuElementInfo);
         });
     }
 
     function onCollapseAllMenuClicked(e: MouseEvent): void {
-        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             let defaultOpen: boolean = openByDefault(menuElementInfo, "collapseOpenAtLevel");
 
             // Close the items above the "collapseOpenAtLevel" level
@@ -514,14 +509,10 @@ namespace FormMenu {
         return menuElement;
     }
 
-    function addMenuBody(mainMenuElement: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
-
-        // Create topList first, because this also sets the parent properties on the menuElementInfos,
-        // which is needed probably for the setActive method called when Item State Infos are processed.
-        let topList: HTMLUListElement = createList(null, { value:0}, menuElementInfos);
+    function addMenuBody(_mainMenuElement: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
 
         addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
-            "showMenuHideShowButton", mainMenuElement);
+            "showMenuHideShowButton", _mainMenuElement);
 
         let filterBar: HTMLElement = document.createElement("span");
         filterBar.classList.add('formmenu-filter-bar');
@@ -532,7 +523,7 @@ namespace FormMenu {
         addFilterButton('formmenu-collapse-all-menu-button', onCollapseAllMenuClicked,
             "showCollapseAllMenuButton", filterBar);
 
-        processAllItemStateInfos(filterBar, menuElementInfos);
+        processAllItemStateInfos(filterBar, _menuElementInfos);
 
         let showFilterInput: boolean = getConfigValue("showFilterInput");
         if (showFilterInput) {
@@ -540,17 +531,18 @@ namespace FormMenu {
             filterBar.appendChild(filterInput);
         }
 
-        mainMenuElement.appendChild(filterBar);
-        mainMenuElement.appendChild(topList);
+        _mainMenuElement.appendChild(filterBar);
+
+        rebuildMenuList();
     }
 
     // Visits all item state infos, processes the menu element infos for each
     // and adds a filter button for each to the passed in filter bar. 
-    function processAllItemStateInfos(filterBar: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
+    function processAllItemStateInfos(filterBar: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
         let itemStateInfos: { [key: string]: iItemStateInfo} = getConfigValue("itemStateInfos");
 
         Object.keys(itemStateInfos).forEach(key => {
-            processItemStateInfo(itemStateInfos[key], filterBar, menuElementInfos);
+            processItemStateInfo(itemStateInfos[key], filterBar, _menuElementInfos);
         });
     }
 
@@ -558,7 +550,7 @@ namespace FormMenu {
         let clickedElement:HTMLElement = (<any>(e.currentTarget));
         if (clickedElement.classList.contains('formmenu-filter-button-disabled')) { return; }
 
-        toggleClass(mainMenuElement, itemStateInfo.stateFilterActiveClass);
+        toggleClass(_mainMenuElement, itemStateInfo.stateFilterActiveClass);
     }
 
     function setItemStateActive(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
@@ -574,11 +566,11 @@ namespace FormMenu {
         // You cannot do this for one item, because the parent of a newly inactive item may
         // also be the parent of another item that is still active.
 
-        removeClass(menuElementInfos, itemStateInfo.hasChildWithActiveStateClass);
+        removeClass(_menuElementInfos, itemStateInfo.hasChildWithActiveStateClass);
 
         let existsActiveItem = false;
 
-        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             if (menuElementInfo.menuElement.classList.contains(itemStateInfo.hasActiveStateClass)) {
                 existsActiveItem = true;
                 setClassOnMenuItemParents(menuElementInfo, itemStateInfo.hasChildWithActiveStateClass);
@@ -589,19 +581,19 @@ namespace FormMenu {
             filterButton.classList.remove('formmenu-filter-button-disabled');
         } else {
             filterButton.classList.add('formmenu-filter-button-disabled');
-            mainMenuElement.classList.remove(itemStateInfo.stateFilterActiveClass);
+            _mainMenuElement.classList.remove(itemStateInfo.stateFilterActiveClass);
         }
     }
 
     function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
-        menuElementInfos: MenuElementInfo[]): void {
+        _menuElementInfos: MenuElementInfo[]): void {
 
         let filterButton: HTMLElement = createFilterButton(
             itemStateInfo.stateFilterButtonClass, (e: MouseEvent) => { onItemStateFilterButtonClicked(e, itemStateInfo); });
         filterButton.classList.add('formmenu-filter-button-disabled');
         filterBar.appendChild(filterButton);
 
-        menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             itemStateInfo.wireUp(menuElementInfo.domElement,
                 (active: boolean)=>setItemStateActive(active, itemStateInfo, filterButton, menuElementInfo));
         });
@@ -657,22 +649,22 @@ namespace FormMenu {
     }
 
     function removeVisibilityForMenu(): void {
-        let count = menuElementInfos.length;
+        let count = _menuElementInfos.length;
         for(let i = 0; i < count; i++) {
-            menuElementInfos[i].menuElement.classList.remove('formmenu-is-visible');
-            menuElementInfos[i].menuElement.classList.remove('formmenu-is-parent-of-visible');
+            _menuElementInfos[i].menuElement.classList.remove('formmenu-is-visible');
+            _menuElementInfos[i].menuElement.classList.remove('formmenu-is-parent-of-visible');
         }
     }
 
     function setVisibilityForMenu(): void {
-        if (!menuElementInfos) { return; }
+        if (!_menuElementInfos) { return; }
 
         removeVisibilityForMenu();
-        let count = menuElementInfos.length;
+        let count = _menuElementInfos.length;
         let lastWasVisible = false;
 
         for(let i = 0; i < count; i++) {
-            let currrentMenuElementInfo = menuElementInfos[i];
+            let currrentMenuElementInfo = _menuElementInfos[i];
             let isVisible = elementIsVisible(currrentMenuElementInfo.domElement);
 
             // If we just got past the items that were visible, then the rest will be invisible,
@@ -699,18 +691,18 @@ namespace FormMenu {
     }
 
     export function pageLoadedHandler(): void {
-        menuElementInfos = domElementsToMenuElements(getAllDomElements());
-        setParents(null, { value:0}, menuElementInfos);
+        _menuElementInfos = domElementsToMenuElements(getAllDomElements());
+        setParents(null, { value:0}, _menuElementInfos);
 
-        // Set mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
+        // Set _mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
         // setActive may be called while the menu is being created.
-        mainMenuElement = createMainMenuElement();
+        _mainMenuElement = createMainMenuElement();
 
-        addMenuBody(mainMenuElement, menuElementInfos);
+        addMenuBody(_mainMenuElement, _menuElementInfos);
 
         setVisibilityForMenu();
 
         let bodyElement = document.getElementsByTagName("BODY")[0];
-        bodyElement.appendChild(mainMenuElement);
+        bodyElement.appendChild(_mainMenuElement);
     }
 }
