@@ -54,9 +54,6 @@ namespace FormMenu {
     class MenuElementInfo {
 
         constructor(
-            // The item in the menu
-            public menuElement: HTMLElement,
-
             // The heading, etc. in the actual DOM (not in the menu)
             public domElement: HTMLElement,
 
@@ -67,6 +64,9 @@ namespace FormMenu {
             // Menu items that are not associated with a heading have a very high level.
             public level: number
         ) {}
+
+        // The item in the menu
+        public menuElement: HTMLElement;
 
         // Headings constitute a hierarchy. An H2 below an H1 is the child of that H1.
         // non-headings are children of the heading they sit under.
@@ -173,10 +173,12 @@ namespace FormMenu {
 
         let level:number = tagNameToLevel(domElement.tagName);
         let menuElementInfo = new MenuElementInfo(
-            createMenuElementDiv(caption, menuElementClass, onClickHandler),
             domElement,
             caption,
             level);
+
+        let menuElementDiv = createMenuElementDiv(menuElementInfo, menuElementClass, onClickHandler);
+        menuElementInfo.menuElement = menuElementDiv;
 
         let defaultOpen: boolean = openByDefault(menuElementInfo, "defaultOpenAtLevel");
         menuElementInfo.isExpanded = defaultOpen;
@@ -267,26 +269,22 @@ namespace FormMenu {
         transitionMenuItemHasClass(menuElementInfo, 'formmenu-item-open', 'formmenu-item-closed');
     }
 
-    function onExpandClicked(e:MouseEvent) {
-        // The span with the open/close icon element will have been clicked.
-        // Its parent is the div that also contains the caption.
-
-        let parentDiv:HTMLElement = parentOfEventTarget(e);
-
-        toggleClasses(parentDiv, 'formmenu-item-closed', 'formmenu-item-open');
+    function onExpandClicked(menuElementInfo: MenuElementInfo) {
+        toggleClasses(menuElementInfo.menuElement, 'formmenu-item-closed', 'formmenu-item-open');
+        menuElementInfo.isExpanded = !menuElementInfo.isExpanded;
     }
 
-    function createMenuElementDiv(caption: string, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
+    function createMenuElementDiv(menuElementInfo: MenuElementInfo, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
 
         let expandElement: HTMLElement = document.createElement("span");
         expandElement.classList.add("formmenu-expand");
-        expandElement.onclick = onExpandClicked;
+        expandElement.onclick = (e) => onExpandClicked(menuElementInfo);
         menuElement.appendChild(expandElement);
 
         let captionElement: HTMLElement = document.createElement("span");
         captionElement.classList.add("formmenu-caption");
-        captionElement.innerHTML = caption;
+        captionElement.innerHTML = menuElementInfo.caption;
         captionElement.onclick = onClickHandler;
         menuElement.appendChild(captionElement);
 
@@ -302,64 +300,6 @@ namespace FormMenu {
         const captionSpanElement: HTMLElement = <HTMLElement>(divElement.children[1]);
 
         return captionSpanElement;
-    }
-
-    // Creates a <ul> tag containing a <li> tag for items in _menuElementInfos.
-    // The first li is for the item in _menuElementInfos with index i.
-    //
-    // It goes forward through _menuElementInfos until
-    // 1) _menuElementInfos is exhaused; or
-    // 2) it finds a menuElementInfo with the same level or lower as the level of the parent. That item then won't be added to the ul.
-    //
-    // parent is the menu item that is the parent of the list items. Will be null when the very top level of menu items
-    // is generated.
-    //
-    // Note that i is an object containing a number. When the method returns, that number will have been
-    // updated to the index + 1 of the last item in the list.
-    function createList(parent: MenuElementInfo, i: { value:number}, _menuElementInfos: MenuElementInfo[]): HTMLUListElement {
-        const level: number = parent ? parent.level : 0;
-        let listElement: HTMLUListElement = document.createElement("ul");
-
-        while((i.value < _menuElementInfos.length) && (_menuElementInfos[i.value].level > level)) {
-            let liElement = createListItem(parent, i, _menuElementInfos);
-            listElement.appendChild(liElement);
-        }
-
-        return listElement;
-    }
-
-    // Creates a <li> item for the item in _menuElementInfos that is pointed at by index i.
-    //
-    // Note that i is an object containing a number. When the method returns, that number will have been
-    // updated to the index + 1 of the last child of the item (or index + 1 of the item itself
-    // if it doesn't have children).
-    function createListItem(parent: MenuElementInfo, i: { value:number}, _menuElementInfos: MenuElementInfo[]): HTMLLIElement {
-        let currentMenuElementInfo = _menuElementInfos[i.value];
-        currentMenuElementInfo.parent = parent;
-
-        let listItemElement: HTMLLIElement = document.createElement("li");
-        listItemElement.appendChild(currentMenuElementInfo.menuElement);
-
-        // Point to first child item
-        i.value = i.value + 1;
-
-        let listElement: HTMLUListElement = createList(
-            currentMenuElementInfo, i, _menuElementInfos);
-        
-        // Only append the ul with children if there actually are children
-        if (listElement.children.length > 0) {
-            listItemElement.appendChild(listElement);
-
-            // If you appended the list (as in, the element has children), then also set
-            // the formmenu-item-closed or formmenu-item-open class, so the element will have open/close icons.
-
-            let defaultOpen: boolean = openByDefault(currentMenuElementInfo, "defaultOpenAtLevel");
-            let openCloseClass = defaultOpen ? "formmenu-item-open" : "formmenu-item-closed";
-
-            currentMenuElementInfo.menuElement.classList.add(openCloseClass);
-        }
-
-        return listItemElement;
     }
 
     // Inserts span tags into a string. The start tag will be at startIndex and the end tag
