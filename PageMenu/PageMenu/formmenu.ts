@@ -468,6 +468,11 @@ namespace FormMenu {
 
         _mainMenuElement.appendChild(filterBar);
 
+        // The last element in the main div must be the ul holding the menu items.
+        // It will be replaced by rebuildMenuList.
+        let ulPlaceholderElement: HTMLUListElement = document.createElement("ul");
+        _mainMenuElement.appendChild(ulPlaceholderElement);
+
         rebuildMenuList();
     }
 
@@ -714,9 +719,11 @@ namespace FormMenu {
         return liElement;
     }
 
-
+    // Replaces the last child in the main div with a ul holding the menu items
     function rebuildMenuList(): void {
-        
+        const ulElement = getMenuElementsUl(_menuElementInfosRoot);
+        const lastChild = _mainMenuElement.lastElementChild;
+        _mainMenuElement.replaceChild(ulElement, lastChild);
     }
 
     export function scrollHandler(): void {

@@ -1,177 +1,136 @@
+/*! 
+Copyright
+Source code at:
+Doco at:
+*/
 .formmenu {
-    position: fixed;
-    right: 10px;
-    top: 10px;
-    border: 1px solid red;
-    background-color: white;
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  border: 1px solid red;
+  background-color: white;
 }
 
-/* Remove bullets and reduce indent of the items. */
 .formmenu ul {
-    list-style-type: none;
-    margin-left: -25px;
-  }
-
-  /* 
-  Only applies to very first ul. Place this after the .formmenu ul, so it overrides
-  the margin-left.
-  Note that the overflow-y scroll is on this ul, so the filter box doesn't scroll.
-  Otherwise it could scroll up and out of sight.
-   */
-.formmenu > ul {
-    padding: 0 10px 0 10px; 
-    margin: 5px 0 0 0; 
-
-    /* If you use a percentage here, the ul box breaks out of its containing div box and you can't get to lower menu items. */
-    max-height: 500px; 
-    overflow-y: scroll;
+  list-style-type: none;
+  margin-left: -25px;
 }
 
+.formmenu > ul {
+  padding: 0 10px 0 10px;
+  margin: 5px 0 0 0;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+/********************************************/
+/* Form menu item */
 .formmenu-item {
-    cursor: pointer;
-    clear: both;
+  cursor: pointer;
+  clear: both;
 }
 
 .formmenu-highlighted-dom-item {
-    background-color: yellow;
+  background-color: yellow;
 }
 
-/* 
-Give formmenu-expand a width, so menu item captions align nicely even if one has an open/close
-and the other doesn't. 
-Because of this, formmenu-expand and formmenu-caption have to be floated lef.
-*/
+/********************************************/
+/* Form menu expand / collapse */
 .formmenu-expand {
-    float: left;
-    display: block;
-    width: 10px;
+  float: left;
+  display: block;
+  width: 10px;
 }
 
 .formmenu-caption {
-    float: left;
-    display: block;
+  float: left;
+  display: block;
 }
 
-/*
-Make sure there is a character in formmenu-expand even if you do not want to show an open/close,
-otherwise it won't be given the width.
-Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0. 
-See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
-*/
 .formmenu-expand::after {
-    content: "\00a0";
+  content: "\00a0";
 }
 
 .formmenu-item-closed .formmenu-expand::after {
-    content: "+ ";
+  content: "+ ";
 }
 
 .formmenu-item-closed + ul {
-    display: none;
+  display: none;
 }
 
 .formmenu-item-open .formmenu-expand::after {
-    content: "- ";
+  content: "- ";
 }
 
 /******************************************************/
-
+/* Visible */
 .formmenu-is-visible .formmenu-caption {
-    color: darkgoldenrod;
+  color: darkgoldenrod;
 }
 
-/* Make menu item open if one its children is visible (in the main page), even if 
-it was closed by the close button (-). 
-Give this definition higher specificity by adding .formmenu, so it overrides .formmenu-item-closed.
-*/
-.formmenu .formmenu-is-parent-of-visible + ul {
-    display: block;
-}
-
-/******************************************************/
-
-.formmenu-hidden {
-
-}
-
-.formmenu-hidden ul, 
+/********************************************************/
+/* Form menu hide/show */
+.formmenu-hidden ul,
 .formmenu-hidden .formmenu-filter-bar {
-    display: none;
-}
-
-.formmenu-shown {
-
+  display: none;
 }
 
 .formmenu-menu-hide-show {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .formmenu-hidden .formmenu-menu-hide-show::after {
-    content: "<< ";
+  content: "<< ";
 }
 
 .formmenu-shown .formmenu-menu-hide-show::after {
-    content: ">> ";
+  content: ">> ";
 }
 
 /******************************************************/
-
+/* Filter */
 input.formmenu-filter {
-    display: inline;
-    width: auto;
-}
-
-.formmenu-is-filter-result {
-    
-}
-
-.formmenu .formmenu-is-parent-of-filter-result + ul {
-    display: block;
+  display: inline;
+  width: auto;
 }
 
 .formmenu-matching-filter-text {
-    background-color: yellow;
+  background-color: yellow;
 }
 
-.formmenu-filter-bar {
-
+.formmenu-textmatch-filter-is-active .formmenu-is-textmatch,
+.formmenu-textmatch-filter-is-active .formmenu-is-parent-of-textmatch,
+.formmenu-textmatch-filter-is-active .formmenu-is-parent-of-textmatch + ul {
+  display: block;
 }
 
-/* If filter is active, only show selected items and their parents */
-.formmenu-filter-is-active li div {
-    display: none;
-}
-
-.formmenu-filter-is-active .formmenu-is-filter-result,
-.formmenu-filter-is-active .formmenu-is-parent-of-filter-result
- {
-    display: block;
+.formmenu-textmatch-filter-is-active li div {
+  display: none;
 }
 
 /******************************************************/
-
+/* Filter bar */
 .formmenu-filter-button {
-    cursor: pointer;
-    min-width: 10px;
-    display: inline-block;
-    border: 1px grey solid;
-    margin-right: 2px;
-    text-align: center;
+  cursor: pointer;
+  min-width: 10px;
+  display: inline-block;
+  border: 1px grey solid;
+  margin-right: 2px;
+  text-align: center;
 }
 
 .formmenu-filter-button-disabled.formmenu-filter-button {
-    background-color: #f0f0f0;
-    color: #808080;
-    cursor: auto;
+  background-color: #f0f0f0;
+  color: #808080;
+  cursor: auto;
 }
 
 .formmenu-expand-all-menu-button::after {
-    content: "+";
+  content: "+";
 }
 
 .formmenu-collapse-all-menu-button::after {
-    content: "-";
+  content: "-";
 }
-
-
+/*# sourceMappingURL=formmenu.css.map */
