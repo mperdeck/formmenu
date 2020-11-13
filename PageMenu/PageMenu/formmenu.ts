@@ -99,6 +99,16 @@ namespace FormMenu {
 
     const _levelNonHeadingMenuItem: number = 9000;
 
+    function searchFilterIsActive(): boolean {
+        const filterValue = _searchTerm;
+        const filterMinimumCharacters: number = getConfigValue("filterMinimumCharacters");
+
+        // Filter is active if there is a filter value, and there are enough filter characters.
+        const filterIsActive = (filterValue && (filterValue.length >= filterMinimumCharacters));
+
+        return filterIsActive;
+    }
+
     function tagNameToLevelDefaultMethod(tagName: string): number {
         switch (tagName.toLowerCase()) {
             case 'h1': return 1;
@@ -325,6 +335,13 @@ namespace FormMenu {
 
     function onChangeFilter(e: Event): void {
         _searchTerm = (<HTMLInputElement>(e.currentTarget)).value;
+        
+        if (searchFilterIsActive()) {
+            _mainMenuElement.classList.add('formmenu-textmatch-filter-is-active');
+        } else {
+            _mainMenuElement.classList.remove('formmenu-textmatch-filter-is-active');
+        }
+
         rebuildMenuList();
     }
 
@@ -451,13 +468,19 @@ namespace FormMenu {
         rebuildMenuList();
     }
 
-    // Visits all item state infos, processes the menu element infos for each
-    // and adds a filter button for each to the passed in filter bar. 
-    function processAllItemStateInfos(filterBar: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
+    function visitAllItemStateInfos(callback: (itemStateInfo: iItemStateInfo)=>void): void {
         let itemStateInfos: { [key: string]: iItemStateInfo} = getConfigValue("itemStateInfos");
 
         Object.keys(itemStateInfos).forEach(key => {
-            processItemStateInfo(itemStateInfos[key], filterBar, _menuElementInfos);
+            callback(itemStateInfos[key]);
+        });
+    }
+
+    // Visits all item state infos, processes the menu element infos for each
+    // and adds a filter button for each to the passed in filter bar. 
+    function processAllItemStateInfos(filterBar: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
+        visitAllItemStateInfos((itemStateInfo: iItemStateInfo)=>{
+            processItemStateInfo(itemStateInfo, filterBar, _menuElementInfos);
         });
     }
 
@@ -607,6 +630,66 @@ namespace FormMenu {
             }
         }
     }
+
+    // Finds out if the menu element in the menuElementInfo passes the search filter.
+    // If so, updates the caption to highlight the matched bit and returns true.
+    // Otherwise returns false.
+    function passesSearchFilter(menuElementInfo: MenuElementInfo): boolean {
+        const captionElement = getCaptionElement(menuElementInfo);
+
+        // Restore the caption to its original state
+        captionElement.innerHTML = menuElementInfo.caption;
+        menuElementInfo.menuElement.classList.remove('formmenu-is-textmatch');
+
+        if (!searchFilterIsActive()) {
+            return true;
+        }
+
+        const filterValueLc = _searchTerm.toLowerCase();
+        const foundIndex = menuElementInfo.caption.toLowerCase().indexOf(filterValueLc);
+
+        // If there is no match, return
+        if (foundIndex === -1) {
+            return false;
+        }
+
+        const captionWithFilterTextSpan = insertMatchingFilterTextSpan(
+            menuElementInfo.caption, foundIndex, filterValueLc.length);
+        captionElement.innerHTML = captionWithFilterTextSpan;
+
+        menuElementInfo.menuElement.classList.add('formmenu-is-textmatch');
+
+        return true;
+    }
+
+    function passesItemStateFilters(menuElementInfo: MenuElementInfo): boolean {
+
+        // Remove any existing active state classes
+        visitAllItemStateInfos((itemStateInfo: iItemStateInfo)=>{
+            menuElementInfo.menuElement.classList.remove(itemStateInfo.hasActiveStateClass);
+        });
+
+        for (let i = 0; i < _itemStateInfoActiveFilters.length; i++) {
+            if (menuElementInfo.itemStates.indexOf(_itemStateInfoActiveFilters[i]) === -1) {
+                return false;
+            }
+
+            menuElementInfo.menuElement.classList.add(_itemStateInfoActiveFilters[i].hasActiveStateClass);
+        }
+
+        return true;
+    }
+
+    // Gets the div element representing a menu element from the corresponding menuElementInfo.
+    // Returns falsy if the menu element should not be shown (because it doesn't pass a filter).
+    function getMenuElementDiv(menuElementInfo: MenuElementInfo): HTMLElement {
+
+        if (!passesSearchFilter(menuElementInfo)) { return null; }
+        if (!passesItemStateFilters(menuElementInfo)) { return null; }
+
+        return menuElementInfo.menuElement;
+    }
+
 
     function rebuildMenuList(): void {
         
