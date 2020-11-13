@@ -242,6 +242,13 @@ namespace FormMenu {
         }
     }
 
+    function setClass(htmlElement:HTMLElement, setIt: boolean, cssClass: string): void {
+        htmlElement.classList.remove(cssClass);
+        if (setIt) {
+            htmlElement.classList.add(cssClass);
+        }
+    }
+
     // Removes the given class from all given menu elements
     function removeClass(_menuElementInfos: MenuElementInfo[], cssClass: string): void {
         _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
@@ -336,11 +343,7 @@ namespace FormMenu {
     function onChangeFilter(e: Event): void {
         _searchTerm = (<HTMLInputElement>(e.currentTarget)).value;
         
-        if (searchFilterIsActive()) {
-            _mainMenuElement.classList.add('formmenu-textmatch-filter-is-active');
-        } else {
-            _mainMenuElement.classList.remove('formmenu-textmatch-filter-is-active');
-        }
+        setClass(_mainMenuElement, searchFilterIsActive(), 'formmenu-textmatch-filter-is-active');
 
         rebuildMenuList();
     }
@@ -529,11 +532,7 @@ namespace FormMenu {
             });
         }
 
-        if (existsActiveItem) {
-            filterButton.classList.remove('formmenu-filter-button-disabled');
-        } else {
-            filterButton.classList.add('formmenu-filter-button-disabled');
-        }
+        setClass(filterButton, existsActiveItem, 'formmenu-filter-button-disabled');
 
         rebuildMenuList();
     }
@@ -680,14 +679,39 @@ namespace FormMenu {
         return true;
     }
 
-    // Gets the div element representing a menu element from the corresponding menuElementInfo.
+    function getMenuElementsUl(menuElementInfo: MenuElementInfo): HTMLUListElement {
+        let ulElement: HTMLUListElement = document.createElement("ul");
+        for(let i = 0; i < menuElementInfo.children.length; i++) {
+            let liElement = getMenuElementLi(menuElementInfo.children[i]);
+            if (liElement) {
+                ulElement.appendChild(liElement);
+            }
+        }
+
+        return ulElement;
+    }
+
+    // Gets the li element representing a menu element from the corresponding menuElementInfo.
     // Returns falsy if the menu element should not be shown (because it doesn't pass a filter).
-    function getMenuElementDiv(menuElementInfo: MenuElementInfo): HTMLElement {
+    function getMenuElementLi(menuElementInfo: MenuElementInfo): HTMLElement {
+        const ulElement: HTMLUListElement = getMenuElementsUl(menuElementInfo);
+        let hasChildren = (ulElement.children.length > 0);
 
-        if (!passesSearchFilter(menuElementInfo)) { return null; }
-        if (!passesItemStateFilters(menuElementInfo)) { return null; }
+        setClass(menuElementInfo.menuElement, hasChildren, 'formmenu-has-children');
 
-        return menuElementInfo.menuElement;
+        if ((!passesSearchFilter(menuElementInfo)) && (!hasChildren)) { return null; }
+        if ((!passesItemStateFilters(menuElementInfo)) && (!hasChildren)) { return null; }
+
+        let liElement: HTMLLIElement = document.createElement("li");
+        liElement.appendChild(menuElementInfo.menuElement);
+
+        if (hasChildren) {
+            liElement.appendChild(ulElement);
+
+            setClass(menuElementInfo.menuElement, menuElementInfo.isExpanded, "formmenu-item-open")
+        }
+
+        return liElement;
     }
 
 

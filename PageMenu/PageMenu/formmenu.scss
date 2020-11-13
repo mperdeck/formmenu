@@ -72,16 +72,25 @@ Doco at:
     content: "\00a0";
 }
 
-.formmenu-item-closed .formmenu-expand::after {
-    content: "+ ";
-}
+.formmenu-has-children {
 
-.formmenu-item-closed + ul {
-    display: none;
-}
+    .formmenu-expand::after {
+        content: "+ ";
+    }
 
-.formmenu-item-open .formmenu-expand::after {
-    content: "- ";
+    ul {
+        display: none;
+    }
+
+    &.formmenu-item-open {
+        .formmenu-expand::after {
+            content: "- ";
+        }
+
+        ul {
+            display: block;
+        }
+    }
 }
 
 /******************************************************/
