@@ -78,6 +78,12 @@ namespace FormMenu {
         // If this element has children, then if true the element is expanded
         public isExpanded: boolean = false;
 
+        // true if the menuElement (the dom menu item) is included in the menu. That is, if any filters are active,
+        // it passed those filters. 
+        // Note that the menu item could be still not visible to the user even if this is true, because its parent was closed,
+        // because it is scrolled out of the menu div visible area.
+        public isIncludedInMenu: boolean = false;
+
         // Contains all item state infos that are active for this element
         public itemStates: iItemStateInfo[] = [];
     }
@@ -691,9 +697,14 @@ namespace FormMenu {
     function getMenuElementsUl(menuElementInfo: MenuElementInfo): HTMLUListElement {
         let ulElement: HTMLUListElement = document.createElement("ul");
         for(let i = 0; i < menuElementInfo.children.length; i++) {
-            let liElement = getMenuElementLi(menuElementInfo.children[i]);
+            const childMenuElement = menuElementInfo.children[i];
+            childMenuElement.isIncludedInMenu = false;
+            
+            const liElement = getMenuElementLi(childMenuElement);
+
             if (liElement) {
                 ulElement.appendChild(liElement);
+                childMenuElement.isIncludedInMenu = true;
             }
         }
 
