@@ -719,11 +719,24 @@ namespace FormMenu {
         return liElement;
     }
 
+    // Debounces calls to a method.
+    // timerId - store this between calls. Will be updated by the method. Initialise to a { id: 0 }
+    // bounceMs - the method will not be called more often than once every bounceMs milliseconds.
+    // callback - method to be called.
+    function debounce(timerId: { id: number }, bounceMs: number, callback: ()=>void) {
+        if (timerId.id) { clearTimeout(timerId.id); }
+        timerId.id = setTimeout(callback, bounceMs);
+    }
+
+    let rebuildMenuDebounceTimer = { id: 0 };
+
     // Replaces the last child in the main div with a ul holding the menu items
     function rebuildMenuList(): void {
-        const ulElement = getMenuElementsUl(_menuElementInfosRoot);
-        const lastChild = _mainMenuElement.lastElementChild;
-        _mainMenuElement.replaceChild(ulElement, lastChild);
+        debounce(rebuildMenuDebounceTimer, 200, function() {
+            const ulElement = getMenuElementsUl(_menuElementInfosRoot);
+            const lastChild = _mainMenuElement.lastElementChild;
+            _mainMenuElement.replaceChild(ulElement, lastChild);
+        });
     }
 
     export function scrollHandler(): void {
