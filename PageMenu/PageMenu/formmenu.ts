@@ -293,7 +293,7 @@ namespace FormMenu {
     }
 
     function onExpandClicked(menuElementInfo: MenuElementInfo) {
-        toggleClasses(menuElementInfo.menuElement, 'formmenu-item-closed', 'formmenu-item-open');
+        toggleClass(menuElementInfo.menuElement, 'formmenu-item-open')
         menuElementInfo.isExpanded = !menuElementInfo.isExpanded;
     }
 
@@ -716,7 +716,7 @@ namespace FormMenu {
 
     // Replaces the last child in the main div with a ul holding the menu items
     function rebuildMenuList(): void {
-        debounce(rebuildMenuDebounceTimer, 200, function() {
+        debounce(rebuildMenuDebounceTimer, 50, function() {
             const ulElement = getMenuElementsUl(_menuElementInfosRoot);
             const lastChild = _mainMenuElement.lastElementChild;
             _mainMenuElement.replaceChild(ulElement, lastChild);

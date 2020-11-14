@@ -78,7 +78,7 @@ Doco at:
         content: "+ ";
     }
 
-    ul {
+    &+ul {
         display: none;
     }
 
@@ -87,7 +87,7 @@ Doco at:
             content: "- ";
         }
 
-        ul {
+        &+ul {
             display: block;
         }
     }
