@@ -185,7 +185,7 @@ namespace FormMenu {
         // it is.
         let onClickHandler = (e:MouseEvent)=>{
 
-            if (!elementIsVisible(domElement)) {
+            if (elementIsVisible(domElement) !== 0) {
                 domElement.scrollIntoView();
             }
 
@@ -589,14 +589,23 @@ namespace FormMenu {
         });
     }
 
-    function elementIsVisible(element: HTMLElement): boolean {
+    // If the element is visible, returns 0.
+    // If it is not visible, returns distance from top of screen to top of element.
+    // This will be negative if the element is above the screen. The more negative it is, the higher it is
+    // (as in, the further away from the screen.)
+    function elementIsVisible(element: HTMLElement): number {
         const boundingRectangle = element.getBoundingClientRect();
-        return (
+
+        const isVisible = (
             (boundingRectangle.top >= 0) &&
             (boundingRectangle.left >= 0) &&
             (boundingRectangle.bottom <= (window.innerHeight || document.documentElement.clientHeight)) &&
             (boundingRectangle.right <= (window.innerWidth || document.documentElement.clientWidth))
         );
+
+        if (isVisible) { return 0; }
+
+        return boundingRectangle.top;
     }
 
     // Sets a class on this menu item, and another class on the parent of the item, its parents, etc.
@@ -644,6 +653,10 @@ namespace FormMenu {
         return true;
     }
 
+    function elementIsHeader(menuElementInfo: MenuElementInfo): boolean {
+        return (menuElementInfo.level < _levelNonHeadingMenuItem);
+    }
+
     function setVisibilityForMenu(): void {
         if (!_menuElementInfos) { return; }
 
@@ -651,9 +664,28 @@ namespace FormMenu {
         let count = _menuElementInfos.length;
         let lastWasVisible = false;
 
+        // The element that is 1) above the screen; 2) closest to the screen of all elements above the screen;
+        // 3) visible inside the menu (not hidden because a parent is closed).
+        let invisibleMenuHeaderAboveVisibleArea: MenuElementInfo;
+
+        // Distance to top of screen of invisibleMenuElementAboveVisibleArea.
+        // This is negative. The closer to zero, the closer to the top.
+        let closestDistanceToTop: number = Number.NEGATIVE_INFINITY;
+
         for(let i = 0; i < count; i++) {
-            let currrentMenuElementInfo = _menuElementInfos[i];
-            let isVisible = elementIsVisible(currrentMenuElementInfo.domElement);
+            let currentMenuElementInfo = _menuElementInfos[i];
+            let visibility:number = elementIsVisible(currentMenuElementInfo.domElement);
+
+            const isVisible = (visibility === 0);
+
+            if (!isVisible) {
+                if ((visibility < 0) && (visibility > closestDistanceToTop) && 
+                    elementIsHeader(currentMenuElementInfo) && 
+                    elementIsShownInMenu(currentMenuElementInfo)) {
+                        
+                    invisibleMenuHeaderAboveVisibleArea = currentMenuElementInfo;
+                }
+            }
 
             // If we just got past the items that were visible, then the rest will be invisible,
             // so no need to visit any more items.
@@ -661,8 +693,15 @@ namespace FormMenu {
             lastWasVisible = isVisible;
             
             if (isVisible) {
-                setVisibility(currrentMenuElementInfo);
+                setVisibility(currentMenuElementInfo);
             }
+        }
+
+        // The header just above the screen should be marked visible as well,
+        // because at the top of the screen will probably be stuff that sits right under that header
+        // but is not represented on the menu.
+        if (invisibleMenuHeaderAboveVisibleArea) {
+            setVisibility(invisibleMenuHeaderAboveVisibleArea);
         }
     }
 
