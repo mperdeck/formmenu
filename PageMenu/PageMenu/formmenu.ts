@@ -504,7 +504,7 @@ namespace FormMenu {
 
         // If the item state info was found in the array, remove it. Otherwise add it.
         if (idx != -1) {
-            _itemStateInfoActiveFilters.splice(idx, 0);
+            _itemStateInfoActiveFilters.splice(idx, 1);
         } else {
             _itemStateInfoActiveFilters.push(itemStateInfo);
         }
@@ -519,7 +519,7 @@ namespace FormMenu {
         let idx:number = itemStates.indexOf(itemStateInfo);
 
         if (idx != -1) {
-            itemStates.splice(idx, 0);
+            itemStates.splice(idx, 1);
         }
         
         if (active) {
@@ -537,7 +537,7 @@ namespace FormMenu {
             });
         }
 
-        setClass(filterButton, existsActiveItem, 'formmenu-filter-button-disabled');
+        setClass(filterButton, !existsActiveItem, 'formmenu-filter-button-disabled');
 
         rebuildMenuList();
     }
