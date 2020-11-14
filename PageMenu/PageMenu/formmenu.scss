@@ -177,6 +177,10 @@ input.formmenu-filter {
     cursor: auto;
 }
 
+.formmenu-filter-button-depressed.formmenu-filter-button {
+    border: 2px black solid;
+}
+
 .formmenu-expand-all-menu-button::after {
     content: "+";
 }
