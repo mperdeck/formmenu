@@ -20,11 +20,13 @@ window.addEventListener("resize", function(){
 });
 
 namespace FormMenu {
+    const _levelNonHeadingMenuItem: number = 9000;
+
     let defaultConfiguration: iFormMenuConfiguration = {
         skipFirstHeading: false,
 
         // Items with level equal or lower than this will be open initially. -1 to open everything. 0 to open nothing.
-        defaultOpenAtLevel: 1,
+        defaultOpenAtLevel: _levelNonHeadingMenuItem + 1,
 
         // Same as defaultOpenAtLevel, but applies when user clicks the collapse filter button.
         collapseOpenAtLevel: 1,
@@ -96,8 +98,6 @@ namespace FormMenu {
 
     // Holds references to all iItemStateInfos whose filers are active
     let _itemStateInfoActiveFilters: iItemStateInfo[] = [];
-
-    const _levelNonHeadingMenuItem: number = 9000;
 
     function searchFilterIsActive(): boolean {
         const filterValue = _searchTerm;
