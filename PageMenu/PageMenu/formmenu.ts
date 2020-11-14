@@ -526,6 +526,9 @@ namespace FormMenu {
             itemStates.push(itemStateInfo);
         }
     
+        // Update the menu element
+        setClass(menuElementInfo.menuElement, active, itemStateInfo.hasActiveStateClass);
+
         // Update filter button style
 
         let existsActiveItem = active;
@@ -652,17 +655,10 @@ namespace FormMenu {
 
     function passesItemStateFilters(menuElementInfo: MenuElementInfo): boolean {
 
-        // Remove any existing active state classes
-        visitAllItemStateInfos((itemStateInfo: iItemStateInfo)=>{
-            menuElementInfo.menuElement.classList.remove(itemStateInfo.hasActiveStateClass);
-        });
-
         for (let i = 0; i < _itemStateInfoActiveFilters.length; i++) {
             if (menuElementInfo.itemStates.indexOf(_itemStateInfoActiveFilters[i]) === -1) {
                 return false;
             }
-
-            menuElementInfo.menuElement.classList.add(_itemStateInfoActiveFilters[i].hasActiveStateClass);
         }
 
         return true;
