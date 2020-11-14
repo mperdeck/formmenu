@@ -65,9 +65,6 @@ interface iItemStateInfo {
     // Menu items associated with a dom element that has active state will have this class
     hasActiveStateClass: string;
 
-    // Parents of menu items associated with a dom element that has active state will have this class
-    hasChildWithActiveStateClass: string;
-
     // If the user is filtering by active state, this class is added to the top level div.
     stateFilterActiveClass: string;
 

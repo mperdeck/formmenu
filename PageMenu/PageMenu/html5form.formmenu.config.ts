@@ -11,7 +11,6 @@ namespace FormMenu {
         constructor(
             public onChangeMenuItemsWithItemStateExist: (exist: boolean)=>void,
             public hasActiveStateClass: string,
-            public hasChildWithActiveStateClass: string,
             public stateFilterActiveClass: string,
             public stateFilterButtonClass: string,
             public wireUp: (domElement: HTMLElement, setActive: (active: boolean)=>void)=>void
@@ -25,7 +24,7 @@ namespace FormMenu {
 
     formMenuConfiguration.itemStateInfos["html5required"] = new Html5ItemStateInfo(
         null,
-        'formmenu-is-required', 'formmenu-is-parent-of-required', 
+        'formmenu-is-required', 
         'formmenu-required-filter-is-active', 'formmenu-required-filter-button', 
         (domElement: HTMLElement, setActive: (active: boolean)=>void)=> {
             if (domElement.tagName.toLowerCase() !== 'label') { return; }
@@ -41,7 +40,7 @@ namespace FormMenu {
 
         formMenuConfiguration.itemStateInfos["html5invalid"] = new Html5ItemStateInfo(
             (exist: boolean)=>{ console.log("########### html5invalid:" + exist); },
-            'formmenu-is-invalid', 'formmenu-is-parent-of-invalid', 
+            'formmenu-is-invalid',
             'formmenu-invalid-filter-is-active', 'formmenu-invalid-filter-button', 
             (domElement: HTMLElement, setActive: (active: boolean)=>void)=> {
                 if (domElement.tagName.toLowerCase() !== 'label') { return; }

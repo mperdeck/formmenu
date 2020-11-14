@@ -608,8 +608,8 @@ namespace FormMenu {
         return boundingRectangle.top;
     }
 
-    // Sets a class on this menu item, and another class on the parent of the item, its parents, etc.
-    function setClassOnMenuItem(menuElement:MenuElementInfo, classThisItem: string, classParents: string): void {
+    // Sets a class on this menu item
+    function setClassOnMenuItem(menuElement:MenuElementInfo, classThisItem: string): void {
         menuElement.menuElement.classList.add(classThisItem);
     }
 
@@ -624,18 +624,16 @@ namespace FormMenu {
         }
     }
 
-    // Sets the formmenu-is-visible of an item, and the formmenu-is-parent-of-visible
-    // class on its parents.
+    // Sets the formmenu-is-visible of an item.
     // Note that this doesn't reset the formmenu-is-visible etc. classes of items that are not visible.
     function setVisibility(menuElement:MenuElementInfo): void {
-        setClassOnMenuItem(menuElement, 'formmenu-is-visible', 'formmenu-is-parent-of-visible');
+        setClassOnMenuItem(menuElement, 'formmenu-is-visible');
     }
 
     function removeVisibilityForMenu(): void {
         let count = _menuElementInfos.length;
         for(let i = 0; i < count; i++) {
             _menuElementInfos[i].menuElement.classList.remove('formmenu-is-visible');
-            _menuElementInfos[i].menuElement.classList.remove('formmenu-is-parent-of-visible');
         }
     }
 
