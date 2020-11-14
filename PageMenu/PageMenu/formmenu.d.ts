@@ -57,6 +57,11 @@ interface iItemStateInfo {
 
     wireUp: (domElement: HTMLElement, setActive: (active: boolean)=>void)=>void;
 
+    // Called when there are menu item with the given state, or when there are no longer such menu items.
+    // Can be called multiple times with the same exist value.
+    // exist - true if such items exist, false if no longer exist
+    onChangeMenuItemsWithItemStateExist?: (exist: boolean)=>void;
+
     // Menu items associated with a dom element that has active state will have this class
     hasActiveStateClass: string;
 

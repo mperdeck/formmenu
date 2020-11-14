@@ -498,8 +498,8 @@ namespace FormMenu {
         return (idx !== -1);
     }
 
-    // Sets the state of the given item state.
-    // active - true to set active, false to set inactive
+    // Sets the state of the given item state filter.
+    // active - true to set active (so menu items are filtered), false to set inactive
     // filterButton - filter button associated with the item state
     function setItemStateStatus(active: boolean, itemStateInfo: iItemStateInfo, filterButton:HTMLElement): void {
         setClass(_mainMenuElement, active, itemStateInfo.stateFilterActiveClass);
@@ -528,6 +528,7 @@ namespace FormMenu {
         rebuildMenuList();
     }
 
+    // Called when the item state of a menu item is updated
     function setItemStateActive(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
         menuElementInfo: MenuElementInfo): void {
 
@@ -554,6 +555,10 @@ namespace FormMenu {
                     existsActiveItem = true;
                 }
             });
+        }
+
+        if (itemStateInfo.onChangeMenuItemsWithItemStateExist) {
+            itemStateInfo.onChangeMenuItemsWithItemStateExist(existsActiveItem);
         }
 
         setClass(filterButton, !existsActiveItem, 'formmenu-filter-button-disabled');

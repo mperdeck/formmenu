@@ -9,6 +9,7 @@ namespace FormMenu {
 
     class Html5ItemStateInfo implements  iItemStateInfo {
         constructor(
+            public onChangeMenuItemsWithItemStateExist: (exist: boolean)=>void,
             public hasActiveStateClass: string,
             public hasChildWithActiveStateClass: string,
             public stateFilterActiveClass: string,
@@ -23,6 +24,7 @@ namespace FormMenu {
     if (!formMenuConfiguration.itemStateInfos) { formMenuConfiguration.itemStateInfos = {}; }
 
     formMenuConfiguration.itemStateInfos["html5required"] = new Html5ItemStateInfo(
+        null,
         'formmenu-is-required', 'formmenu-is-parent-of-required', 
         'formmenu-required-filter-is-active', 'formmenu-required-filter-button', 
         (domElement: HTMLElement, setActive: (active: boolean)=>void)=> {
@@ -38,6 +40,7 @@ namespace FormMenu {
         });
 
         formMenuConfiguration.itemStateInfos["html5invalid"] = new Html5ItemStateInfo(
+            (exist: boolean)=>{ console.log("########### html5invalid:" + exist); },
             'formmenu-is-invalid', 'formmenu-is-parent-of-invalid', 
             'formmenu-invalid-filter-is-active', 'formmenu-invalid-filter-button', 
             (domElement: HTMLElement, setActive: (active: boolean)=>void)=> {
