@@ -492,22 +492,38 @@ namespace FormMenu {
         });
     }
 
-    function onItemStateFilterButtonClicked(e: MouseEvent, itemStateInfo: iItemStateInfo): void {
-        let clickedElement:HTMLElement = (<any>(e.currentTarget));
-        if (clickedElement.classList.contains('formmenu-filter-button-disabled')) { return; }
+    // Returns true if the given item state is active
+    function getItemStateStatus(itemStateInfo: iItemStateInfo): boolean {
+        const idx:number = _itemStateInfoActiveFilters.indexOf(itemStateInfo);
+        return (idx !== -1);
+    }
 
-        toggleClass(_mainMenuElement, itemStateInfo.stateFilterActiveClass);
+    // Sets the state of the given item state.
+    // active - true to set active, false to set inactive
+    // filterButton - filter button associated with the item state
+    function setItemStateStatus(active: boolean, itemStateInfo: iItemStateInfo, filterButton:HTMLElement): void {
+        setClass(_mainMenuElement, active, itemStateInfo.stateFilterActiveClass);
+        setClass(filterButton, active, 'formmenu-filter-button-depressed');
 
         // Update _itemStateInfoActiveFilters array
 
         let idx:number = _itemStateInfoActiveFilters.indexOf(itemStateInfo);
 
-        // If the item state info was found in the array, remove it. Otherwise add it.
         if (idx != -1) {
             _itemStateInfoActiveFilters.splice(idx, 1);
-        } else {
+        }
+        
+        if (active) {
             _itemStateInfoActiveFilters.push(itemStateInfo);
         }
+    }
+
+    function onItemStateFilterButtonClicked(e: MouseEvent, itemStateInfo: iItemStateInfo): void {
+        let clickedElement:HTMLElement = (<any>(e.currentTarget));
+        if (clickedElement.classList.contains('formmenu-filter-button-disabled')) { return; }
+
+        const itemStateActive: boolean = getItemStateStatus(itemStateInfo);
+        setItemStateStatus(!itemStateActive, itemStateInfo, clickedElement);
 
         rebuildMenuList();
     }
@@ -541,6 +557,9 @@ namespace FormMenu {
         }
 
         setClass(filterButton, !existsActiveItem, 'formmenu-filter-button-disabled');
+        if (!existsActiveItem) {
+            setItemStateStatus(false, itemStateInfo, filterButton);
+        }
 
         rebuildMenuList();
     }
