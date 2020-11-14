@@ -255,13 +255,6 @@ namespace FormMenu {
         }
     }
 
-    // Removes the given class from all given menu elements
-    function removeClass(_menuElementInfos: MenuElementInfo[], cssClass: string): void {
-        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
-            menuElementInfo.menuElement.classList.remove(cssClass);
-        });
-    }
-
     function parentOfEventTarget(e:MouseEvent): HTMLElement {
         // See https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget
         // currentTarget will return the span containing the caption.
@@ -277,25 +270,6 @@ namespace FormMenu {
         const result = ((menuElementInfo.level <= levelConfig) || (levelConfig == -1));
 
         return result;
-    }
-
-    // If the menu item has oldClass, then replace that with newClass.
-    // Otherwise to nothing.
-    function transitionMenuItemHasClass(menuElementInfo: MenuElementInfo, oldClass: string, newClass: string): void {
-        const classList:DOMTokenList = menuElementInfo.menuElement.classList;
-
-        if (classList.contains(oldClass)) {
-            classList.remove(oldClass);
-            classList.add(newClass);
-        }
-    }
-
-    function openMenuItem(menuElementInfo: MenuElementInfo): void {
-        transitionMenuItemHasClass(menuElementInfo, 'formmenu-item-closed', 'formmenu-item-open');
-    }
-
-    function closeMenuItem(menuElementInfo: MenuElementInfo): void {
-        transitionMenuItemHasClass(menuElementInfo, 'formmenu-item-open', 'formmenu-item-closed');
     }
 
     function onExpandClicked(menuElementInfo: MenuElementInfo) {
@@ -611,17 +585,6 @@ namespace FormMenu {
     // Sets a class on this menu item
     function setClassOnMenuItem(menuElement:MenuElementInfo, classThisItem: string): void {
         menuElement.menuElement.classList.add(classThisItem);
-    }
-
-    // Removes a class on this menu item, and another class on the parent of the item, its parents, etc.
-    function removeClassFromMenuItem(menuElement:MenuElementInfo, classThisItem: string, classParents: string): void {
-        menuElement.menuElement.classList.remove(classThisItem);
-
-        let currentElement = menuElement.parent;
-        while(currentElement) {
-            currentElement.menuElement.classList.remove(classParents);
-            currentElement = currentElement.parent;
-        }
     }
 
     // Sets the formmenu-is-visible of an item.
