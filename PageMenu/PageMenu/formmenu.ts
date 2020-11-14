@@ -630,6 +630,20 @@ namespace FormMenu {
         }
     }
 
+    // Returns true if the menuElementInfo has passed any filters, and it is not hidden
+    // because any of its parents is closed.
+    // Even if this returns true, the element could still be invisible because scrolled out of the
+    // visible area of the menu.
+    function elementIsShownInMenu(menuElementInfo: MenuElementInfo): boolean {
+        if (!menuElementInfo.isIncludedInMenu) { return false; }
+
+        for(let e = menuElementInfo.parent; e && (e !== _menuElementInfosRoot); e = e.parent) {
+            if (!e.isExpanded) { return false; }
+        }
+
+        return true;
+    }
+
     function setVisibilityForMenu(): void {
         if (!_menuElementInfos) { return; }
 
@@ -699,7 +713,7 @@ namespace FormMenu {
         for(let i = 0; i < menuElementInfo.children.length; i++) {
             const childMenuElement = menuElementInfo.children[i];
             childMenuElement.isIncludedInMenu = false;
-            
+
             const liElement = getMenuElementLi(childMenuElement);
 
             if (liElement) {
