@@ -591,6 +591,7 @@ namespace FormMenu {
 
     function elementIsVisible(element: HTMLElement): boolean {
         const boundingRectangle = element.getBoundingClientRect();
+
         return (
             (boundingRectangle.top >= 0) &&
             (boundingRectangle.left >= 0) &&
@@ -653,7 +654,19 @@ namespace FormMenu {
 
         for(let i = 0; i < count; i++) {
             let currrentMenuElementInfo = _menuElementInfos[i];
+
             let isVisible = elementIsVisible(currrentMenuElementInfo.domElement);
+
+                //#######################
+                if (currrentMenuElementInfo.caption === 'Material') {
+                console.log('############## setVisibilityForMenu isVisible=' + isVisible);
+
+                //#######################
+                const boundingRectangle = currrentMenuElementInfo.domElement.getBoundingClientRect();
+
+                console.log('##### elementIsVisible top=' + boundingRectangle.top + ', left, =' + boundingRectangle.left + ', bottom =' + boundingRectangle.bottom + ', right =' + boundingRectangle.right);
+                console.log('##### ' + (window.innerHeight || document.documentElement.clientHeight) + ', ' +  (window.innerWidth || document.documentElement.clientWidth));
+            }
 
             // If we just got past the items that were visible, then the rest will be invisible,
             // so no need to visit any more items.
