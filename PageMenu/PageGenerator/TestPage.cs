@@ -16,7 +16,7 @@ namespace PageGenerator
             for (i = 0; i < 3; i++)
             {
                 sb.AddHeading(2);
-                sb.AddLoremIpsum(4);
+                sb.AddLoremIpsum(10);
             }
 
             sb.AddHeading(2);
