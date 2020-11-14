@@ -100,15 +100,6 @@ Doco at:
     color: darkgoldenrod;
 }
 
-// Make menu item open if one its children is visible (in the main page), even if 
-// it was closed by the close button (-). 
-// Give this definition higher specificity by adding .formmenu, so it overrides .formmenu-item-closed.
-
-//#############################
-// .formmenu .formmenu-is-parent-of-visible + ul {
-//     display: block;
-// }
-
 /********************************************************/
 /* Form menu hide/show */
 

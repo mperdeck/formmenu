@@ -1,15 +1,2 @@
 
-@mixin filter-showhide($filter-name) {
-
-    //#########################
-    // .formmenu-#{$filter-name}-filter-is-active .formmenu-is-#{$filter-name},
-    // .formmenu-#{$filter-name}-filter-is-active .formmenu-is-parent-of-#{$filter-name},
-    // .formmenu-#{$filter-name}-filter-is-active .formmenu-is-parent-of-#{$filter-name} + ul {
-    //     display: block;
-    // }
-    
-    // .formmenu-#{$filter-name}-filter-is-active li div {
-    //     display: none;
-    // }
-}
 
