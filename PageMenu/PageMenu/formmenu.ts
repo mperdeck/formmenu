@@ -569,22 +569,6 @@ namespace FormMenu {
     // Sets a class on this menu item, and another class on the parent of the item, its parents, etc.
     function setClassOnMenuItem(menuElement:MenuElementInfo, classThisItem: string, classParents: string): void {
         menuElement.menuElement.classList.add(classThisItem);
-        setClassOnMenuItemParents(menuElement, classParents);
-    }
-
-    // Sets a class on the parent of the given item, its parents, etc.
-    function setClassOnMenuItemParents(menuElement:MenuElementInfo, classParents: string): void {
-
-        let currentElement = menuElement.parent;
-        while(currentElement) {
-            // If the class for parents has already been set on a parent, it will have been set on that
-            // parent's parents as well. So can stop here.
-
-            if (currentElement.menuElement.classList.contains(classParents)) { break; }
-            currentElement.menuElement.classList.add(classParents);
-            
-            currentElement = currentElement.parent;
-        }
     }
 
     // Removes a class on this menu item, and another class on the parent of the item, its parents, etc.
