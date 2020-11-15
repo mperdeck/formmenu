@@ -5,6 +5,9 @@
 // -----------------------------------
 
 namespace FormMenu {
+    // Will hold reference to the Save button generated below the form
+    export var menuSaveButton: HTMLButtonElement;
+
     export var formMenuConfiguration: iFormMenuConfiguration;
 
     class Html5ItemStateInfo implements  iItemStateInfo {
@@ -39,7 +42,16 @@ namespace FormMenu {
         });
 
         formMenuConfiguration.itemStateInfos["html5invalid"] = new Html5ItemStateInfo(
-            (exist: boolean)=>{ console.log("########### html5invalid:" + exist); },
+            (exist: boolean)=>{ 
+
+                // Disable the save button if there are invalid input elements.
+                // Note that when this callback starts getting called, the buttons will not yet be in the DOM,
+                // so use the button returned in the wireUp method of the menuButtons object.
+
+                if (menuSaveButton) {
+                    menuSaveButton.disabled = exist;
+                }
+            },
             'formmenu-is-invalid',
             'formmenu-invalid-filter-is-active', 'formmenu-invalid-filter-button', 
             (domElement: HTMLElement, setActive: (active: boolean)=>void)=> {

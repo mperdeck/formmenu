@@ -7,6 +7,9 @@
 namespace FormMenu {
     export var formMenuConfiguration: iFormMenuConfiguration;
 
+    // Will hold reference to the Save button generated below the form
+    export var menuSaveButton: HTMLButtonElement;
+
     class MenuButton implements  iMenuButton {
         constructor(
             public caption: string,
@@ -22,7 +25,10 @@ namespace FormMenu {
     formMenuConfiguration.menuButtons["saveButton"] = new MenuButton(
         'Save',
         ()=> { console.log('####### Save button clicked'); },
-        'btn btn-save');
+        'btn btn-save',
+        (createdSaveButton)=>{ 
+            menuSaveButton = createdSaveButton; 
+        });
 
     formMenuConfiguration.menuButtons["cancelButton"] = new MenuButton(
         'Cancel',

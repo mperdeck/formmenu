@@ -439,6 +439,11 @@ namespace FormMenu {
         addFilterButton('formmenu-collapse-all-menu-button', onCollapseAllMenuClicked,
             "showCollapseAllMenuButton", filterBar);
 
+        // Create the buttons area very early on, in case processing of the item state infos
+        // or the rebuilding of the menu itself
+        // has a dependency on the buttons.
+        const buttonsArea:HTMLDivElement = createButtonsArea();
+
         processAllItemStateInfos(filterBar, _menuElementInfos);
 
         let showFilterInput: boolean = getConfigValue("showFilterInput");
@@ -456,7 +461,7 @@ namespace FormMenu {
         _mainMenuElement.appendChild(ulPlaceholderElement);
 
         // Create buttons area
-        _mainMenuElement.appendChild(createButtonsArea());
+        _mainMenuElement.appendChild(buttonsArea);
 
         rebuildMenuList();
     }
@@ -484,9 +489,9 @@ namespace FormMenu {
 
     // Creates a button area div. Visits all menu button infos
     // and adds the button to the button area div. Returns the button area div.
-    function createButtonsArea(): HTMLElement {
+    function createButtonsArea(): HTMLDivElement {
 
-        let buttonArea: HTMLElement = document.createElement("div");
+        let buttonArea: HTMLDivElement = document.createElement("div");
         buttonArea.classList.add('formmenu-buttonarea');
         buttonArea.id = 'formmenu-buttonarea';
 
