@@ -11,20 +11,21 @@ namespace PageGenerator
         static int WordIndex = 0;
         static int CurrentIndent = 0;
 
-        public static void AddPageStart(this StringBuilder sb, string configFileName)
+        public static void AddPageStart(this StringBuilder sb, string formConfigFileName, string buttonsConfigFileName)
         {
             sb.AppendLine(@"<!DOCTYPE html>");
             sb.AppendLine(@"<html>");
             sb.AppendLine(@"<head>");
             sb.AppendLine(@"<link rel=""stylesheet"" href=""style.css"">");
             sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}formmenu.css"">");
-            sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}{configFileName}.formmenu.css"">");
+            sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}{formConfigFileName}.formmenu.css"">");
+            sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}{buttonsConfigFileName}.buttons.css"">");
             sb.AppendLine(@"</head>");
             sb.AppendLine(@"<body>");
             sb.AppendLine(@"<div class=""inner"">");
         }
 
-        public static void AddPageEnd(this StringBuilder sb, string outFileName, string configFileName)
+        public static void AddPageEnd(this StringBuilder sb, string outFileName, string formConfigFileName, string buttonsConfigFileName)
         {
             sb.AppendLine(@"</div>");
             sb.AppendLine(@$"<script src=""{PathConstants.DevFromTest}formmenu.js""></script>");
@@ -33,23 +34,29 @@ namespace PageGenerator
             sb.AppendLine(@$"<script src=""{outFileName}.formmenu.config.js""></script>");
 
             // Write script tag for developed config file to be tested
-            if (!string.IsNullOrEmpty(configFileName))
+
+            if (!string.IsNullOrEmpty(formConfigFileName))
             {
-                sb.AppendLine(@$"<script src=""{PathConstants.DevFromTest}{configFileName}.formmenu.config.js""></script>");
+                sb.AppendLine(@$"<script src=""{PathConstants.DevFromTest}{formConfigFileName}.formmenu.config.js""></script>");
+            }
+
+            if (!string.IsNullOrEmpty(buttonsConfigFileName))
+            {
+                sb.AppendLine(@$"<script src=""{PathConstants.DevFromTest}{buttonsConfigFileName}.buttons.config.js""></script>");
             }
 
             sb.AppendLine(@"</body>");
             sb.AppendLine(@"</html>");
         }
 
-        public static void WriteTestPage(Action<StringBuilder> buildPage, string outFileName, string configFileName)
+        public static void WriteTestPage(Action<StringBuilder> buildPage, string outFileName, string formConfigFileName, string buttonsConfigFileName)
         {
             var sb = new StringBuilder();
 
-            sb.AddPageStart(configFileName);
+            sb.AddPageStart(formConfigFileName, buttonsConfigFileName);
             buildPage(sb);
 
-            sb.AddPageEnd(outFileName, configFileName);
+            sb.AddPageEnd(outFileName, formConfigFileName, buttonsConfigFileName);
             sb.WriteToFile(PathConstants.Test + outFileName + ".html");
         }
 

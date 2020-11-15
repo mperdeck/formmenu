@@ -14,10 +14,10 @@ namespace PageGenerator
     {
         static void Main(string[] args)
         {
-            Helpers.WriteTestPage(TestPage.LongPageNoForm, "test1", "");
-            Helpers.WriteTestPage(TestPage.LongFormOneLevel, "longform1", "html5form");
-            Helpers.WriteTestPage(TestPage.ShortFormOneLevel, "shortform1", "html5form");
-            Helpers.WriteTestPage(TestPage.TinyFormOneLevel, "tinyform1", "html5form");
+            Helpers.WriteTestPage(TestPage.LongPageNoForm, "test1", "", "");
+            Helpers.WriteTestPage(TestPage.LongFormOneLevel, "longform1", "html5form", "buttonstest");
+            Helpers.WriteTestPage(TestPage.ShortFormOneLevel, "shortform1", "html5form", "buttonstest");
+            Helpers.WriteTestPage(TestPage.TinyFormOneLevel, "tinyform1", "html5form", "buttonstest");
         }
     }
 }
