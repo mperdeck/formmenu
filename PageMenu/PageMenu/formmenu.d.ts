@@ -30,6 +30,9 @@ interface iFormMenuConfiguration {
     // This structure makes it possible to add item state infos to this structure
     // in multiple ...formmenu.config.js files
     itemStateInfos?: { [key: string]: iItemStateInfo};
+
+    // Similar to itemStateInfos. Used to define buttons that will sit just below the menu.
+    menuButtons?: { [key: string]: iMenuButton};
 }
 
 declare let formMenuConfiguration: iFormMenuConfiguration;
@@ -72,3 +75,20 @@ interface iItemStateInfo {
     // will have this class.
     stateFilterButtonClass: string;
 }
+
+// Represents a button tag that will be generated below the menu
+interface iMenuButton {
+
+    caption: string;
+
+    // Will be called when this button is clicked
+    onClick: ()=>void;
+
+    // Classes to be added to the button. If you want multiple classes, separate with a space.
+    cssClass?: string;
+
+    // If defined, this method will be called after the button tag has been created.
+    // buttonElement - the button element
+    wireUp?: (buttonElement: HTMLButtonElement)=>void;
+}
+

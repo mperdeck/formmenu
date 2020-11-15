@@ -43,7 +43,8 @@ namespace FormMenu {
         querySelector: "h1,h2,h3,h4,h5,h6",
 
         tagNameToLevelMethod: tagNameToLevelDefaultMethod,
-        itemStateInfos: {}
+        itemStateInfos: {},
+        menuButtons: {}
     }
 
     // Create empty formMenuConfiguration here, to make it easier to write
@@ -448,20 +449,69 @@ namespace FormMenu {
 
         _mainMenuElement.appendChild(filterBar);
 
-        // The last element in the main div must be the ul holding the menu items.
+        // The the ul holding the menu items must have the class formmenu-top-menuitems.
         // It will be replaced by rebuildMenuList.
-        let ulPlaceholderElement: HTMLUListElement = document.createElement("ul");
+        const ulPlaceholderElement: HTMLUListElement = document.createElement("ul");
+        ulPlaceholderElement.classList.add("formmenu-top-menuitems");
         _mainMenuElement.appendChild(ulPlaceholderElement);
+
+        // Create buttons area
+        _mainMenuElement.appendChild(createButtonsArea());
 
         rebuildMenuList();
     }
 
-    function visitAllItemStateInfos(callback: (itemStateInfo: iItemStateInfo)=>void): void {
-        let itemStateInfos: { [key: string]: iItemStateInfo} = getConfigValue("itemStateInfos");
+    function topMenuUlElement(): HTMLUListElement {
+        const ulElement = _mainMenuElement.getElementsByClassName('formmenu-top-menuitems')[0];
+        return ulElement as HTMLUListElement;
+    } 
 
-        Object.keys(itemStateInfos).forEach(key => {
-            callback(itemStateInfos[key]);
+    function visitAllItemStateInfos(callback: (itemStateInfo: iItemStateInfo)=>void): void {
+        visitKeyedConfigItems<iItemStateInfo>("itemStateInfos", callback);
+    }
+
+    function visitAllMenuButtonInfos(callback: (menuButtonInfo: iMenuButton)=>void): void {
+        visitKeyedConfigItems<iMenuButton>("menuButtons", callback);
+    }
+
+    function visitKeyedConfigItems<T>(configValueName: string, callback: (configItem: T)=>void): void {
+        let configItems: { [key: string]: T} = getConfigValue(configValueName);
+
+        Object.keys(configItems).forEach(key => {
+            callback(configItems[key]);
         });
+    }
+
+    // Creates a button area div. Visits all menu button infos
+    // and adds the button to the button area div. Returns the button area div.
+    function createButtonsArea(): HTMLElement {
+
+        let buttonArea: HTMLElement = document.createElement("div");
+        buttonArea.classList.add('formmenu-buttonarea');
+        buttonArea.id = 'formmenu-buttonarea';
+
+        visitAllMenuButtonInfos((menuButtonInfo: iMenuButton)=>{
+            let button: HTMLButtonElement = document.createElement("button");
+
+            button.type = "button";
+            button.innerHTML = menuButtonInfo.caption;
+            button.onclick = menuButtonInfo.onClick;
+
+            if (menuButtonInfo.cssClass) {
+                const cssClasses: string[] = menuButtonInfo.cssClass.split(' ');
+                for (let i = 0; i < cssClasses.length; i++) {
+                    button.classList.add(cssClasses[i]);
+                }
+            }
+
+            if (menuButtonInfo.wireUp) {
+                menuButtonInfo.wireUp(button);
+            }
+
+            buttonArea.appendChild(button);
+        })
+
+        return buttonArea;
     }
 
     // Visits all item state infos, processes the menu element infos for each
@@ -710,6 +760,8 @@ namespace FormMenu {
 
     function getMenuElementsUl(menuElementInfo: MenuElementInfo): HTMLUListElement {
         let ulElement: HTMLUListElement = document.createElement("ul");
+        ulElement.classList.add('formmenu-top-menuitems');
+
         for(let i = 0; i < menuElementInfo.children.length; i++) {
             const childMenuElement = menuElementInfo.children[i];
             childMenuElement.isIncludedInMenu = false;
@@ -763,8 +815,7 @@ namespace FormMenu {
     function rebuildMenuList(): void {
         debounce(rebuildMenuDebounceTimer, 50, function() {
             const ulElement = getMenuElementsUl(_menuElementInfosRoot);
-            const lastChild = _mainMenuElement.lastElementChild;
-            _mainMenuElement.replaceChild(ulElement, lastChild);
+            _mainMenuElement.replaceChild(ulElement, topMenuUlElement());
         });
     }
 
