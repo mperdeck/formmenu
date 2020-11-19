@@ -31,6 +31,14 @@ Doco at:
         max-height: 500px; 
         overflow-y: scroll;
     }
+
+    button {
+        cursor: pointer;
+    }
+
+    button[disabled] {
+        cursor: auto;
+    }
 }
 
 /********************************************/
@@ -158,22 +166,28 @@ input.formmenu-filter {
 
 }
 
-.formmenu-filter-button {
-    cursor: pointer;
-    min-width: 10px;
-    display: inline-block;
-    border: 1px grey solid;
-    margin-right: 2px;
-    text-align: center;
-}
+//#######################
+// .formmenu-filter-button {
+//     cursor: pointer;
+//     min-width: 10px;
+//     display: inline-block;
+//     border: 1px grey solid;
+//     margin-right: 2px;
+//     text-align: center;
+// }
 
-.formmenu-filter-button-disabled.formmenu-filter-button {
-    background-color: #f0f0f0;
-    color: #808080;
-    cursor: auto;
-}
+//#######################
+// .formmenu-filter-button-disabled.formmenu-filter-button {
+//     background-color: #f0f0f0;
+//     color: #808080;
+//     cursor: auto;
+// }
 
-.formmenu-filter-button-depressed.formmenu-filter-button {
+// .formmenu-filter-button-depressed .formmenu-filter-button {
+//     border: 2px black solid;
+// }
+
+button.formmenu-filter-button-depressed {
     border: 2px black solid;
 }
 

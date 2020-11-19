@@ -402,10 +402,16 @@ namespace FormMenu {
         parent.appendChild(filterButton);
     }
 
-    function createFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void): HTMLElement {
-        let filterButton: HTMLElement = document.createElement("span");
-        filterButton.classList.add(cssClass);
-        filterButton.classList.add('formmenu-filter-button');
+    function createFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void): HTMLButtonElement {
+        let filterButton: HTMLButtonElement = document.createElement("button");
+        filterButton.type = "button";
+
+        let filterButtonSpan: HTMLElement = document.createElement("span");
+        filterButtonSpan.classList.add(cssClass);
+        filterButtonSpan.classList.add('formmenu-filter-button');
+
+        filterButton.appendChild(filterButtonSpan);
+
         filterButton.onclick = onClickHandler;
 
         return filterButton;
@@ -557,7 +563,7 @@ namespace FormMenu {
 
     function onItemStateFilterButtonClicked(e: MouseEvent, itemStateInfo: iItemStateInfo): void {
         let clickedElement:HTMLElement = (<any>(e.currentTarget));
-        if (clickedElement.classList.contains('formmenu-filter-button-disabled')) { return; }
+    //###########    if (clickedElement.classList.contains('formmenu-filter-button-disabled')) { return; }
 
         const itemStateActive: boolean = getItemStateStatus(itemStateInfo);
         setItemStateStatus(!itemStateActive, itemStateInfo, clickedElement);
@@ -566,7 +572,7 @@ namespace FormMenu {
     }
 
     // Called when the item state of a menu item is updated
-    function setItemStateActive(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLElement, 
+    function setItemStateActive(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLButtonElement, 
         menuElementInfo: MenuElementInfo): void {
 
         let itemStates = menuElementInfo.itemStates;
@@ -598,7 +604,9 @@ namespace FormMenu {
             itemStateInfo.onChangeMenuItemsWithItemStateExist(existsActiveItem);
         }
 
-        setClass(filterButton, !existsActiveItem, 'formmenu-filter-button-disabled');
+ //##########       setClass(filterButton, !existsActiveItem, 'formmenu-filter-button-disabled');
+        filterButton.disabled = !existsActiveItem;
+
         if (!existsActiveItem) {
             setItemStateStatus(false, itemStateInfo, filterButton);
         }
@@ -609,9 +617,9 @@ namespace FormMenu {
     function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
         _menuElementInfos: MenuElementInfo[]): void {
 
-        let filterButton: HTMLElement = createFilterButton(
+        let filterButton: HTMLButtonElement = createFilterButton(
             itemStateInfo.stateFilterButtonClass, (e: MouseEvent) => { onItemStateFilterButtonClicked(e, itemStateInfo); });
-        filterButton.classList.add('formmenu-filter-button-disabled');
+        filterButton.disabled = true;
         filterBar.appendChild(filterButton);
 
         _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
