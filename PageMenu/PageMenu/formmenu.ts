@@ -350,12 +350,7 @@ namespace FormMenu {
     }
 
     function onMenuHideShowButtonClicked(e: MouseEvent): void {
-        // The span with the hide/show will have been clicked.
-        // Its parent is the formmenu div.
-
-        let parentDiv:HTMLElement = parentOfEventTarget(e);
-
-        toggleClasses(parentDiv, 'formmenu-hidden', 'formmenu-shown');
+        toggleClasses(_mainMenuElement, 'formmenu-hidden', 'formmenu-shown');
     }
 
     function onExpandAllMenuClicked(e: MouseEvent): void {
@@ -426,12 +421,19 @@ namespace FormMenu {
     }
 
     function addMenuBody(_mainMenuElement: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
+        let openButtonBar: HTMLElement = document.createElement("div");
+        openButtonBar.classList.add('formmenu-open-button-bar');
 
         addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
-            "showMenuHideShowButton", _mainMenuElement);
+            "showMenuHideShowButton", openButtonBar);
 
-        let filterBar: HTMLElement = document.createElement("span");
+        _mainMenuElement.appendChild(openButtonBar);
+
+        let filterBar: HTMLElement = document.createElement("div");
         filterBar.classList.add('formmenu-filter-bar');
+
+        addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
+            "showMenuHideShowButton", filterBar);
 
         addFilterButton('formmenu-expand-all-menu-button', onExpandAllMenuClicked,
             "showExpandAllMenuButton", filterBar);

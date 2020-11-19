@@ -103,13 +103,18 @@ Doco at:
 /********************************************************/
 /* Form menu hide/show */
 
-.formmenu-hidden {
-
+.formmenu-open-button-bar {
+    display: none;
 }
 
-.formmenu-hidden ul, 
-.formmenu-hidden .formmenu-filter-bar {
-    display: none;
+.formmenu-hidden {
+    .formmenu-filter-bar, ul, .formmenu-buttonarea {
+        display: none;
+    }
+
+    .formmenu-open-button-bar {
+        display: block;
+    }
 }
 
 .formmenu-shown {
@@ -144,7 +149,7 @@ input.formmenu-filter {
     
 }
 
-@include filter-showhide("textmatch");
+//############  @include filter-showhide("textmatch");
 
 /******************************************************/
 /* Filter bar */
