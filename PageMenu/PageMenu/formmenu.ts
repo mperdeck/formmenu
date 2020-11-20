@@ -31,7 +31,6 @@ namespace FormMenu {
         // Same as defaultOpenAtLevel, but applies when user clicks the collapse filter button.
         collapseOpenAtLevel: 1,
 
-        domItemHighlightPeriodMS: 500,
         showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
@@ -177,7 +176,6 @@ namespace FormMenu {
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
         let menuElementClass = 'formmenu-' + domElement.tagName;
         let caption = domElement.innerText;
-        let domItemHighlightPeriodMS: number = getConfigValue("domItemHighlightPeriodMS");
 
         // If a menu item gets clicked, scroll the associated dom element into view if it is not already
         // visible. If it is already visible, do not scroll it.
@@ -190,8 +188,9 @@ namespace FormMenu {
                 domElement.scrollIntoView();
             }
 
+            domElement.addEventListener("animationend", 
+                function(){ domElement.classList.remove('formmenu-highlighted-dom-item'); }, false);
             domElement.classList.add('formmenu-highlighted-dom-item');
-            setTimeout(function(){ domElement.classList.remove('formmenu-highlighted-dom-item'); }, domItemHighlightPeriodMS);
         };
 
         let level:number = tagNameToLevel(domElement.tagName);
@@ -406,6 +405,7 @@ namespace FormMenu {
     function createFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void): HTMLButtonElement {
         let filterButton: HTMLButtonElement = document.createElement("button");
         filterButton.type = "button";
+        filterButton.classList.add('formmenu-filter-button-outer');
 
         let filterButtonSpan: HTMLElement = document.createElement("span");
         filterButtonSpan.classList.add(cssClass);
