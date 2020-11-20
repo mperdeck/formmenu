@@ -105,6 +105,12 @@ namespace FormMenu {
     // Holds references to all iItemStateInfos whose filers are active
     let _itemStateInfoActiveFilters: iItemStateInfo[] = [];
 
+    // Used to determine in which direction the page is scrolling
+    let _lastPageYOffset: number = 0;
+
+    // If true, we're scrolling towards the end of the document
+    let _scrollingDown = true;
+
     function searchFilterIsActive(): boolean {
         const filterValue = _searchTerm;
         const filterMinimumCharacters: number = getConfigValue("filterMinimumCharacters");
@@ -188,6 +194,7 @@ namespace FormMenu {
                 domElement.scrollIntoView();
             }
 
+            // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
             domElement.addEventListener("animationend", 
                 function(){ domElement.classList.remove('formmenu-highlighted-dom-item'); }, false);
             domElement.classList.add('formmenu-highlighted-dom-item');
@@ -699,6 +706,9 @@ namespace FormMenu {
         // This is negative. The closer to zero, the closer to the top.
         let closestDistanceToTop: number = Number.NEGATIVE_INFINITY;
 
+        let firstVisibleElement: MenuElementInfo;
+        let lastVisibleElement: MenuElementInfo;
+
         for(let i = 0; i < count; i++) {
             let currentMenuElementInfo = _menuElementInfos[i];
             let visibility:number = elementIsVisible(currentMenuElementInfo.domElement);
@@ -721,6 +731,12 @@ namespace FormMenu {
             
             if (isVisible) {
                 setVisibility(currentMenuElementInfo);
+
+                if (!firstVisibleElement) {
+                    firstVisibleElement = currentMenuElementInfo;
+                }
+
+                lastVisibleElement = currentMenuElementInfo;
             }
         }
 
@@ -729,6 +745,25 @@ namespace FormMenu {
         // but is not represented on the menu.
         if (invisibleMenuHeaderAboveVisibleArea) {
             setVisibility(invisibleMenuHeaderAboveVisibleArea);
+
+            if (!firstVisibleElement) {
+                firstVisibleElement = invisibleMenuHeaderAboveVisibleArea;
+            }
+
+            lastVisibleElement = invisibleMenuHeaderAboveVisibleArea;
+        }
+
+        // Make sure that the menu elements associated with the visible dom elements
+        // are actually in view.
+        // Theoratically, there could be more visible elements than can be shown in the menu box.
+        // You want to have the menu scrolling in the same direction as the document.
+        // So, when scrolling down (towards bottom of the document), scroll the last "visible" menu item
+        // into view. When scrolling up, scroll the first "visible" item in view.
+
+        if (_scrollingDown) {
+            lastVisibleElement.domElement.scrollIntoView();
+        } else {
+            firstVisibleElement.domElement.scrollIntoView();
         }
     }
 
@@ -836,6 +871,11 @@ namespace FormMenu {
     }
 
     export function scrollHandler(): void {
+
+        let currentYOffset = window.pageYOffset;
+        _scrollingDown = (currentYOffset > _lastPageYOffset);
+        _lastPageYOffset = (currentYOffset < 0) ? 0 : currentYOffset;
+
         setVisibilityForMenu();
     }
 
@@ -844,6 +884,8 @@ namespace FormMenu {
     }
 
     export function pageLoadedHandler(): void {
+        _lastPageYOffset = window.pageYOffset;
+
         _menuElementInfos = domElementsToMenuElements(getAllDomElements());
         setParents(_menuElementInfosRoot, { value:0}, _menuElementInfos);
 
