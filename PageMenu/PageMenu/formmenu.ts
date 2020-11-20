@@ -281,7 +281,8 @@ namespace FormMenu {
     function createMenuElementDiv(menuElementInfo: MenuElementInfo, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
 
-        let expandElement: HTMLElement = document.createElement("span");
+        let expandElement: HTMLAnchorElement = document.createElement("a");
+        expandElement.href = "#";
         expandElement.classList.add("formmenu-expand");
         expandElement.onclick = (e) => onExpandClicked(menuElementInfo);
         menuElement.appendChild(expandElement);
