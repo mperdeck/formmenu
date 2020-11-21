@@ -694,8 +694,8 @@ namespace FormMenu {
         const menuItemSpan = getCaptionElement(menuElementInfo);
         const availableXSpace = _mainUlElement.clientHeight - menuItemSpan.clientHeight;
         const isVisible = 
-            (menuElementInfo.domElement.offsetTop >= _mainUlElement.scrollTop) &&
-            (menuElementInfo.domElement.offsetTop <= (_mainUlElement.scrollTop + availableXSpace));
+            (menuElementInfo.menuElement.offsetTop >= _mainUlElement.scrollTop) &&
+            (menuElementInfo.menuElement.offsetTop <= (_mainUlElement.scrollTop + availableXSpace));
 
         return isVisible;
     }
@@ -704,7 +704,7 @@ namespace FormMenu {
     // shows at the top.
     function menuItemMakeVisibleAtTop(menuElementInfo: MenuElementInfo): void {
         if (!menuItemIsVisible(menuElementInfo)) {
-            _mainUlElement.scrollTop = menuElementInfo.domElement.offsetTop;
+            _mainUlElement.scrollTop = menuElementInfo.menuElement.offsetTop;
         }
     }
 
@@ -715,11 +715,9 @@ namespace FormMenu {
             const menuItemSpan = getCaptionElement(menuElementInfo);
             const availableXSpace = _mainUlElement.clientHeight - menuItemSpan.clientHeight;
     
-            let newOffsetTop = menuElementInfo.domElement.offsetTop - availableXSpace;
+            let newOffsetTop = menuElementInfo.menuElement.offsetTop - availableXSpace;
             if (newOffsetTop < 0) { newOffsetTop = 0; }
-            if (menuElementInfo.domElement.offsetTop > availableXSpace) {
-                _mainUlElement.scrollTop = newOffsetTop;
-            }
+            _mainUlElement.scrollTop = newOffsetTop;
         }
     }
 
@@ -782,7 +780,13 @@ namespace FormMenu {
                 firstVisibleElement = invisibleMenuHeaderAboveVisibleArea;
             }
 
-            lastVisibleElement = invisibleMenuHeaderAboveVisibleArea;
+            // Note that invisibleMenuHeaderAboveVisibleArea can only be the last visible element
+            // if there are no other elements - seeing it by definition sits above all other
+            // visible elements.
+
+            if (!lastVisibleElement) {
+                lastVisibleElement = invisibleMenuHeaderAboveVisibleArea;
+            }
         }
 
         // Make sure that the menu elements associated with the visible dom elements
