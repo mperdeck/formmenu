@@ -688,6 +688,41 @@ namespace FormMenu {
         return (menuElementInfo.level < _levelNonHeadingMenuItem);
     }
 
+    // Returns true if the given menu item is visible inside the menu box.
+    // Assumes the entire menu box is in a fixed location on the page and is entirely visible.
+    function menuItemIsVisible(menuElementInfo: MenuElementInfo): boolean {
+        const menuItemSpan = getCaptionElement(menuElementInfo);
+        const availableXSpace = _mainUlElement.clientHeight - menuItemSpan.clientHeight;
+        const isVisible = 
+            (menuElementInfo.domElement.offsetTop >= _mainUlElement.scrollTop) &&
+            (menuElementInfo.domElement.offsetTop <= (_mainUlElement.scrollTop + availableXSpace));
+
+        return isVisible;
+    }
+
+    // If given menu item is not visible inside the menu, scrolls the menu so the item
+    // shows at the top.
+    function menuItemMakeVisibleAtTop(menuElementInfo: MenuElementInfo): void {
+        if (!menuItemIsVisible(menuElementInfo)) {
+            _mainUlElement.scrollTop = menuElementInfo.domElement.offsetTop;
+        }
+    }
+
+    // If given menu item is not visible inside the menu, scrolls the menu so the item
+    // shows at the bottom.
+    function menuItemMakeVisibleAtBottom(menuElementInfo: MenuElementInfo): void {
+        if (!menuItemIsVisible(menuElementInfo)) {
+            const menuItemSpan = getCaptionElement(menuElementInfo);
+            const availableXSpace = _mainUlElement.clientHeight - menuItemSpan.clientHeight;
+    
+            let newOffsetTop = menuElementInfo.domElement.offsetTop - availableXSpace;
+            if (newOffsetTop < 0) { newOffsetTop = 0; }
+            if (menuElementInfo.domElement.offsetTop > availableXSpace) {
+                _mainUlElement.scrollTop = newOffsetTop;
+            }
+        }
+    }
+
     function setVisibilityForMenu(): void {
         if (!_menuElementInfos) { return; }
 
@@ -758,9 +793,9 @@ namespace FormMenu {
         // into view. When scrolling up, scroll the first "visible" item in view.
 
         if (_scrollingDown) {
-            lastVisibleElement.domElement.scrollIntoView();
+            menuItemMakeVisibleAtBottom(lastVisibleElement);
         } else {
-            firstVisibleElement.domElement.scrollIntoView();
+            menuItemMakeVisibleAtTop(firstVisibleElement);
         }
     }
 
