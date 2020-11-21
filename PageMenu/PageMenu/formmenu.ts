@@ -296,7 +296,32 @@ namespace FormMenu {
         let captionElement: HTMLElement = document.createElement("span");
         captionElement.classList.add("formmenu-caption");
         captionElement.innerHTML = menuElementInfo.caption;
-        captionElement.onclick = onClickHandler;
+        
+        
+        
+//#############        captionElement.onclick = onClickHandler;
+        captionElement.onclick = function() {
+            let u = topMenuUlElement();
+
+            console.log('############# ' + menuElement.offsetTop + ', ' + u.scrollTop + ', ' + 
+            u.clientHeight + ', ' + captionElement.clientHeight );
+
+// scroll memnu item to top
+// ##########  u.scrollTop = menuElement.offsetTop;
+
+// scroll memnu item to top
+let newMenuItemX = u.clientHeight - captionElement.clientHeight;
+if (menuElement.offsetTop > newMenuItemX) {
+    u.scrollTop = menuElement.offsetTop - newMenuItemX;
+}
+
+
+
+
+
+        };
+
+
         menuElement.appendChild(captionElement);
 
         menuElement.classList.add(cssClass);
@@ -760,11 +785,11 @@ namespace FormMenu {
         // So, when scrolling down (towards bottom of the document), scroll the last "visible" menu item
         // into view. When scrolling up, scroll the first "visible" item in view.
 
-        if (_scrollingDown) {
-            lastVisibleElement.domElement.scrollIntoView();
-        } else {
-            firstVisibleElement.domElement.scrollIntoView();
-        }
+        // if (_scrollingDown) {
+        //     lastVisibleElement.domElement.scrollIntoView();
+        // } else {
+        //     firstVisibleElement.domElement.scrollIntoView();
+        // }
     }
 
     // Finds out if the menu element in the menuElementInfo passes the search filter.
