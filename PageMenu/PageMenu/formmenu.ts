@@ -863,6 +863,13 @@ namespace FormMenu {
     function rebuildMenuList(): void {
         debounce(rebuildMenuDebounceTimer, 50, function() {
             const ulElement = getMenuElementsUl(_menuElementInfosRoot);
+
+            // The top level ul must be positioned, so location of menu items within that ul
+            // can be determined with offsetTop
+            // Make sure ONLY the top level ul is positioned, not lower level ones.
+
+            ulElement.style.position = "relative";
+
             _mainMenuElement.replaceChild(ulElement, _mainUlElement);
             _mainUlElement = ulElement;
         });
