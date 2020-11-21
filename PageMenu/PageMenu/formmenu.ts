@@ -99,6 +99,9 @@ namespace FormMenu {
     // The div that contains the entire menu
     let _mainMenuElement:HTMLElement;
 
+    // The div that contains the entire menu
+    let _mainUlElement:HTMLUListElement;
+
     // The current content of the search box
     let _searchTerm:string = '';
 
@@ -472,20 +475,14 @@ namespace FormMenu {
 
         // The the ul holding the menu items must have the class formmenu-top-menuitems.
         // It will be replaced by rebuildMenuList.
-        const ulPlaceholderElement: HTMLUListElement = document.createElement("ul");
-        ulPlaceholderElement.classList.add("formmenu-top-menuitems");
-        _mainMenuElement.appendChild(ulPlaceholderElement);
+        _mainUlElement = document.createElement("ul");
+        _mainMenuElement.appendChild(_mainUlElement);
 
         // Create buttons area
         _mainMenuElement.appendChild(buttonsArea);
 
         rebuildMenuList();
     }
-
-    function topMenuUlElement(): HTMLUListElement {
-        const ulElement = _mainMenuElement.getElementsByClassName('formmenu-top-menuitems')[0];
-        return ulElement as HTMLUListElement;
-    } 
 
     function visitAllItemStateInfos(callback: (itemStateInfo: iItemStateInfo)=>void): void {
         visitKeyedConfigItems<iItemStateInfo>("itemStateInfos", callback);
@@ -866,7 +863,8 @@ namespace FormMenu {
     function rebuildMenuList(): void {
         debounce(rebuildMenuDebounceTimer, 50, function() {
             const ulElement = getMenuElementsUl(_menuElementInfosRoot);
-            _mainMenuElement.replaceChild(ulElement, topMenuUlElement());
+            _mainMenuElement.replaceChild(ulElement, _mainUlElement);
+            _mainUlElement = ulElement;
         });
     }
 
