@@ -39,6 +39,22 @@ Doco at:
     button[disabled] {
         cursor: auto;
     }
+
+    .formmenu-buttonarea {
+        position:  relative; /* Needed for abolute positioning of the resize icon */
+        height: 20px; /* Needed to show the resize icon if there are no buttons */
+
+        .formmenu-resize-icon {
+            padding-right: 2px;
+            position: absolute;
+            right: 0;
+            bottom: -2px;
+    
+            &::after {
+                content: "\25E2";
+            }
+        }
+    }
 }
 
 /********************************************/
@@ -217,5 +233,4 @@ button.formmenu-filter-button-depressed {
 .formmenu-collapse-all-menu-button::after {
     content: "-";
 }
-
 

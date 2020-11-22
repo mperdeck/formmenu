@@ -539,6 +539,10 @@ namespace FormMenu {
             buttonArea.appendChild(button);
         })
 
+        let resizeIcon: HTMLDivElement = document.createElement("div");
+        resizeIcon.classList.add('formmenu-resize-icon');
+        buttonArea.appendChild(resizeIcon);
+
         return buttonArea;
     }
 
