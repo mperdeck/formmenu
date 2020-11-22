@@ -43,15 +43,16 @@ Doco at:
     .formmenu-buttonarea {
         position:  relative; /* Needed for abolute positioning of the resize icon */
         height: 20px; /* Needed to show the resize icon if there are no buttons */
+        padding-left: 18px;
 
         .formmenu-resize-icon {
-            padding-right: 2px;
+            padding-left: 2px;
             position: absolute;
-            right: 0;
-            bottom: -2px;
+            left: 0;
+            bottom: -3px;
     
             &::after {
-                content: "\25E2";
+                content: "\25E3";
             }
         }
     }
