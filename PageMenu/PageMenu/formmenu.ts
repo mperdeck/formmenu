@@ -265,6 +265,16 @@ namespace FormMenu {
         }
     }
 
+    // If there is a local storage item with the given key, removes it.
+    // Otherwise adds it with a non-falsy value.
+    function toggleLocalStorage(key: string) {
+        if (localStorage.getItem(key)) {
+            localStorage.removeItem(key);
+        } else {
+            localStorage.setItem(key, "1");
+        }
+    }
+
     function parentOfEventTarget(e:MouseEvent): HTMLElement {
         // See https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget
         // currentTarget will return the span containing the caption.
@@ -361,6 +371,7 @@ namespace FormMenu {
 
     function onMenuHideShowButtonClicked(e: MouseEvent): void {
         toggleClass(_mainMenuElement, 'formmenu-hidden');
+        toggleLocalStorage('formmenu-hidden');
     }
 
     function onExpandAllMenuClicked(e: MouseEvent): void {
@@ -935,6 +946,10 @@ namespace FormMenu {
         // Set _mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
         // setActive may be called while the menu is being created.
         _mainMenuElement = createMainMenuElement();
+
+        if (localStorage.getItem('formmenu-hidden')) {
+            _mainMenuElement.classList.add('formmenu-hidden');
+        }
 
         addMenuBody(_mainMenuElement, _menuElementInfos);
 
