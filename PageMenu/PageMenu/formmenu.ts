@@ -360,7 +360,7 @@ namespace FormMenu {
     }
 
     function onMenuHideShowButtonClicked(e: MouseEvent): void {
-        toggleClasses(_mainMenuElement, 'formmenu-hidden', 'formmenu-shown');
+        toggleClass(_mainMenuElement, 'formmenu-hidden');
     }
 
     function onExpandAllMenuClicked(e: MouseEvent): void {
@@ -431,7 +431,6 @@ namespace FormMenu {
     function createMainMenuElement(): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
         menuElement.classList.add('formmenu');
-        menuElement.classList.add('formmenu-shown');
         menuElement.id = 'formmenu';
 
         return menuElement;

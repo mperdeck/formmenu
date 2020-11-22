@@ -148,20 +148,16 @@ Doco at:
     }
 }
 
-.formmenu-shown {
-
-}
-
 .formmenu-menu-hide-show {
     cursor: pointer;
 }
 
-.formmenu-hidden .formmenu-menu-hide-show::after {
-    content: "<< ";
+.formmenu-menu-hide-show::after {
+    content: ">> ";
 }
 
-.formmenu-shown .formmenu-menu-hide-show::after {
-    content: ">> ";
+.formmenu-hidden .formmenu-menu-hide-show::after {
+    content: "<< ";
 }
 
 /******************************************************/
