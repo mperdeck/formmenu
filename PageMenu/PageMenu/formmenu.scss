@@ -12,6 +12,9 @@ Doco at:
     top: 10px;
     border: 1px solid red;
     background-color: white;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
     // Remove bullets and reduce indent of the items.
     ul {
@@ -27,9 +30,8 @@ Doco at:
         padding: 0 10px 0 10px; 
         margin: 5px 0 0 0; 
 
-        // If you use a percentage here, the ul box breaks out of its containing div box and you can't get to lower menu items. */
-        max-height: 500px; 
         overflow-y: scroll;
+        flex-grow: 1;
     }
 
     button {
@@ -38,6 +40,16 @@ Doco at:
 
     button[disabled] {
         cursor: auto;
+    }
+
+    .formmenu-filter-bar {
+        display: flex;
+
+        .formmenu-filter {
+            display: inline;
+            width: auto;
+            flex-grow: 1;
+        }
     }
 
     .formmenu-buttonarea {
@@ -50,6 +62,7 @@ Doco at:
             position: absolute;
             left: 0;
             bottom: -3px;
+            cursor: ne-resize;
     
             &::after {
                 content: "\25E3";
@@ -180,11 +193,6 @@ Doco at:
 /******************************************************/
 /* Filter */
 
-input.formmenu-filter {
-    display: inline;
-    width: auto;
-}
-
 .formmenu-matching-filter-text {
     background-color: yellow;
 }
@@ -194,13 +202,6 @@ input.formmenu-filter {
 }
 
 //############  @include filter-showhide("textmatch");
-
-/******************************************************/
-/* Filter bar */
-
-.formmenu-filter-bar {
-
-}
 
 //#######################
 // .formmenu-filter-button {

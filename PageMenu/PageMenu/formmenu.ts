@@ -539,11 +539,49 @@ namespace FormMenu {
             buttonArea.appendChild(button);
         })
 
-        let resizeIcon: HTMLDivElement = document.createElement("div");
-        resizeIcon.classList.add('formmenu-resize-icon');
+        const resizeIcon = neResizeDiv();
         buttonArea.appendChild(resizeIcon);
 
         return buttonArea;
+    }
+
+    function neResizeDiv(): HTMLDivElement {
+        let resizeIcon: HTMLDivElement = document.createElement("div");
+        resizeIcon.classList.add('formmenu-resize-icon');
+
+        resizeIcon.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+
+            const boundingRect = _mainMenuElement.getBoundingClientRect();
+            const preMoveX = boundingRect.left;
+            const preMoveWidth = boundingRect.right - boundingRect.left;
+            const preMoveHeight = boundingRect.bottom - boundingRect.top;
+            const preMoveMouseX = e.pageX;
+            const preMoveMouseY = e.pageY;
+
+            const resizeMenu = (e) => {
+                            
+                let newWidth = preMoveWidth - (e.pageX - preMoveMouseX);
+                if (newWidth < resizeIcon.clientWidth) { newWidth = resizeIcon.clientWidth; }
+
+                let newHeight = preMoveHeight + (e.pageY - preMoveMouseY);
+                if (newHeight < resizeIcon.clientHeight) { newHeight = resizeIcon.clientHeight; }
+
+                let newX = preMoveX - (newWidth - preMoveWidth);
+
+                _mainMenuElement.style.left = newX + "px";
+                _mainMenuElement.style.width = newWidth + "px";
+                _mainMenuElement.style.height = newHeight + "px";
+            };
+
+            window.addEventListener('mousemove', resizeMenu);
+
+            window.addEventListener('mouseup', ()=> {
+                window.removeEventListener('mousemove', resizeMenu);
+            });
+        });
+
+        return resizeIcon;
     }
 
     // Visits all item state infos, processes the menu element infos for each
