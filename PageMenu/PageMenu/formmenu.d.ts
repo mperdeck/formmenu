@@ -7,7 +7,12 @@ interface iFormMenuConfiguration {
     // Same as defaultOpenAtLevel, but applies when user clicks the collapse filter button.
     collapseOpenAtLevel?: number;
 
-    domItemHighlightPeriodMS?: number;
+    // When menu width is less than this, it minimizes automatically.
+    minimumMenuWidth?: number;
+
+    // When menu heigth is less than this, it minimizes automatically.
+    minimumMenuHeigth?: number;
+
     showFilterInput?: boolean;
     filterPlaceholder?: string;
     filterMinimumCharacters?: number;

@@ -178,8 +178,15 @@ Doco at:
         display: none;
     }
 
+    background-color: transparent;
+    border: none;
+
     .formmenu-open-button-bar {
         display: block;
+
+        button {
+            float: right;
+        }
     }
 }
 

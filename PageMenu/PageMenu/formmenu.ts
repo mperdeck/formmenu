@@ -31,6 +31,9 @@ namespace FormMenu {
         // Same as defaultOpenAtLevel, but applies when user clicks the collapse filter button.
         collapseOpenAtLevel: 1,
 
+        minimumMenuWidth: 60,
+        minimumMenuHeigth: 60,
+
         showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
@@ -369,6 +372,11 @@ namespace FormMenu {
         return menuElement;
     }
 
+    function hideMenu(): void {
+        _mainMenuElement.classList.add('formmenu-hidden');
+        localStorage.setItem('formmenu-hidden', "1");
+    }
+
     function onMenuHideShowButtonClicked(e: MouseEvent): void {
         toggleClass(_mainMenuElement, 'formmenu-hidden');
         toggleLocalStorage('formmenu-hidden');
@@ -562,10 +570,16 @@ namespace FormMenu {
             const resizeMenu = (e) => {
                             
                 let newWidth = preMoveWidth - (e.pageX - preMoveMouseX);
-                if (newWidth < resizeIcon.clientWidth) { newWidth = resizeIcon.clientWidth; }
-
                 let newHeight = preMoveHeight + (e.pageY - preMoveMouseY);
-                if (newHeight < resizeIcon.clientHeight) { newHeight = resizeIcon.clientHeight; }
+
+                const minimumMenuWidth: number = getConfigValue('minimumMenuWidth');
+                const minimumMenuHeigth: number = getConfigValue('minimumMenuHeigth');
+
+                if ((newWidth < minimumMenuWidth) || (newHeight < minimumMenuHeigth)) {
+                    window.removeEventListener('mousemove', resizeMenu);
+                    hideMenu();
+                    return;
+                }
 
                 let newX = preMoveX - (newWidth - preMoveWidth);
 
