@@ -50,6 +50,10 @@ Doco at:
             display: inline;
             width: auto;
             flex-grow: 1;
+
+            // If you do not add this, the search box will start to poke out the right side of the menu
+            // box, and the x to clear the box will become out of reach.
+            overflow: hidden;
         }
     }
 
