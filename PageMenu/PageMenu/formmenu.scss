@@ -8,8 +8,14 @@ Doco at:
 
 .formmenu {
     position: fixed;
+
+    /* Initial size and width of the menu */
+    /* Also used when screen resized to smaller than height of menu */
     right: 10px;
     top: 10px;
+    bottom: 10px;
+    width: 200px;
+
     border: 1px solid red;
     background-color: white;
     overflow: hidden;
