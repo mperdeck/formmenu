@@ -33,6 +33,7 @@ namespace FormMenu {
 
         minimumMenuWidth: 60,
         minimumMenuHeigth: 60,
+        fixedHeight: false,
 
         showFilterInput: true,
         filterPlaceholder: 'filter',
@@ -372,6 +373,17 @@ namespace FormMenu {
         return menuElement;
     }
 
+    function setMenuHeight(height: number): void {
+        const fixedHeight: boolean = getConfigValue('fixedHeight');
+
+        if (fixedHeight) {
+            _mainMenuElement.style.height = height + "px";
+        } else {
+            _mainMenuElement.style.maxHeight = height + "px";
+            _mainMenuElement.style.bottom = "auto";
+        }
+    }
+
     function storeDimensions(width: number, height: number): void {
         localStorage.setItem('formmenu-width', width.toString());
         localStorage.setItem('formmenu-height', height.toString());
@@ -394,7 +406,7 @@ namespace FormMenu {
         }
 
         if (!isNaN(dimensions.height)) {
-            _mainMenuElement.style.height = dimensions.height + "px";
+            setMenuHeight(dimensions.height);
         }
     }
 
@@ -613,7 +625,7 @@ namespace FormMenu {
 
                 _mainMenuElement.style.left = newX + "px";
                 _mainMenuElement.style.width = newWidth + "px";
-                _mainMenuElement.style.height = newHeight + "px";
+                setMenuHeight(newHeight);
             };
 
             window.addEventListener('mousemove', resizeMenu);
