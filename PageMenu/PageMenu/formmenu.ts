@@ -372,6 +372,32 @@ namespace FormMenu {
         return menuElement;
     }
 
+    function storeDimensions(width: number, height: number): void {
+        localStorage.setItem('formmenu-width', width.toString());
+        localStorage.setItem('formmenu-height', height.toString());
+    }
+
+    function getDimensions(): { width: number, height: number } {
+        const result = { 
+            width: parseInt(localStorage.getItem('formmenu-width')), 
+            height: parseInt(localStorage.getItem('formmenu-height')) 
+        };
+
+        return result;
+    }
+
+    function setDimensionsFromLocalStorage(): void {
+        let dimensions = getDimensions();
+
+        if (!isNaN(dimensions.width)) {
+            _mainMenuElement.style.width = dimensions.width + "px";
+        }
+
+        if (!isNaN(dimensions.height)) {
+            _mainMenuElement.style.height = dimensions.height + "px";
+        }
+    }
+
     function hideMenu(): void {
         _mainMenuElement.classList.add('formmenu-hidden');
         localStorage.setItem('formmenu-hidden', "1");
@@ -571,6 +597,8 @@ namespace FormMenu {
                             
                 let newWidth = preMoveWidth - (e.pageX - preMoveMouseX);
                 let newHeight = preMoveHeight + (e.pageY - preMoveMouseY);
+
+                storeDimensions(newWidth, newHeight);
 
                 const minimumMenuWidth: number = getConfigValue('minimumMenuWidth');
                 const minimumMenuHeigth: number = getConfigValue('minimumMenuHeigth');
@@ -1010,6 +1038,8 @@ namespace FormMenu {
         addMenuBody(_mainMenuElement, _menuElementInfos);
 
         setVisibilityForMenu();
+
+        setDimensionsFromLocalStorage();
 
         let bodyElement = document.getElementsByTagName("BODY")[0];
         bodyElement.appendChild(_mainMenuElement);
