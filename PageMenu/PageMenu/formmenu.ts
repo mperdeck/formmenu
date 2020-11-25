@@ -411,6 +411,19 @@ namespace FormMenu {
         }
     }
 
+    // If formmenu-bottom has not been set, figures out the distance between the bottom of the
+    // menu and the bottom of the screen and stores that under formmenu-bottom.
+    function storeMenuBottom(): void {
+
+        if (localStorage.getItem("formmenu-bottom") !== null) { return; }
+
+        const boundingRectangle = _mainMenuElement.getBoundingClientRect();
+        const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+        const formBottom = windowHeight - boundingRectangle.bottom;
+
+        localStorage.setItem('formmenu-bottom', formBottom.toString());
+    }
+
     // If the user resizes the windows, reducing it height, at some point the menu
     // will start extending below the bottom of the window. So its bottom is no longer
     // visible. Ensures this doesn't happen by removing
@@ -419,6 +432,33 @@ namespace FormMenu {
     // This allows the stylesheet to take over. If this sets top and bottom of the main menu
     // element, that will lead to both top and bottom of the menu being visible.
     function ensureMenuBottomVisible(): void {
+
+        // If menu has never been resized, nothing that can be done here
+        const storedHeightString = localStorage.getItem('formmenu-height');
+        if (storedHeightString === null) { return; }
+
+        // formBottom should always be there, seeing it is set when the component is loaded.
+        const formBottom = parseInt(localStorage.getItem('formmenu-bottom'));
+
+        const boundingRectangle = _mainMenuElement.getBoundingClientRect();
+        const menuHeightWanted = boundingRectangle.bottom + formBottom;
+        const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+
+        if (windowHeight < menuHeightWanted) {
+            // Menu has started to get too close to the bottom edge
+            // Remove the bottom and height / max-height styles (which were set during menu resizes), 
+            // so the stylesheet can take over 
+            // sizing the heigth of the menu
+
+            _mainMenuElement.style.height = null;
+            _mainMenuElement.style.maxHeight = null;
+            _mainMenuElement.style.bottom = null;
+        } else {
+
+        }
+
+
+
 
     }
 
@@ -1070,5 +1110,7 @@ namespace FormMenu {
 
         let bodyElement = document.getElementsByTagName("BODY")[0];
         bodyElement.appendChild(_mainMenuElement);
+
+        storeMenuBottom();
     }
 }
