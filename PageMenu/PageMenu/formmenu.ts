@@ -441,11 +441,11 @@ namespace FormMenu {
         const formBottom = parseInt(localStorage.getItem('formmenu-bottom'));
 
         const boundingRectangle = _mainMenuElement.getBoundingClientRect();
-        const menuHeightWanted = boundingRectangle.bottom + formBottom;
+        const menuHeightWanted = boundingRectangle.top + parseInt(storedHeightString) + formBottom;
         const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
 
         if (windowHeight < menuHeightWanted) {
-            // Menu has started to get too close to the bottom edge
+            // Heigth stored in local storage is too high for the window.
             // Remove the bottom and height / max-height styles (which were set during menu resizes), 
             // so the stylesheet can take over 
             // sizing the heigth of the menu
@@ -454,12 +454,9 @@ namespace FormMenu {
             _mainMenuElement.style.maxHeight = null;
             _mainMenuElement.style.bottom = null;
         } else {
-
+            // window has grown higher to the point that the stored height can be used again
+            setDimensionsFromLocalStorage();
         }
-
-
-
-
     }
 
     function hideMenu(): void {
