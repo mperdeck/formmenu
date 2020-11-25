@@ -299,6 +299,7 @@ namespace FormMenu {
     function onExpandClicked(menuElementInfo: MenuElementInfo) {
         toggleClass(menuElementInfo.menuElement, 'formmenu-item-open')
         menuElementInfo.isExpanded = !menuElementInfo.isExpanded;
+        ensureMenuBottomVisible();
     }
 
     function createMenuElementDiv(menuElementInfo: MenuElementInfo, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
@@ -408,6 +409,17 @@ namespace FormMenu {
         if (!isNaN(dimensions.height)) {
             setMenuHeight(dimensions.height);
         }
+    }
+
+    // If the user resizes the windows, reducing it height, at some point the menu
+    // will start extending below the bottom of the window. So its bottom is no longer
+    // visible. Ensures this doesn't happen by removing
+    // the height or max-height property; and
+    // the bottom: auto property.
+    // This allows the stylesheet to take over. If this sets top and bottom of the main menu
+    // element, that will lead to both top and bottom of the menu being visible.
+    function ensureMenuBottomVisible(): void {
+
     }
 
     function hideMenu(): void {
@@ -1017,6 +1029,8 @@ namespace FormMenu {
 
             _mainMenuElement.replaceChild(ulElement, _mainUlElement);
             _mainUlElement = ulElement;
+
+            ensureMenuBottomVisible();
         });
     }
 
@@ -1031,6 +1045,7 @@ namespace FormMenu {
 
     export function resizeHandler(): void {
         setVisibilityForMenu();
+        ensureMenuBottomVisible();
     }
 
     export function pageLoadedHandler(): void {
