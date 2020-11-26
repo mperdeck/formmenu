@@ -15,8 +15,8 @@ interface iFormMenuConfiguration {
 
     // If true, user can only adjust the width of the menu.
     // If false, user can adjust both width and height.
-    // To stop user from adjusting the size of the menu at all, follow instructions in formmenu.scss
-    fixedHeight?: boolean;
+    // To stop user from adjusting the size of the menu at all, follow instructions in _formmenu.config.scss
+    widthResizeOnly?: boolean;
 
     showFilterInput?: boolean;
     filterPlaceholder?: string;

@@ -5,7 +5,7 @@
 // Uncomment the below to 1) let the height of the menu adjust automatically
 // to the number of menu items; and 2) only let the user adjust the width of the menu,
 // not the height.
-// Make sure the fixedHeight configuration option is set to true.
+// Make sure the widthResizeOnly configuration option is set to true.
 .formmenu { bottom: auto; max-height: 95%; }
 .formmenu .formmenu-buttonarea .formmenu-resize-icon { cursor: e-resize; }
 
