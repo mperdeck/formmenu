@@ -9,4 +9,13 @@
 .formmenu { bottom: auto; max-height: 95%; }
 .formmenu .formmenu-buttonarea .formmenu-resize-icon { cursor: e-resize; }
 
+// Uncomment the below to 1) let make the height of the menu fixed;
+// and 2) only let the user adjust both width and height of the menu.
+// Make sure the widthResizeOnly configuration option is set to false.
+//
+// To make the menu less tall, increase the bottom property (which is the distance
+// between bottom of menu and bottom of window).
+.formmenu { bottom: 10px; max-height: 100%; }
+.formmenu .formmenu-buttonarea .formmenu-resize-icon { cursor: ne-resize; }
+
 
