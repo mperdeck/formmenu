@@ -1,21 +1,23 @@
-// Uncomment the below to hide the resize icon
-// .formmenu .formmenu-buttonarea { padding-left: 0; }
-// .formmenu .formmenu-buttonarea .formmenu-resize-icon { display: none; }
-
-// Uncomment the below to 1) let the height of the menu adjust automatically
-// to the number of menu items; and 2) only let the user adjust the width of the menu,
+// By default 1) the height of the menu is adjusted automatically
+// by the number of menu items; and 2) the user can only adjust the width of the menu,
 // not the height.
-// Make sure the widthResizeOnly configuration option is set to true.
-.formmenu { bottom: auto; max-height: 95%; }
-.formmenu .formmenu-buttonarea .formmenu-resize-icon { cursor: e-resize; }
 
-// Uncomment the below to 1) let make the height of the menu fixed;
-// and 2) only let the user adjust both width and height of the menu.
+// ---------------------------------------------
+// Uncomment the below to 1) not automatically adjust the height of the menu based on the
+// number of menu items;
+// and 2) let the user adjust both width and height of the menu.
 // Make sure the widthResizeOnly configuration option is set to false.
 //
-// To make the menu less tall, increase the bottom property (which is the distance
+// To make the menu less tall, increase the "bottom" property below (which is the distance
 // between bottom of menu and bottom of window).
-.formmenu { bottom: 10px; max-height: 100%; }
-.formmenu .formmenu-buttonarea .formmenu-resize-icon { cursor: ne-resize; }
+
+// .formmenu { bottom: 10px; max-height: 100%; }
+// .formmenu .formmenu-buttonarea .formmenu-resize-icon { cursor: ne-resize; }
+
+// ---------------------------------------------
+// Uncomment the below to hide the resize icon. The user will no longer be able to resize the menu.
+
+// .formmenu .formmenu-buttonarea { padding-left: 0; }
+// .formmenu .formmenu-buttonarea .formmenu-resize-icon { display: none; }
 
 

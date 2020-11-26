@@ -11,7 +11,7 @@ Doco at:
     /* Note that if the screen height becomes less then the height of the menu, any height property will be removed */
     right: 10px;
     top: 10px;
-    bottom: 10px;
+    max-height: 95%;
     width: 200px;
 
     border: 1px solid red;
@@ -71,7 +71,7 @@ Doco at:
             position: absolute;
             left: 0;
             bottom: -3px;
-            cursor: ne-resize;
+            cursor: e-resize;
     
             &::after {
                 content: "\25E3";
