@@ -4,8 +4,6 @@ Source code at:
 Doco at:
 */
 
-@import "_definitions.formmenu";
-
 .formmenu {
     position: fixed;
 
@@ -79,10 +77,6 @@ Doco at:
                 content: "\25E3";
             }
         }
-
-        // Uncomment the below to hide the resize icon
-        // padding-left: 0;
-        // .formmenu-resize-icon { display: none; }
     }
 }
 
@@ -257,4 +251,6 @@ button.formmenu-filter-button-depressed {
 .formmenu-collapse-all-menu-button::after {
     content: "-";
 }
+
+@import "_formmenu.config";
 
