@@ -31,8 +31,8 @@ namespace FormMenu {
         // Same as defaultOpenAtLevel, but applies when user clicks the collapse filter button.
         collapseOpenAtLevel: 1,
 
-        minimumMenuWidth: 60,
-        minimumMenuHeigth: 60,
+        minimumMenuWidth: 160,
+        minimumMenuHeigth: 100,
         widthResizeOnly: true,
 
         showFilterInput: true,
