@@ -33,7 +33,7 @@ namespace FormMenu {
 
         minimumMenuWidth: 60,
         minimumMenuHeigth: 60,
-        fixedHeight: false,
+        fixedHeight: true,
 
         showFilterInput: true,
         filterPlaceholder: 'filter',
@@ -376,13 +376,9 @@ namespace FormMenu {
 
     function setMenuHeight(height: number): void {
         const fixedHeight: boolean = getConfigValue('fixedHeight');
+        if (fixedHeight) { return; }
 
-        if (fixedHeight) {
-            _mainMenuElement.style.height = height + "px";
-        } else {
-            _mainMenuElement.style.maxHeight = height + "px";
-            _mainMenuElement.style.bottom = "auto";
-        }
+        _mainMenuElement.style.height = height + "px";
     }
 
     function storeDimensions(width: number, height: number): void {

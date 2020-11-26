@@ -13,9 +13,9 @@ interface iFormMenuConfiguration {
     // When menu heigth is less than this, it minimizes automatically.
     minimumMenuHeigth?: number;
 
-    // If true, the height of the menu is set using property height - giving fixed height.
-    // If false, the height of the menu is set using property max-height - so if the menu takes less vertical space,
-    // the menu is less high.
+    // If true, user can only adjust the width of the menu.
+    // If false, user can adjust both width and height.
+    // To stop user from adjusting the size of the menu at all, follow instructions in formmenu.scss
     fixedHeight?: boolean;
 
     showFilterInput?: boolean;
