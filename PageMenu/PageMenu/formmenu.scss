@@ -78,178 +78,155 @@ Doco at:
             }
         }
     }
-}
 
-/********************************************/
-/* Form menu item */
+    /********************************************/
+    /* Form menu item */
 
-.formmenu-item {
-    cursor: pointer;
-    display: flex;
-}
+    .formmenu-item {
+        cursor: pointer;
+        display: flex;
+    }
 
-.formmenu-highlighted-dom-item {
-    animation-duration: 0.5s;
-    animation-name: formmenu-highlighted-dom-item-animation;
-    animation-iteration-count: 2;
-    animation-direction: alternate;
-}
+    .formmenu-highlighted-dom-item {
+        animation-duration: 0.5s;
+        animation-name: formmenu-highlighted-dom-item-animation;
+        animation-iteration-count: 2;
+        animation-direction: alternate;
+    }
 
-@keyframes formmenu-highlighted-dom-item-animation {
-    from {
-        background-color: auto;
+    @keyframes formmenu-highlighted-dom-item-animation {
+        from {
+            background-color: auto;
+        }
+        
+        to {
+            background-color: yellow;
+        }
     }
     
-    to {
-        background-color: yellow;
-    }
-  }
-  
-/********************************************/
-/* Form menu expand / collapse */
+    /********************************************/
+    /* Form menu expand / collapse */
 
-// Give formmenu-expand a width, so menu item captions align nicely even if one has an open/close
-// and the other doesn't. 
-// Because of this, formmenu-expand and formmenu-caption have to be floated lef.
-
-.formmenu-expand {
-    display: block;
-    width: 10px;
-    white-space: nowrap;
-}
-
-.formmenu-caption {
-    display: block;
-    white-space: nowrap;
-}
-
-// Make sure there is a character in formmenu-expand even if you do not want to show an open/close,
-// otherwise it won't be given the width.
-// Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0. 
-// See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
-
-.formmenu-expand {
-    color: black;
-    text-decoration: none;
-    pointer-events: none;
-
-    &::after {
-        content: "\00a0";
-    }
-}
-
-.formmenu-has-children {
+    // Give formmenu-expand a width, so menu item captions align nicely even if one has an open/close
+    // and the other doesn't. 
+    // Because of this, formmenu-expand and formmenu-caption have to be floated lef.
 
     .formmenu-expand {
-        pointer-events: auto;
+        display: block;
+        width: 10px;
+        white-space: nowrap;
+    }
+
+    .formmenu-caption {
+        display: block;
+        white-space: nowrap;
+    }
+
+    // Make sure there is a character in formmenu-expand even if you do not want to show an open/close,
+    // otherwise it won't be given the width.
+    // Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0. 
+    // See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
+
+    .formmenu-expand {
+        color: black;
+        text-decoration: none;
+        pointer-events: none;
 
         &::after {
-            content: "+";
+            content: "\00a0";
         }
     }
 
-    &+ul {
-        display: none;
-    }
+    .formmenu-has-children {
 
-    &.formmenu-item-open {
-        .formmenu-expand::after {
-            content: "-";
+        .formmenu-expand {
+            pointer-events: auto;
+
+            &::after {
+                content: "+";
+            }
         }
 
         &+ul {
-            display: block;
+            display: none;
+        }
+
+        &.formmenu-item-open {
+            .formmenu-expand::after {
+                content: "-";
+            }
+
+            &+ul {
+                display: block;
+            }
         }
     }
-}
 
-/******************************************************/
-/* Visible */
+    /******************************************************/
+    /* Visible */
 
-.formmenu-is-visible .formmenu-caption {
-    color: darkgoldenrod;
-}
+    .formmenu-is-visible .formmenu-caption {
+        color: darkgoldenrod;
+    }
 
-/********************************************************/
-/* Form menu hide/show */
+    /********************************************************/
+    /* Form menu hide/show */
 
-.formmenu-open-button-bar {
-    display: none;
-}
-
-.formmenu-hidden {
-    .formmenu-filter-bar, ul, .formmenu-buttonarea {
+    .formmenu-open-button-bar {
         display: none;
     }
 
-    background-color: transparent;
-    border: none;
+    &.formmenu-hidden {
+        .formmenu-filter-bar, ul, .formmenu-buttonarea {
+            display: none;
+        }
 
-    .formmenu-open-button-bar {
-        display: block;
+        background-color: transparent;
+        border: none;
 
-        button {
-            float: right;
+        .formmenu-open-button-bar {
+            display: block;
+
+            button {
+                float: right;
+            }
         }
     }
-}
 
-.formmenu-menu-hide-show {
-    cursor: pointer;
-}
+    .formmenu-menu-hide-show {
+        cursor: pointer;
+    }
 
-.formmenu-menu-hide-show::after {
-    content: ">> ";
-}
+    .formmenu-menu-hide-show::after {
+        content: ">> ";
+    }
 
-.formmenu-hidden .formmenu-menu-hide-show::after {
-    content: "<< ";
-}
+    &.formmenu-hidden .formmenu-menu-hide-show::after {
+        content: "<< ";
+    }
 
-/******************************************************/
-/* Filter */
+    /******************************************************/
+    /* Filter */
 
-.formmenu-matching-filter-text {
-    background-color: yellow;
-}
+    .formmenu-matching-filter-text {
+        background-color: yellow;
+    }
 
-.formmenu-is-textmatch {
-    
-}
+    .formmenu-is-textmatch {
+        
+    }
 
-//############  @include filter-showhide("textmatch");
+    button.formmenu-filter-button-depressed {
+        border: 2px black solid;
+    }
 
-//#######################
-// .formmenu-filter-button {
-//     cursor: pointer;
-//     min-width: 10px;
-//     display: inline-block;
-//     border: 1px grey solid;
-//     margin-right: 2px;
-//     text-align: center;
-// }
+    .formmenu-expand-all-menu-button::after {
+        content: "+";
+    }
 
-//#######################
-// .formmenu-filter-button-disabled.formmenu-filter-button {
-//     background-color: #f0f0f0;
-//     color: #808080;
-//     cursor: auto;
-// }
-
-// .formmenu-filter-button-depressed .formmenu-filter-button {
-//     border: 2px black solid;
-// }
-
-button.formmenu-filter-button-depressed {
-    border: 2px black solid;
-}
-
-.formmenu-expand-all-menu-button::after {
-    content: "+";
-}
-
-.formmenu-collapse-all-menu-button::after {
-    content: "-";
+    .formmenu-collapse-all-menu-button::after {
+        content: "-";
+    }
 }
 
 @import "_formmenu.config";

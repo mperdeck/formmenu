@@ -242,17 +242,6 @@ namespace FormMenu {
         }
     }
 
-    // If the element has class1, sets class2 instead. And vice versa.
-    function toggleClasses(htmlElement:HTMLElement, class1: string, class2: string): void {
-        if (htmlElement.classList.contains(class1)) {
-            htmlElement.classList.remove(class1);
-            htmlElement.classList.add(class2);
-        } else if (htmlElement.classList.contains(class2)) {
-            htmlElement.classList.remove(class2);
-            htmlElement.classList.add(class1);
-        }
-    }
-
     // If the element has cssClass, remove it. Otherwise add it.
     function toggleClass(htmlElement:HTMLElement, cssClass: string): void {
         if (htmlElement.classList.contains(cssClass)) {
@@ -277,14 +266,6 @@ namespace FormMenu {
         } else {
             localStorage.setItem(key, "1");
         }
-    }
-
-    function parentOfEventTarget(e:MouseEvent): HTMLElement {
-        // See https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget
-        // currentTarget will return the span containing the caption.
-
-        let parent:HTMLElement = (<any>(e.currentTarget)).parentNode;
-        return parent;
     }
 
     // Returns if by default the menu item should be open, false otherwise.
@@ -760,7 +741,6 @@ namespace FormMenu {
             itemStateInfo.onChangeMenuItemsWithItemStateExist(existsActiveItem);
         }
 
- //##########       setClass(filterButton, !existsActiveItem, 'formmenu-filter-button-disabled');
         filterButton.disabled = !existsActiveItem;
 
         if (!existsActiveItem) {
