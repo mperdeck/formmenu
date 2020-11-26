@@ -5,10 +5,32 @@ Doco at:
 */
 .formmenu {
   position: fixed;
+  /* Initial size and width of the menu */
+  /* Note that if the screen height becomes less then the height of the menu, any height property will be removed */
   right: 10px;
   top: 10px;
+  max-height: 95%;
+  width: 200px;
   border: 1px solid red;
   background-color: white;
+  overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  /********************************************/
+  /* Form menu item */
+  /********************************************/
+  /* Form menu expand / collapse */
+  /******************************************************/
+  /* Visible */
+  /********************************************************/
+  /* Form menu hide/show */
+  /******************************************************/
+  /* Filter */
 }
 
 .formmenu ul {
@@ -19,118 +41,183 @@ Doco at:
 .formmenu > ul {
   padding: 0 10px 0 10px;
   margin: 5px 0 0 0;
-  max-height: 500px;
-  overflow-y: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
 }
 
-/********************************************/
-/* Form menu item */
-.formmenu-item {
-  cursor: pointer;
-  clear: both;
-}
-
-.formmenu-highlighted-dom-item {
-  background-color: yellow;
-}
-
-/********************************************/
-/* Form menu expand / collapse */
-.formmenu-expand {
-  float: left;
-  display: block;
-  width: 10px;
-}
-
-.formmenu-caption {
-  float: left;
-  display: block;
-}
-
-.formmenu-expand::after {
-  content: "\00a0";
-}
-
-.formmenu-item-closed .formmenu-expand::after {
-  content: "+ ";
-}
-
-.formmenu-item-closed + ul {
-  display: none;
-}
-
-.formmenu-item-open .formmenu-expand::after {
-  content: "- ";
-}
-
-/******************************************************/
-/* Visible */
-.formmenu-is-visible .formmenu-caption {
-  color: darkgoldenrod;
-}
-
-/********************************************************/
-/* Form menu hide/show */
-.formmenu-hidden ul,
-.formmenu-hidden .formmenu-filter-bar {
-  display: none;
-}
-
-.formmenu-menu-hide-show {
+.formmenu button {
   cursor: pointer;
 }
 
-.formmenu-hidden .formmenu-menu-hide-show::after {
-  content: "<< ";
-}
-
-.formmenu-shown .formmenu-menu-hide-show::after {
-  content: ">> ";
-}
-
-/******************************************************/
-/* Filter */
-input.formmenu-filter {
-  display: inline;
-  width: auto;
-}
-
-.formmenu-matching-filter-text {
-  background-color: yellow;
-}
-
-.formmenu-textmatch-filter-is-active .formmenu-is-textmatch,
-.formmenu-textmatch-filter-is-active .formmenu-is-parent-of-textmatch,
-.formmenu-textmatch-filter-is-active .formmenu-is-parent-of-textmatch + ul {
-  display: block;
-}
-
-.formmenu-textmatch-filter-is-active li div {
-  display: none;
-}
-
-/******************************************************/
-/* Filter bar */
-.formmenu-filter-button {
-  cursor: pointer;
-  min-width: 10px;
-  display: inline-block;
-  border: 1px grey solid;
-  margin-right: 2px;
-  text-align: center;
-}
-
-.formmenu-filter-button-disabled.formmenu-filter-button {
-  background-color: #f0f0f0;
-  color: #808080;
+.formmenu button[disabled] {
   cursor: auto;
 }
 
-.formmenu-expand-all-menu-button::after {
+.formmenu .formmenu-filter-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.formmenu .formmenu-filter-bar .formmenu-filter {
+  display: inline;
+  width: auto;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  overflow: hidden;
+}
+
+.formmenu .formmenu-buttonarea {
+  position: relative;
+  /* Needed for abolute positioning of the resize icon */
+  height: 20px;
+  /* Needed to show the resize icon if there are no buttons */
+  padding-left: 18px;
+}
+
+.formmenu .formmenu-buttonarea .formmenu-resize-icon {
+  padding-left: 2px;
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  cursor: e-resize;
+}
+
+.formmenu .formmenu-buttonarea .formmenu-resize-icon::after {
+  content: "\25E3";
+}
+
+.formmenu .formmenu-item {
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.formmenu .formmenu-highlighted-dom-item {
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+  -webkit-animation-name: formmenu-highlighted-dom-item-animation;
+          animation-name: formmenu-highlighted-dom-item-animation;
+  -webkit-animation-iteration-count: 2;
+          animation-iteration-count: 2;
+  -webkit-animation-direction: alternate;
+          animation-direction: alternate;
+}
+
+@-webkit-keyframes formmenu-highlighted-dom-item-animation {
+  from {
+    background-color: auto;
+  }
+  to {
+    background-color: yellow;
+  }
+}
+
+@keyframes formmenu-highlighted-dom-item-animation {
+  from {
+    background-color: auto;
+  }
+  to {
+    background-color: yellow;
+  }
+}
+
+.formmenu .formmenu-expand {
+  display: block;
+  width: 10px;
+  white-space: nowrap;
+}
+
+.formmenu .formmenu-caption {
+  display: block;
+  white-space: nowrap;
+}
+
+.formmenu .formmenu-expand {
+  color: black;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+.formmenu .formmenu-expand::after {
+  content: "\00a0";
+}
+
+.formmenu .formmenu-has-children .formmenu-expand {
+  pointer-events: auto;
+}
+
+.formmenu .formmenu-has-children .formmenu-expand::after {
   content: "+";
 }
 
-.formmenu-collapse-all-menu-button::after {
+.formmenu .formmenu-has-children + ul {
+  display: none;
+}
+
+.formmenu .formmenu-has-children.formmenu-item-open .formmenu-expand::after {
+  content: "-";
+}
+
+.formmenu .formmenu-has-children.formmenu-item-open + ul {
+  display: block;
+}
+
+.formmenu .formmenu-is-visible .formmenu-caption {
+  color: darkgoldenrod;
+}
+
+.formmenu .formmenu-open-button-bar {
+  display: none;
+}
+
+.formmenu.formmenu-hidden {
+  background-color: transparent;
+  border: none;
+}
+
+.formmenu.formmenu-hidden .formmenu-filter-bar, .formmenu.formmenu-hidden ul, .formmenu.formmenu-hidden .formmenu-buttonarea {
+  display: none;
+}
+
+.formmenu.formmenu-hidden .formmenu-open-button-bar {
+  display: block;
+}
+
+.formmenu.formmenu-hidden .formmenu-open-button-bar button {
+  float: right;
+}
+
+.formmenu .formmenu-menu-hide-show {
+  cursor: pointer;
+}
+
+.formmenu .formmenu-menu-hide-show::after {
+  content: "\25B6";
+}
+
+.formmenu.formmenu-hidden .formmenu-menu-hide-show::after {
+  content: "\25C0";
+}
+
+.formmenu .formmenu-matching-filter-text {
+  background-color: yellow;
+}
+
+.formmenu button.formmenu-filter-button-depressed {
+  border: 2px black solid;
+}
+
+.formmenu .formmenu-expand-all-menu-button::after {
+  content: "+";
+}
+
+.formmenu .formmenu-collapse-all-menu-button::after {
   content: "-";
 }
 /*# sourceMappingURL=formmenu.css.map */

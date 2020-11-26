@@ -1,4 +1,3 @@
-@import "_definitions.formmenu";
 
 .formmenu-is-required .formmenu-caption::after {
     content: "*";
@@ -13,5 +12,6 @@
 }
 
 .formmenu-invalid-filter-button::after {
-    content: "!";
+    content: "\2716";
+    color: red;
 }

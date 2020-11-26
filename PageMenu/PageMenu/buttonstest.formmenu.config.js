@@ -29,14 +29,7 @@ var FormMenu;
         var inputElement = document.getElementById(inputElementId);
         setActive(inputElement.required);
     });
-    FormMenu.formMenuConfiguration.itemStateInfos["html5invalid"] = new Html5ItemStateInfo(function (exist) {
-        // Disable the save button if there are invalid input elements.
-        // Note that when this callback starts getting called, the buttons will not yet be in the DOM,
-        // so use the button returned in the wireUp method of the menuButtons object.
-        if (FormMenu.menuSaveButton) {
-            FormMenu.menuSaveButton.disabled = exist;
-        }
-    }, 'formmenu-is-invalid', 'formmenu-invalid-filter-is-active', 'formmenu-invalid-filter-button', function (domElement, setActive) {
+    FormMenu.formMenuConfiguration.itemStateInfos["html5invalid"] = new Html5ItemStateInfo(function (exist) { console.log("########### html5invalid:" + exist); }, 'formmenu-is-invalid', 'formmenu-invalid-filter-is-active', 'formmenu-invalid-filter-button', function (domElement, setActive) {
         if (domElement.tagName.toLowerCase() !== 'label') {
             return;
         }
@@ -50,4 +43,4 @@ var FormMenu;
         });
     });
 })(FormMenu || (FormMenu = {}));
-//# sourceMappingURL=html5form.formmenu.config.js.map
+//# sourceMappingURL=buttonstest.formmenu.config.js.map
