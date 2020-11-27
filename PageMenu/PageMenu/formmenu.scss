@@ -232,6 +232,16 @@ Doco at:
     .formmenu-collapse-all-menu-button::after {
         content: "\2212";
     }
+
+    .formmenu-buttonarea {
+        display: flex;
+
+        button {
+            margin: 5px 0 5px 0;
+            flex-grow: 1;
+            margin-left: 5px;
+        }
+    }
 }
 
 @import "_formmenu.config";
