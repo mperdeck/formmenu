@@ -11,11 +11,22 @@ namespace PageGenerator
         static int WordIndex = 0;
         static int CurrentIndent = 0;
 
-        public static void AddPageStart(this StringBuilder sb, string formConfigFileName, string buttonsConfigFileName)
+        public static void AddPageStart(this StringBuilder sb, string formConfigFileName, string buttonsConfigFileName, ExternalLibrary? externalLibrary)
         {
             sb.AppendLine(@"<!DOCTYPE html>");
             sb.AppendLine(@"<html>");
             sb.AppendLine(@"<head>");
+
+            if (externalLibrary.HasValue)
+            {
+                switch(externalLibrary.Value)
+                {
+                    case ExternalLibrary.Bootstrap3:
+                        sb.AppendLine(@"<link rel=""stylesheet"" href=""https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"" integrity=""sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"" crossorigin=""anonymous"">");
+                        break;
+                }
+            }
+
             sb.AppendLine(@"<link rel=""stylesheet"" href=""style.css"">");
             sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}formmenu.css"">");
             sb.AppendLine(@$"<link rel=""stylesheet"" href=""{PathConstants.DevFromTest}{formConfigFileName}.formmenu.css"">");
@@ -25,7 +36,8 @@ namespace PageGenerator
             sb.AppendLine(@"<div class=""inner"">");
         }
 
-        public static void AddPageEnd(this StringBuilder sb, string outFileName, string formConfigFileName, string buttonsConfigFileName)
+        public static void AddPageEnd(this StringBuilder sb, string outFileName, string formConfigFileName, 
+            string buttonsConfigFileName, ExternalLibrary? externalLibrary)
         {
             sb.AppendLine(@"</div>");
             sb.AppendLine(@$"<script src=""{PathConstants.DevFromTest}formmenu.js""></script>");
@@ -45,18 +57,29 @@ namespace PageGenerator
                 sb.AppendLine(@$"<script src=""{PathConstants.DevFromTest}{buttonsConfigFileName}.buttons.config.js""></script>");
             }
 
+            if (externalLibrary.HasValue)
+            {
+                switch (externalLibrary.Value)
+                {
+                    case ExternalLibrary.Bootstrap3:
+                        sb.AppendLine(@"<script src=""https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"" integrity=""sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"" crossorigin=""anonymous""></script>");
+                        break;
+                }
+            }
+
             sb.AppendLine(@"</body>");
             sb.AppendLine(@"</html>");
         }
 
-        public static void WriteTestPage(Action<StringBuilder> buildPage, string outFileName, string formConfigFileName, string buttonsConfigFileName)
+        public static void WriteTestPage(Action<StringBuilder> buildPage, string outFileName, string formConfigFileName, 
+            string buttonsConfigFileName, ExternalLibrary? externalLibrary = null)
         {
             var sb = new StringBuilder();
 
-            sb.AddPageStart(formConfigFileName, buttonsConfigFileName);
+            sb.AddPageStart(formConfigFileName, buttonsConfigFileName, externalLibrary);
             buildPage(sb);
 
-            sb.AddPageEnd(outFileName, formConfigFileName, buttonsConfigFileName);
+            sb.AddPageEnd(outFileName, formConfigFileName, buttonsConfigFileName, externalLibrary);
             sb.WriteToFile(PathConstants.Test + outFileName + ".html");
         }
 
