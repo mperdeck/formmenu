@@ -1,0 +1,12 @@
+
+.formmenu {
+    .formmenu-buttonarea {
+        display: flex;
+        padding: 5px 0 5px 0;
+
+        button {
+            flex-grow: 1;
+            margin-left: 5px;
+        }
+    }
+}
