@@ -33,7 +33,6 @@ namespace FormMenu {
 
         minimumMenuWidth: 160,
         minimumMenuHeigth: 100,
-        widthResizeOnly: true,
 
         showFilterInput: true,
         filterPlaceholder: 'filter',
@@ -367,6 +366,14 @@ namespace FormMenu {
         localStorage.setItem('formmenu-height', height.toString());
     }
 
+    function storeWidth(width: number): void {
+        localStorage.setItem('formmenu-width', width.toString());
+    }
+
+    function storeHeight(height: number): void {
+        localStorage.setItem('formmenu-height', height.toString());
+    }
+
     function getDimensions(): { width: number, height: number } {
         const result = { 
             width: parseInt(localStorage.getItem('formmenu-width')), 
@@ -384,7 +391,7 @@ namespace FormMenu {
         }
 
         if (!isNaN(dimensions.height)) {
-            setMenuHeight(dimensions.height);
+            _mainMenuElement.style.height = dimensions.height + "px";
         }
     }
 
@@ -520,6 +527,10 @@ namespace FormMenu {
     }
 
     function addMenuBody(_mainMenuElement: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
+
+        _mainMenuElement.appendChild(verticalResizeDiv());
+        _mainMenuElement.appendChild(horizontalResizeDiv());
+
         let openButtonBar: HTMLElement = document.createElement("div");
         openButtonBar.classList.add('formmenu-open-button-bar');
 
@@ -611,38 +622,31 @@ namespace FormMenu {
             buttonArea.appendChild(button);
         })
 
-        const resizeIcon = neResizeDiv();
-        buttonArea.appendChild(resizeIcon);
-
         return buttonArea;
     }
 
-    function neResizeDiv(): HTMLDivElement {
-        let resizeIcon: HTMLDivElement = document.createElement("div");
-        resizeIcon.classList.add('formmenu-resize-icon');
+    function horizontalResizeDiv(): HTMLDivElement {
+        let resizeDiv: HTMLDivElement = document.createElement("div");
+        resizeDiv.classList.add('formmenu-horizontal-resizer');
 
-        resizeIcon.addEventListener('mousedown', function(e) {
+        resizeDiv.addEventListener('mousedown', function(e) {
             e.preventDefault();
 
             const boundingRect = _mainMenuElement.getBoundingClientRect();
             const preMoveX = boundingRect.left;
             const preMoveWidth = boundingRect.right - boundingRect.left;
-            const preMoveHeight = boundingRect.bottom - boundingRect.top;
             const preMoveMouseX = e.pageX;
-            const preMoveMouseY = e.pageY;
 
-            const resizeMenu = (e) => {
+            const resizeMenuHorizontally = (e) => {
                             
                 let newWidth = preMoveWidth - (e.pageX - preMoveMouseX);
-                let newHeight = preMoveHeight + (e.pageY - preMoveMouseY);
 
-                storeDimensions(newWidth, newHeight);
+                storeWidth(newWidth);
 
                 const minimumMenuWidth: number = getConfigValue('minimumMenuWidth');
-                const minimumMenuHeigth: number = getConfigValue('minimumMenuHeigth');
 
-                if ((newWidth < minimumMenuWidth) || (newHeight < minimumMenuHeigth)) {
-                    window.removeEventListener('mousemove', resizeMenu);
+                if (newWidth < minimumMenuWidth) {
+                    window.removeEventListener('mousemove', resizeMenuHorizontally);
                     hideMenu();
                     return;
                 }
@@ -651,17 +655,54 @@ namespace FormMenu {
 
                 _mainMenuElement.style.left = newX + "px";
                 _mainMenuElement.style.width = newWidth + "px";
-                setMenuHeight(newHeight);
             };
 
-            window.addEventListener('mousemove', resizeMenu);
+            window.addEventListener('mousemove', resizeMenuHorizontally);
 
             window.addEventListener('mouseup', ()=> {
-                window.removeEventListener('mousemove', resizeMenu);
+                window.removeEventListener('mousemove', resizeMenuHorizontally);
             });
         });
 
-        return resizeIcon;
+        return resizeDiv;
+    }
+
+    function verticalResizeDiv(): HTMLDivElement {
+        let resizeDiv: HTMLDivElement = document.createElement("div");
+        resizeDiv.classList.add('formmenu-vertical-resizer');
+
+        resizeDiv.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+
+            const boundingRect = _mainMenuElement.getBoundingClientRect();
+            const preMoveHeight = boundingRect.bottom - boundingRect.top;
+            const preMoveMouseY = e.pageY;
+
+            const resizeMenuVertically = (e) => {
+                            
+                let newHeight = preMoveHeight + (e.pageY - preMoveMouseY);
+
+                storeHeight(newHeight);
+
+                const minimumMenuHeigth: number = getConfigValue('minimumMenuHeigth');
+
+                if (newHeight < minimumMenuHeigth) {
+                    window.removeEventListener('mousemove', resizeMenuVertically);
+                    hideMenu();
+                    return;
+                }
+
+                _mainMenuElement.style.height = newHeight + "px";
+            };
+
+            window.addEventListener('mousemove', resizeMenuVertically);
+
+            window.addEventListener('mouseup', ()=> {
+                window.removeEventListener('mousemove', resizeMenuVertically);
+            });
+        });
+
+        return resizeDiv;
     }
 
     // Visits all item state infos, processes the menu element infos for each

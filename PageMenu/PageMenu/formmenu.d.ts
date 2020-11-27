@@ -13,11 +13,6 @@ interface iFormMenuConfiguration {
     // When menu heigth is less than this, it minimizes automatically.
     minimumMenuHeigth?: number;
 
-    // If true, user can only adjust the width of the menu.
-    // If false, user can adjust both width and height.
-    // To stop user from adjusting the size of the menu at all, follow instructions in _formmenu.config.scss
-    widthResizeOnly?: boolean;
-
     showFilterInput?: boolean;
     filterPlaceholder?: string;
     filterMinimumCharacters?: number;
