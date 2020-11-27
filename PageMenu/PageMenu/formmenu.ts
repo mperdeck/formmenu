@@ -611,7 +611,9 @@ namespace FormMenu {
             if (menuButtonInfo.cssClass) {
                 const cssClasses: string[] = menuButtonInfo.cssClass.split(' ');
                 for (let i = 0; i < cssClasses.length; i++) {
-                    button.classList.add(cssClasses[i]);
+                    if (cssClasses[i] && (cssClasses[i] !== ' ')) {
+                        button.classList.add(cssClasses[i]);
+                    }
                 }
             }
 
