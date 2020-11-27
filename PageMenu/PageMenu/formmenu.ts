@@ -628,6 +628,7 @@ namespace FormMenu {
     function horizontalResizeDiv(): HTMLDivElement {
         let resizeDiv: HTMLDivElement = document.createElement("div");
         resizeDiv.classList.add('formmenu-horizontal-resizer');
+        resizeDiv.innerHTML = "&nbsp;";
 
         resizeDiv.addEventListener('mousedown', function(e) {
             e.preventDefault();
@@ -670,6 +671,7 @@ namespace FormMenu {
     function verticalResizeDiv(): HTMLDivElement {
         let resizeDiv: HTMLDivElement = document.createElement("div");
         resizeDiv.classList.add('formmenu-vertical-resizer');
+        resizeDiv.innerHTML = "&nbsp;";
 
         resizeDiv.addEventListener('mousedown', function(e) {
             e.preventDefault();
