@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "PageGenerator": {
-      "commandName": "Project",
-      "commandLineArgs": "C:\\Dev\\pagemenu\\background\\testfiles\\test2.html"
-    }
-  }
-}
