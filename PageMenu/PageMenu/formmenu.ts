@@ -644,7 +644,6 @@ namespace FormMenu {
             e.preventDefault();
 
             const boundingRect = _mainMenuElement.getBoundingClientRect();
-            const preMoveX = boundingRect.left;
             const preMoveWidth = boundingRect.right - boundingRect.left;
             const preMoveMouseX = e.pageX;
 
@@ -662,9 +661,6 @@ namespace FormMenu {
                     return;
                 }
 
-                let newX = preMoveX - (newWidth - preMoveWidth);
-
-                _mainMenuElement.style.left = newX + "px";
                 _mainMenuElement.style.width = newWidth + "px";
             };
 
