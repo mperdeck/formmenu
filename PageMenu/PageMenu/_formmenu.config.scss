@@ -1,4 +1,4 @@
-//----------------------------------------
+// =====================================================
 // Resizers
 
 // By default 1) the height of the menu is adjusted automatically
@@ -22,20 +22,12 @@
 
 // .formmenu .formmenu-horizontal-resizer { display: none; }
 
-//----------------------------------------
-// Patches for Bootstrap 3
+// =====================================================
+// Patches for Bootstrap 4
 //
 // Uncomment the below if you applied Bootstrap btn classes to the filter buttons.
 
-// Remove button styles applied by formmenu stylesheet that interfere with Bootstrap styles
-// .formmenu .formmenu-filter-bar button {
-//     &.active {
-//         border: none;
-//     }
+// .formmenu .formmenu-filter-bar button.formmenu-filter-button-depressed {
+//     box-shadow: 4px 4px 4px #888888;
 // }
-
-
-
-
-
 
