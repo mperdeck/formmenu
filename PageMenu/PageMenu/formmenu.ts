@@ -505,13 +505,9 @@ namespace FormMenu {
     function createFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void): HTMLButtonElement {
         let filterButton: HTMLButtonElement = document.createElement("button");
         filterButton.type = "button";
-        filterButton.classList.add('formmenu-filter-button-outer');
 
-        let filterButtonSpan: HTMLElement = document.createElement("span");
-        filterButtonSpan.classList.add(cssClass);
-        filterButtonSpan.classList.add('formmenu-filter-button');
-
-        filterButton.appendChild(filterButtonSpan);
+        filterButton.classList.add(cssClass);
+        filterButton.classList.add('formmenu-filter-button');
 
         filterButton.onclick = onClickHandler;
 
