@@ -20,6 +20,11 @@ interface iFormMenuConfiguration {
     showExpandAllMenuButton?: boolean;
     showCollapseAllMenuButton?: boolean;
 
+    classMenuShowButton?: string;
+    classMenuHideButton?: string;
+    classExpandAllMenuButton?: string;
+    classCollapseAllMenuButton?: string;
+
     // Query selector used to select the tags that will be represented in the menu
     querySelector?: string;
 

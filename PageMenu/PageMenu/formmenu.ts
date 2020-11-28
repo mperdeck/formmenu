@@ -41,6 +41,11 @@ namespace FormMenu {
         showExpandAllMenuButton: true,
         showCollapseAllMenuButton: true,
 
+        classMenuShowButton: 'formmenu-menu-show',
+        classMenuHideButton: 'formmenu-menu-hide',
+        classExpandAllMenuButton: 'formmenu-expand-all-menu-button',
+        classCollapseAllMenuButton: 'formmenu-collapse-all-menu-button',
+        
         // Note that HTML only has these heading tags. There is no h7, etc.
         querySelector: "h1,h2,h3,h4,h5,h6",
 
@@ -490,13 +495,13 @@ namespace FormMenu {
     }
 
     // Add a filter button to the filter bar (the bit of space left of the filter).
-    // cssClass - css class of the span representing the button.
+    // cssClassConfigName - name of config item holding css class of the button.
     // onClickHandler - runs when button is clicked.
     // showHideConfigName - name of a config item. If blank, button is always created.
     //                      If not blank, config item has to be true for button to be created.
     // parent - filter button will be added to this element.
     //
-    function addFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void,
+    function addFilterButton(cssClassConfigName: string, onClickHandler: (e: MouseEvent) => void,
         showHideConfigName: string, parent: HTMLElement) {
 
         let showButton: boolean = true;
@@ -507,6 +512,11 @@ namespace FormMenu {
         
         if (!showButton) {
             return;
+        }
+        
+        let cssClass;
+        if (cssClassConfigName) {
+            cssClass = getConfigValue(cssClassConfigName);
         }
 
         let filterButton: HTMLElement = createFilterButton(cssClass, onClickHandler);
@@ -541,7 +551,7 @@ namespace FormMenu {
         let openButtonBar: HTMLElement = document.createElement("div");
         openButtonBar.classList.add('formmenu-open-button-bar');
 
-        addFilterButton('formmenu-menu-show', onMenuHideShowButtonClicked,
+        addFilterButton('classMenuShowButton', onMenuHideShowButtonClicked,
             "showMenuHideShowButton", openButtonBar);
 
         _mainMenuElement.appendChild(openButtonBar);
@@ -549,13 +559,13 @@ namespace FormMenu {
         let filterBar: HTMLElement = document.createElement("div");
         filterBar.classList.add('formmenu-filter-bar');
 
-        addFilterButton('formmenu-menu-hide', onMenuHideShowButtonClicked,
+        addFilterButton('classMenuHideButton', onMenuHideShowButtonClicked,
             "showMenuHideShowButton", filterBar);
 
-        addFilterButton('formmenu-expand-all-menu-button', onExpandAllMenuClicked,
+        addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked,
             "showExpandAllMenuButton", filterBar);
 
-        addFilterButton('formmenu-collapse-all-menu-button', onCollapseAllMenuClicked,
+        addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked,
             "showCollapseAllMenuButton", filterBar);
 
         // Create the buttons area very early on, in case processing of the item state infos
