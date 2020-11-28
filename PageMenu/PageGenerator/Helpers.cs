@@ -24,6 +24,9 @@ namespace PageGenerator
                     case ExternalLibrary.Bootstrap3:
                         sb.AppendLine(@"<link rel=""stylesheet"" href=""bootstrap-3.3.7-dist/css/bootstrap.min.css"">");
                         break;
+                    case ExternalLibrary.Bootstrap4:
+                        sb.AppendLine(@"<link rel=""stylesheet"" href=""bootstrap-4.5.3-dist/css/bootstrap.min.css"">");
+                        break;
                 }
             }
 
@@ -63,6 +66,9 @@ namespace PageGenerator
                 {
                     case ExternalLibrary.Bootstrap3:
                         sb.AppendLine(@"<script src=""bootstrap-3.3.7-dist/js/bootstrap.min.js""></script>");
+                        break;
+                    case ExternalLibrary.Bootstrap4:
+                        sb.AppendLine(@"<script src=""bootstrap-4.5.3-dist/js/bootstrap.min.js""></script>");
                         break;
                 }
             }
