@@ -250,13 +250,22 @@ namespace FormMenu {
         }
     }
 
-    function setClass(htmlElement:HTMLElement, cssClass: string, setIt: boolean = false): void {
-        if (!setIt) {
-            htmlElement.classList.remove(cssClass);
-            return;
+    // Adds the given class to the given element.
+    // cssClass - one or more classes, separated by space
+    // setIt - if true, the classes are added. If false, the classes are removed.
+    function setClass(htmlElement:HTMLElement, cssClass: string, setIt: boolean = true): void {
+        if (cssClass) {
+            const cssClasses: string[] = cssClass.split(' ');
+            for (let i = 0; i < cssClasses.length; i++) {
+                if (cssClasses[i] && (cssClasses[i] !== ' ')) {
+                    if (!setIt) {
+                        htmlElement.classList.remove(cssClasses[i]);
+                    } else {
+                        htmlElement.classList.add(cssClasses[i]);
+                    }
+               }
+            }
         }
-
-        htmlElement.classList.add(cssClass);
     }
 
     // If there is a local storage item with the given key, removes it.
@@ -299,7 +308,7 @@ namespace FormMenu {
         captionElement.onclick = onClickHandler;
         menuElement.appendChild(captionElement);
 
-        menuElement.classList.add(cssClass);
+        setClass(menuElement, cssClass);
         menuElement.classList.add("formmenu-item");
 
         return menuElement;
@@ -508,7 +517,7 @@ namespace FormMenu {
         let filterButton: HTMLButtonElement = document.createElement("button");
         filterButton.type = "button";
 
-        filterButton.classList.add(cssClass);
+        setClass(filterButton, cssClass);
         filterButton.classList.add('formmenu-filter-button');
 
         filterButton.onclick = onClickHandler;
@@ -605,15 +614,7 @@ namespace FormMenu {
             button.type = "button";
             button.innerHTML = menuButtonInfo.caption;
             button.onclick = menuButtonInfo.onClick;
-
-            if (menuButtonInfo.cssClass) {
-                const cssClasses: string[] = menuButtonInfo.cssClass.split(' ');
-                for (let i = 0; i < cssClasses.length; i++) {
-                    if (cssClasses[i] && (cssClasses[i] !== ' ')) {
-                        button.classList.add(cssClasses[i]);
-                    }
-                }
-            }
+            setClass(button, menuButtonInfo.cssClass);
 
             if (menuButtonInfo.wireUp) {
                 menuButtonInfo.wireUp(button);
