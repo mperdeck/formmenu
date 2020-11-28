@@ -96,23 +96,6 @@ Doco at:
         cursor: pointer;
         display: flex;
     }
-
-    .formmenu-highlighted-dom-item {
-        animation-duration: 0.5s;
-        animation-name: formmenu-highlighted-dom-item-animation;
-        animation-iteration-count: 2;
-        animation-direction: alternate;
-    }
-
-    @keyframes formmenu-highlighted-dom-item-animation {
-        from {
-            background-color: auto;
-        }
-        
-        to {
-            background-color: yellow;
-        }
-    }
     
     /********************************************/
     /* Form menu expand / collapse */
@@ -246,6 +229,23 @@ Doco at:
                 margin-right: 5px;
             }
         }
+    }
+}
+
+.formmenu-highlighted-dom-item {
+    animation-duration: 0.5s;
+    animation-name: formmenu-highlighted-dom-item-animation;
+    animation-iteration-count: 2;
+    animation-direction: alternate;
+}
+
+@keyframes formmenu-highlighted-dom-item-animation {
+    from {
+        background-color: auto;
+    }
+    
+    to {
+        background-color: yellow;
     }
 }
 
