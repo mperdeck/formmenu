@@ -250,11 +250,13 @@ namespace FormMenu {
         }
     }
 
-    function setClass(htmlElement:HTMLElement, setIt: boolean, cssClass: string): void {
-        htmlElement.classList.remove(cssClass);
-        if (setIt) {
-            htmlElement.classList.add(cssClass);
+    function setClass(htmlElement:HTMLElement, cssClass: string, setIt: boolean = false): void {
+        if (!setIt) {
+            htmlElement.classList.remove(cssClass);
+            return;
         }
+
+        htmlElement.classList.add(cssClass);
     }
 
     // If there is a local storage item with the given key, removes it.
@@ -329,7 +331,7 @@ namespace FormMenu {
     function onChangeFilter(e: Event): void {
         _searchTerm = (<HTMLInputElement>(e.currentTarget)).value;
         
-        setClass(_mainMenuElement, searchFilterIsActive(), 'formmenu-textmatch-filter-is-active');
+        setClass(_mainMenuElement, 'formmenu-textmatch-filter-is-active', searchFilterIsActive());
 
         rebuildMenuList();
     }
@@ -723,8 +725,8 @@ namespace FormMenu {
     // active - true to set active (so menu items are filtered), false to set inactive
     // filterButton - filter button associated with the item state
     function setItemStateStatus(active: boolean, itemStateInfo: iItemStateInfo, filterButton:HTMLElement): void {
-        setClass(_mainMenuElement, active, itemStateInfo.stateFilterActiveClass);
-        setClass(filterButton, active, 'formmenu-filter-button-depressed');
+        setClass(_mainMenuElement, itemStateInfo.stateFilterActiveClass, active);
+        setClass(filterButton, 'formmenu-filter-button-depressed', active);
 
         // Update _itemStateInfoActiveFilters array
 
@@ -765,7 +767,7 @@ namespace FormMenu {
         }
     
         // Update the menu element
-        setClass(menuElementInfo.menuElement, active, itemStateInfo.hasActiveStateClass);
+        setClass(menuElementInfo.menuElement, itemStateInfo.hasActiveStateClass, active);
 
         // Update filter button style
 
@@ -1042,7 +1044,7 @@ namespace FormMenu {
         const ulElement: HTMLUListElement = getMenuElementsUl(menuElementInfo);
         let hasChildren = (ulElement.children.length > 0);
 
-        setClass(menuElementInfo.menuElement, hasChildren, 'formmenu-has-children');
+        setClass(menuElementInfo.menuElement, 'formmenu-has-children', hasChildren);
 
         if ((!passesSearchFilter(menuElementInfo)) && (!hasChildren)) { return null; }
         if ((!passesItemStateFilters(menuElementInfo)) && (!hasChildren)) { return null; }
@@ -1053,7 +1055,7 @@ namespace FormMenu {
         if (hasChildren) {
             liElement.appendChild(ulElement);
 
-            setClass(menuElementInfo.menuElement, menuElementInfo.isExpanded, "formmenu-item-open")
+            setClass(menuElementInfo.menuElement, "formmenu-item-open", menuElementInfo.isExpanded)
         }
 
         return liElement;
