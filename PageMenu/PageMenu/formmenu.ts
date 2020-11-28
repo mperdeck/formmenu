@@ -25,10 +25,8 @@ namespace FormMenu {
     let defaultConfiguration: iFormMenuConfiguration = {
         skipFirstHeading: false,
 
-        // Items with level equal or lower than this will be open initially. -1 to open everything. 0 to open nothing.
         defaultOpenAtLevel: _levelNonHeadingMenuItem + 1,
 
-        // Same as defaultOpenAtLevel, but applies when user clicks the collapse filter button.
         collapseOpenAtLevel: 1,
 
         minimumMenuWidth: 160,
@@ -37,6 +35,7 @@ namespace FormMenu {
         showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
+
         showMenuHideShowButton: true,
         showExpandAllMenuButton: true,
         showCollapseAllMenuButton: true,
