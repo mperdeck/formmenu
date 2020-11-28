@@ -20,6 +20,8 @@ namespace PageGenerator
             Helpers.WriteTestPage(TestPage.ShortFormOneLevel, "shortform1.bootstrap3", "html5form", "buttonstest", ExternalLibrary.Bootstrap3);
             Helpers.WriteTestPage(TestPage.ShortFormOneLevel, "shortform1.bootstrap4", "html5form", "buttonstest", ExternalLibrary.Bootstrap4);
             Helpers.WriteTestPage(TestPage.TinyFormOneLevel, "tinyform1", "html5form", "buttonstest");
+            Helpers.WriteTestPage(TestPage.TinyFormOneLevel, "tinyform1.bootstrap3", "html5form", "buttonstest", ExternalLibrary.Bootstrap3);
+            Helpers.WriteTestPage(TestPage.TinyFormOneLevel, "tinyform1.bootstrap4", "html5form", "buttonstest", ExternalLibrary.Bootstrap4);
         }
     }
 }
