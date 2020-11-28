@@ -30,15 +30,15 @@ namespace FormMenu {
             menuSaveButton = createdSaveButton; 
         });
 
-        formMenuConfiguration.menuButtons["deleteButton"] = new MenuButton(
-            'Delete',
-            ()=> { console.log('####### Delete button clicked'); },
-            'btn btn-danger btn-sm');
+    formMenuConfiguration.menuButtons["deleteButton"] = new MenuButton(
+        'Delete',
+        ()=> { console.log('####### Delete button clicked'); },
+        'btn btn-danger btn-sm');
 
-        formMenuConfiguration.menuButtons["cancelButton"] = new MenuButton(
-            'Cancel',
-            ()=> { console.log('####### Cancel button clicked'); },
-            'btn btn-link');
+    formMenuConfiguration.menuButtons["cancelButton"] = new MenuButton(
+        'Cancel',
+        ()=> { console.log('####### Cancel button clicked'); },
+        'btn btn-link');
 }
 
 
