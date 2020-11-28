@@ -46,6 +46,7 @@ Doco at:
 
     button[disabled] {
         cursor: auto;
+        opacity: 0.5;
     }
 
     .formmenu-vertical-resizer {
@@ -72,6 +73,10 @@ Doco at:
 
     .formmenu-filter-bar {
         display: flex;
+
+        .formmenu-filter-button {
+            margin: 2px;            
+        }
 
         .formmenu-filter {
             display: inline;
