@@ -736,7 +736,7 @@ namespace FormMenu {
     // filterButton - filter button associated with the item state
     function setItemStateStatus(active: boolean, itemStateInfo: iItemStateInfo, filterButton:HTMLElement): void {
         setClass(_mainMenuElement, itemStateInfo.stateFilterActiveClass, active);
-        setClass(filterButton, 'formmenu-filter-button-depressed', active);
+        setClass(filterButton, 'active', active);
 
         // Update _itemStateInfoActiveFilters array
 
