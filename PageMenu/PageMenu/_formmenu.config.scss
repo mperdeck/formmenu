@@ -1,3 +1,6 @@
+//----------------------------------------
+// Resizers
+
 // By default 1) the height of the menu is adjusted automatically
 // by the number of menu items; and 2) the user can only adjust the width of the menu,
 // not the height.
@@ -18,5 +21,21 @@
 // The user will no longer be able to change the width of the menu.
 
 // .formmenu .formmenu-horizontal-resizer { display: none; }
+
+//----------------------------------------
+// Patches for Bootstrap 3
+//
+// Uncomment the below if you applied Bootstrap btn classes to the filter buttons.
+
+// Remove button styles applied by formmenu stylesheet that interfere with Bootstrap styles
+// .formmenu .formmenu-filter-bar button {
+//     &.active {
+//         border: none;
+//     }
+// }
+
+
+
+
 
 
