@@ -198,15 +198,11 @@ Doco at:
         }
     }
 
-    .formmenu-menu-hide-show {
-        cursor: pointer;
-    }
-
-    .formmenu-menu-hide-show::after {
+    .formmenu-menu-hide::after {
         content: "\25B6";
     }
 
-    &.formmenu-hidden .formmenu-menu-hide-show::after {
+    .formmenu-menu-show::after {
         content: "\25C0";
     }
 

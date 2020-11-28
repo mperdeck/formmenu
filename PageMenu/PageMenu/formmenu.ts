@@ -541,7 +541,7 @@ namespace FormMenu {
         let openButtonBar: HTMLElement = document.createElement("div");
         openButtonBar.classList.add('formmenu-open-button-bar');
 
-        addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
+        addFilterButton('formmenu-menu-show', onMenuHideShowButtonClicked,
             "showMenuHideShowButton", openButtonBar);
 
         _mainMenuElement.appendChild(openButtonBar);
@@ -549,7 +549,7 @@ namespace FormMenu {
         let filterBar: HTMLElement = document.createElement("div");
         filterBar.classList.add('formmenu-filter-bar');
 
-        addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked,
+        addFilterButton('formmenu-menu-hide', onMenuHideShowButtonClicked,
             "showMenuHideShowButton", filterBar);
 
         addFilterButton('formmenu-expand-all-menu-button', onExpandAllMenuClicked,
