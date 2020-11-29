@@ -45,7 +45,7 @@ interface iFormMenuConfiguration {
     menuButtons?: { [key: string]: iMenuButton};
 }
 
-declare let formMenuConfiguration: iFormMenuConfiguration;
+declare let bigFormMenuConfiguration: iFormMenuConfiguration;
     
 // You can have a form menu reflect the state of the associated dom elements.
 // For example, if you include label tags in the form menu, you can show

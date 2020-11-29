@@ -8,7 +8,7 @@ namespace BigFormMenu {
     // Will hold reference to the Save button generated below the form
     export var menuSaveButton: HTMLButtonElement;
 
-    export var formMenuConfiguration: iFormMenuConfiguration;
+    export var bigFormMenuConfiguration: iFormMenuConfiguration;
 
     class Html5ItemStateInfo implements  iItemStateInfo {
         constructor(
@@ -20,12 +20,12 @@ namespace BigFormMenu {
         ) {}
     }
 
-    formMenuConfiguration.querySelector = "h1,h2,h3,h4,h5,h6,label";
+    bigFormMenuConfiguration.querySelector = "h1,h2,h3,h4,h5,h6,label";
 
     // if itemStateInfos is undefined, set it now
-    if (!formMenuConfiguration.itemStateInfos) { formMenuConfiguration.itemStateInfos = {}; }
+    if (!bigFormMenuConfiguration.itemStateInfos) { bigFormMenuConfiguration.itemStateInfos = {}; }
 
-    formMenuConfiguration.itemStateInfos["html5required"] = new Html5ItemStateInfo(
+    bigFormMenuConfiguration.itemStateInfos["html5required"] = new Html5ItemStateInfo(
         null,
         'bigformmenu-is-required', 
         'bigformmenu-required-filter-is-active', 'bigformmenu-required-filter-button', 
@@ -41,7 +41,7 @@ namespace BigFormMenu {
             setActive(inputElement.required);
         });
 
-        formMenuConfiguration.itemStateInfos["html5invalid"] = new Html5ItemStateInfo(
+        bigFormMenuConfiguration.itemStateInfos["html5invalid"] = new Html5ItemStateInfo(
             (exist: boolean)=>{ 
 
                 // Disable the save button if there are invalid input elements.

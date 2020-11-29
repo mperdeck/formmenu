@@ -53,12 +53,12 @@ namespace BigFormMenu {
         menuButtons: {}
     }
 
-    // Create empty formMenuConfiguration here, to make it easier to write
+    // Create empty bigFormMenuConfiguration here, to make it easier to write
     // ...bigformmenu.config.js files that set properties on this object.
     //
     // Do not use let here, because that doesn't allow you to declare a variable 
     // multiple times.
-    export var formMenuConfiguration: iFormMenuConfiguration = {};
+    export var bigFormMenuConfiguration: iFormMenuConfiguration = {};
 
     class MenuElementInfo {
 
@@ -150,16 +150,16 @@ namespace BigFormMenu {
     }
 
     function getConfigValue(itemName: string): any {
-        // formMenuConfiguration may have been created by loading .js file that defines that variable.
+        // bigFormMenuConfiguration may have been created by loading .js file that defines that variable.
         // First try to get the value from there. Otherwise get it from the default config.
         // Note that you want to check against undefined specifically, because for example false
         // is a valid value.
 
-        // Do not use "if (formMenuConfiguration)", because then you'll get a run time reference error
+        // Do not use "if (bigFormMenuConfiguration)", because then you'll get a run time reference error
         // if the variable does not exist already.
-        if (typeof formMenuConfiguration !== 'undefined') {
-            if (typeof formMenuConfiguration[itemName] !== 'undefined') {
-                return formMenuConfiguration[itemName];
+        if (typeof bigFormMenuConfiguration !== 'undefined') {
+            if (typeof bigFormMenuConfiguration[itemName] !== 'undefined') {
+                return bigFormMenuConfiguration[itemName];
             }
         }
 
