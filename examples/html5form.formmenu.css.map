@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AACA,AAAA,qBAAqB,CAAC,iBAAiB,AAAA,OAAO,CAAC;EAC3C,OAAO,EAAE,GAAG;CACf;;AAED,AAAA,oBAAoB,CAAC,iBAAiB,CAAC;EACnC,KAAK,EAAE,GAAG;CACb;;AAED,AAAA,gCAAgC,AAAA,OAAO,CAAC;EACpC,OAAO,EAAE,GAAG;CACf;;AAED,AAAA,+BAA+B,AAAA,OAAO,CAAC;EACnC,OAAO,EAAE,OAAO;EAChB,KAAK,EAAE,GAAG;CACb",
-    "sources": [
-        "html5form.formmenu.scss"
-    ],
-    "names": [],
-    "file": "html5form.formmenu.css"
-}

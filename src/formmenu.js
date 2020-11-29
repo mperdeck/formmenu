@@ -19,19 +19,20 @@ var FormMenu;
     var _levelNonHeadingMenuItem = 9000;
     var defaultConfiguration = {
         skipFirstHeading: false,
-        // Items with level equal or lower than this will be open initially. -1 to open everything. 0 to open nothing.
         defaultOpenAtLevel: _levelNonHeadingMenuItem + 1,
-        // Same as defaultOpenAtLevel, but applies when user clicks the collapse filter button.
         collapseOpenAtLevel: 1,
-        minimumMenuWidth: 60,
-        minimumMenuHeigth: 60,
-        widthResizeOnly: true,
+        minimumMenuWidth: 160,
+        minimumMenuHeigth: 100,
         showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
         showMenuHideShowButton: true,
         showExpandAllMenuButton: true,
         showCollapseAllMenuButton: true,
+        classMenuShowButton: 'formmenu-menu-show',
+        classMenuHideButton: 'formmenu-menu-hide',
+        classExpandAllMenuButton: 'formmenu-expand-all-menu-button',
+        classCollapseAllMenuButton: 'formmenu-collapse-all-menu-button',
         // Note that HTML only has these heading tags. There is no h7, etc.
         querySelector: "h1,h2,h3,h4,h5,h6",
         tagNameToLevelMethod: tagNameToLevelDefaultMethod,
@@ -192,10 +193,23 @@ var FormMenu;
             htmlElement.classList.add(cssClass);
         }
     }
-    function setClass(htmlElement, setIt, cssClass) {
-        htmlElement.classList.remove(cssClass);
-        if (setIt) {
-            htmlElement.classList.add(cssClass);
+    // Adds the given class to the given element.
+    // cssClass - one or more classes, separated by space
+    // setIt - if true, the classes are added. If false, the classes are removed.
+    function setClass(htmlElement, cssClass, setIt) {
+        if (setIt === void 0) { setIt = true; }
+        if (cssClass) {
+            var cssClasses = cssClass.split(' ');
+            for (var i = 0; i < cssClasses.length; i++) {
+                if (cssClasses[i] && (cssClasses[i] !== ' ')) {
+                    if (!setIt) {
+                        htmlElement.classList.remove(cssClasses[i]);
+                    }
+                    else {
+                        htmlElement.classList.add(cssClasses[i]);
+                    }
+                }
+            }
         }
     }
     // If there is a local storage item with the given key, removes it.
@@ -232,7 +246,7 @@ var FormMenu;
         captionElement.innerHTML = menuElementInfo.caption;
         captionElement.onclick = onClickHandler;
         menuElement.appendChild(captionElement);
-        menuElement.classList.add(cssClass);
+        setClass(menuElement, cssClass);
         menuElement.classList.add("formmenu-item");
         return menuElement;
     }
@@ -257,7 +271,7 @@ var FormMenu;
     }
     function onChangeFilter(e) {
         _searchTerm = (e.currentTarget).value;
-        setClass(_mainMenuElement, searchFilterIsActive(), 'formmenu-textmatch-filter-is-active');
+        setClass(_mainMenuElement, 'formmenu-textmatch-filter-is-active', searchFilterIsActive());
         rebuildMenuList();
     }
     function createFilterInput() {
@@ -286,6 +300,12 @@ var FormMenu;
         localStorage.setItem('formmenu-width', width.toString());
         localStorage.setItem('formmenu-height', height.toString());
     }
+    function storeWidth(width) {
+        localStorage.setItem('formmenu-width', width.toString());
+    }
+    function storeHeight(height) {
+        localStorage.setItem('formmenu-height', height.toString());
+    }
     function getDimensions() {
         var result = {
             width: parseInt(localStorage.getItem('formmenu-width')),
@@ -299,7 +319,7 @@ var FormMenu;
             _mainMenuElement.style.width = dimensions.width + "px";
         }
         if (!isNaN(dimensions.height)) {
-            setMenuHeight(dimensions.height);
+            _mainMenuElement.style.height = dimensions.height + "px";
         }
     }
     // If formmenu-bottom has not been set, figures out the distance between the bottom of the
@@ -373,13 +393,13 @@ var FormMenu;
         rebuildMenuList();
     }
     // Add a filter button to the filter bar (the bit of space left of the filter).
-    // cssClass - css class of the span representing the button.
+    // cssClassConfigName - name of config item holding css class of the button.
     // onClickHandler - runs when button is clicked.
     // showHideConfigName - name of a config item. If blank, button is always created.
     //                      If not blank, config item has to be true for button to be created.
     // parent - filter button will be added to this element.
     //
-    function addFilterButton(cssClass, onClickHandler, showHideConfigName, parent) {
+    function addFilterButton(cssClassConfigName, onClickHandler, showHideConfigName, parent) {
         var showButton = true;
         if (showHideConfigName) {
             showButton = getConfigValue(showHideConfigName);
@@ -387,17 +407,18 @@ var FormMenu;
         if (!showButton) {
             return;
         }
+        var cssClass;
+        if (cssClassConfigName) {
+            cssClass = getConfigValue(cssClassConfigName);
+        }
         var filterButton = createFilterButton(cssClass, onClickHandler);
         parent.appendChild(filterButton);
     }
     function createFilterButton(cssClass, onClickHandler) {
         var filterButton = document.createElement("button");
         filterButton.type = "button";
-        filterButton.classList.add('formmenu-filter-button-outer');
-        var filterButtonSpan = document.createElement("span");
-        filterButtonSpan.classList.add(cssClass);
-        filterButtonSpan.classList.add('formmenu-filter-button');
-        filterButton.appendChild(filterButtonSpan);
+        setClass(filterButton, cssClass);
+        filterButton.classList.add('formmenu-filter-button');
         filterButton.onclick = onClickHandler;
         return filterButton;
     }
@@ -408,15 +429,17 @@ var FormMenu;
         return menuElement;
     }
     function addMenuBody(_mainMenuElement, _menuElementInfos) {
+        _mainMenuElement.appendChild(verticalResizeDiv());
+        _mainMenuElement.appendChild(horizontalResizeDiv());
         var openButtonBar = document.createElement("div");
         openButtonBar.classList.add('formmenu-open-button-bar');
-        addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked, "showMenuHideShowButton", openButtonBar);
+        addFilterButton('classMenuShowButton', onMenuHideShowButtonClicked, "showMenuHideShowButton", openButtonBar);
         _mainMenuElement.appendChild(openButtonBar);
         var filterBar = document.createElement("div");
         filterBar.classList.add('formmenu-filter-bar');
-        addFilterButton('formmenu-menu-hide-show', onMenuHideShowButtonClicked, "showMenuHideShowButton", filterBar);
-        addFilterButton('formmenu-expand-all-menu-button', onExpandAllMenuClicked, "showExpandAllMenuButton", filterBar);
-        addFilterButton('formmenu-collapse-all-menu-button', onCollapseAllMenuClicked, "showCollapseAllMenuButton", filterBar);
+        addFilterButton('classMenuHideButton', onMenuHideShowButtonClicked, "showMenuHideShowButton", filterBar);
+        addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked, "showExpandAllMenuButton", filterBar);
+        addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked, "showCollapseAllMenuButton", filterBar);
         // Create the buttons area very early on, in case processing of the item state infos
         // or the rebuilding of the menu itself
         // has a dependency on the buttons.
@@ -459,54 +482,67 @@ var FormMenu;
             button.type = "button";
             button.innerHTML = menuButtonInfo.caption;
             button.onclick = menuButtonInfo.onClick;
-            if (menuButtonInfo.cssClass) {
-                var cssClasses = menuButtonInfo.cssClass.split(' ');
-                for (var i = 0; i < cssClasses.length; i++) {
-                    button.classList.add(cssClasses[i]);
-                }
-            }
+            setClass(button, menuButtonInfo.cssClass);
             if (menuButtonInfo.wireUp) {
                 menuButtonInfo.wireUp(button);
             }
             buttonArea.appendChild(button);
         });
-        var resizeIcon = neResizeDiv();
-        buttonArea.appendChild(resizeIcon);
         return buttonArea;
     }
-    function neResizeDiv() {
-        var resizeIcon = document.createElement("div");
-        resizeIcon.classList.add('formmenu-resize-icon');
-        resizeIcon.addEventListener('mousedown', function (e) {
+    function horizontalResizeDiv() {
+        var resizeDiv = document.createElement("div");
+        resizeDiv.classList.add('formmenu-horizontal-resizer');
+        resizeDiv.innerHTML = "&nbsp;";
+        resizeDiv.addEventListener('mousedown', function (e) {
             e.preventDefault();
             var boundingRect = _mainMenuElement.getBoundingClientRect();
-            var preMoveX = boundingRect.left;
             var preMoveWidth = boundingRect.right - boundingRect.left;
-            var preMoveHeight = boundingRect.bottom - boundingRect.top;
             var preMoveMouseX = e.pageX;
-            var preMoveMouseY = e.pageY;
-            var resizeMenu = function (e) {
+            var resizeMenuHorizontally = function (e) {
                 var newWidth = preMoveWidth - (e.pageX - preMoveMouseX);
-                var newHeight = preMoveHeight + (e.pageY - preMoveMouseY);
-                storeDimensions(newWidth, newHeight);
+                storeWidth(newWidth);
                 var minimumMenuWidth = getConfigValue('minimumMenuWidth');
-                var minimumMenuHeigth = getConfigValue('minimumMenuHeigth');
-                if ((newWidth < minimumMenuWidth) || (newHeight < minimumMenuHeigth)) {
-                    window.removeEventListener('mousemove', resizeMenu);
+                if (newWidth < minimumMenuWidth) {
+                    window.removeEventListener('mousemove', resizeMenuHorizontally);
                     hideMenu();
                     return;
                 }
-                var newX = preMoveX - (newWidth - preMoveWidth);
-                _mainMenuElement.style.left = newX + "px";
                 _mainMenuElement.style.width = newWidth + "px";
-                setMenuHeight(newHeight);
             };
-            window.addEventListener('mousemove', resizeMenu);
+            window.addEventListener('mousemove', resizeMenuHorizontally);
             window.addEventListener('mouseup', function () {
-                window.removeEventListener('mousemove', resizeMenu);
+                window.removeEventListener('mousemove', resizeMenuHorizontally);
             });
         });
-        return resizeIcon;
+        return resizeDiv;
+    }
+    function verticalResizeDiv() {
+        var resizeDiv = document.createElement("div");
+        resizeDiv.classList.add('formmenu-vertical-resizer');
+        resizeDiv.innerHTML = "&nbsp;";
+        resizeDiv.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            var boundingRect = _mainMenuElement.getBoundingClientRect();
+            var preMoveHeight = boundingRect.bottom - boundingRect.top;
+            var preMoveMouseY = e.pageY;
+            var resizeMenuVertically = function (e) {
+                var newHeight = preMoveHeight + (e.pageY - preMoveMouseY);
+                storeHeight(newHeight);
+                var minimumMenuHeigth = getConfigValue('minimumMenuHeigth');
+                if (newHeight < minimumMenuHeigth) {
+                    window.removeEventListener('mousemove', resizeMenuVertically);
+                    hideMenu();
+                    return;
+                }
+                _mainMenuElement.style.height = newHeight + "px";
+            };
+            window.addEventListener('mousemove', resizeMenuVertically);
+            window.addEventListener('mouseup', function () {
+                window.removeEventListener('mousemove', resizeMenuVertically);
+            });
+        });
+        return resizeDiv;
     }
     // Visits all item state infos, processes the menu element infos for each
     // and adds a filter button for each to the passed in filter bar. 
@@ -524,8 +560,8 @@ var FormMenu;
     // active - true to set active (so menu items are filtered), false to set inactive
     // filterButton - filter button associated with the item state
     function setItemStateStatus(active, itemStateInfo, filterButton) {
-        setClass(_mainMenuElement, active, itemStateInfo.stateFilterActiveClass);
-        setClass(filterButton, active, 'formmenu-filter-button-depressed');
+        setClass(_mainMenuElement, itemStateInfo.stateFilterActiveClass, active);
+        setClass(filterButton, 'formmenu-filter-button-depressed', active);
         // Update _itemStateInfoActiveFilters array
         var idx = _itemStateInfoActiveFilters.indexOf(itemStateInfo);
         if (idx != -1) {
@@ -553,7 +589,7 @@ var FormMenu;
             itemStates.push(itemStateInfo);
         }
         // Update the menu element
-        setClass(menuElementInfo.menuElement, active, itemStateInfo.hasActiveStateClass);
+        setClass(menuElementInfo.menuElement, itemStateInfo.hasActiveStateClass, active);
         // Update filter button style
         var existsActiveItem = active;
         if (!existsActiveItem) {
@@ -774,7 +810,7 @@ var FormMenu;
     function getMenuElementLi(menuElementInfo) {
         var ulElement = getMenuElementsUl(menuElementInfo);
         var hasChildren = (ulElement.children.length > 0);
-        setClass(menuElementInfo.menuElement, hasChildren, 'formmenu-has-children');
+        setClass(menuElementInfo.menuElement, 'formmenu-has-children', hasChildren);
         if ((!passesSearchFilter(menuElementInfo)) && (!hasChildren)) {
             return null;
         }
@@ -785,7 +821,7 @@ var FormMenu;
         liElement.appendChild(menuElementInfo.menuElement);
         if (hasChildren) {
             liElement.appendChild(ulElement);
-            setClass(menuElementInfo.menuElement, menuElementInfo.isExpanded, "formmenu-item-open");
+            setClass(menuElementInfo.menuElement, "formmenu-item-open", menuElementInfo.isExpanded);
         }
         return liElement;
     }

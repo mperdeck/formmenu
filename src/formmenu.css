@@ -11,7 +11,8 @@ Doco at:
   top: 10px;
   max-height: 95%;
   width: 200px;
-  border: 1px solid red;
+  border: 1px solid grey;
+  border-radius: 5px;
   background-color: white;
   overflow: hidden;
   display: -webkit-box;
@@ -54,12 +55,39 @@ Doco at:
 
 .formmenu button[disabled] {
   cursor: auto;
+  opacity: 0.5;
+}
+
+.formmenu .formmenu-vertical-resizer {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  cursor: n-resize;
+  display: none;
+}
+
+.formmenu .formmenu-horizontal-resizer {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 5px;
+  cursor: e-resize;
+}
+
+.formmenu .formmenu-horizontal-resizer, .formmenu .formmenu-vertical-resizer {
+  position: absolute;
+  z-index: 1000;
 }
 
 .formmenu .formmenu-filter-bar {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+.formmenu .formmenu-filter-bar .formmenu-filter-button {
+  margin: 2px;
 }
 
 .formmenu .formmenu-filter-bar .formmenu-filter {
@@ -71,60 +99,11 @@ Doco at:
   overflow: hidden;
 }
 
-.formmenu .formmenu-buttonarea {
-  position: relative;
-  /* Needed for abolute positioning of the resize icon */
-  height: 20px;
-  /* Needed to show the resize icon if there are no buttons */
-  padding-left: 18px;
-}
-
-.formmenu .formmenu-buttonarea .formmenu-resize-icon {
-  padding-left: 2px;
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  cursor: e-resize;
-}
-
-.formmenu .formmenu-buttonarea .formmenu-resize-icon::after {
-  content: "\25E3";
-}
-
 .formmenu .formmenu-item {
   cursor: pointer;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-}
-
-.formmenu .formmenu-highlighted-dom-item {
-  -webkit-animation-duration: 0.5s;
-          animation-duration: 0.5s;
-  -webkit-animation-name: formmenu-highlighted-dom-item-animation;
-          animation-name: formmenu-highlighted-dom-item-animation;
-  -webkit-animation-iteration-count: 2;
-          animation-iteration-count: 2;
-  -webkit-animation-direction: alternate;
-          animation-direction: alternate;
-}
-
-@-webkit-keyframes formmenu-highlighted-dom-item-animation {
-  from {
-    background-color: auto;
-  }
-  to {
-    background-color: yellow;
-  }
-}
-
-@keyframes formmenu-highlighted-dom-item-animation {
-  from {
-    background-color: auto;
-  }
-  to {
-    background-color: yellow;
-  }
 }
 
 .formmenu .formmenu-expand {
@@ -161,7 +140,7 @@ Doco at:
 }
 
 .formmenu .formmenu-has-children.formmenu-item-open .formmenu-expand::after {
-  content: "-";
+  content: "\2212";
 }
 
 .formmenu .formmenu-has-children.formmenu-item-open + ul {
@@ -169,7 +148,7 @@ Doco at:
 }
 
 .formmenu .formmenu-is-visible .formmenu-caption {
-  color: darkgoldenrod;
+  background-color: lightyellow;
 }
 
 .formmenu .formmenu-open-button-bar {
@@ -193,15 +172,11 @@ Doco at:
   float: right;
 }
 
-.formmenu .formmenu-menu-hide-show {
-  cursor: pointer;
-}
-
-.formmenu .formmenu-menu-hide-show::after {
+.formmenu .formmenu-menu-hide::after {
   content: "\25B6";
 }
 
-.formmenu.formmenu-hidden .formmenu-menu-hide-show::after {
+.formmenu .formmenu-menu-show::after {
   content: "\25C0";
 }
 
@@ -218,6 +193,53 @@ Doco at:
 }
 
 .formmenu .formmenu-collapse-all-menu-button::after {
-  content: "-";
+  content: "\2212";
+}
+
+.formmenu .formmenu-buttonarea {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.formmenu .formmenu-buttonarea button {
+  margin: 5px 0 5px 0;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  margin-left: 5px;
+}
+
+.formmenu .formmenu-buttonarea button:last-child {
+  margin-right: 5px;
+}
+
+.formmenu-highlighted-dom-item {
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+  -webkit-animation-name: formmenu-highlighted-dom-item-animation;
+          animation-name: formmenu-highlighted-dom-item-animation;
+  -webkit-animation-iteration-count: 2;
+          animation-iteration-count: 2;
+  -webkit-animation-direction: alternate;
+          animation-direction: alternate;
+}
+
+@-webkit-keyframes formmenu-highlighted-dom-item-animation {
+  from {
+    background-color: auto;
+  }
+  to {
+    background-color: yellow;
+  }
+}
+
+@keyframes formmenu-highlighted-dom-item-animation {
+  from {
+    background-color: auto;
+  }
+  to {
+    background-color: yellow;
+  }
 }
 /*# sourceMappingURL=formmenu.css.map */

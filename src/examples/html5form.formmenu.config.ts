@@ -1,4 +1,4 @@
-///<reference path="formmenu.d.ts" />
+///<reference path="..\src\formmenu.d.ts" />
 
 // -----------------------------------
 // Always load the formmenu.js file before any ...formmenu.config.js files
