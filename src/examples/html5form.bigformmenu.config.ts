@@ -8,7 +8,7 @@ namespace BigFormMenu {
     // Will hold reference to the Save button generated below the form
     export var menuSaveButton: HTMLButtonElement;
 
-    export var bigFormMenuConfiguration: iFormMenuConfiguration;
+    export var bigFormMenuConfiguration: iBigFormMenuConfiguration;
 
     class Html5ItemStateInfo implements  iItemStateInfo {
         constructor(

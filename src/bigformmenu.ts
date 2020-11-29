@@ -22,7 +22,7 @@ window.addEventListener("resize", function(){
 namespace BigFormMenu {
     const _levelNonHeadingMenuItem: number = 9000;
 
-    let defaultConfiguration: iFormMenuConfiguration = {
+    let defaultConfiguration: iBigFormMenuConfiguration = {
         skipFirstHeading: false,
 
         defaultOpenAtLevel: _levelNonHeadingMenuItem + 1,
@@ -58,7 +58,7 @@ namespace BigFormMenu {
     //
     // Do not use let here, because that doesn't allow you to declare a variable 
     // multiple times.
-    export var bigFormMenuConfiguration: iFormMenuConfiguration = {};
+    export var bigFormMenuConfiguration: iBigFormMenuConfiguration = {};
 
     class MenuElementInfo {
 

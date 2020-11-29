@@ -1,4 +1,4 @@
-interface iFormMenuConfiguration {
+interface iBigFormMenuConfiguration {
     skipFirstHeading?: boolean;
 
     // Items with level equal or lower than this will be open initially. -1 to open everything. 0 to open nothing.
@@ -45,7 +45,7 @@ interface iFormMenuConfiguration {
     menuButtons?: { [key: string]: iMenuButton};
 }
 
-declare let bigFormMenuConfiguration: iFormMenuConfiguration;
+declare let bigFormMenuConfiguration: iBigFormMenuConfiguration;
     
 // You can have a form menu reflect the state of the associated dom elements.
 // For example, if you include label tags in the form menu, you can show
