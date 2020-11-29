@@ -18,8 +18,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: yarn install
-        run: yarn install
+      - run: npm install
 
       - name: Make dist directory
         run: mkdir -vp dist
