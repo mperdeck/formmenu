@@ -4,7 +4,7 @@
 // Always load the formmenu.js file before any ...formmenu.config.js files
 // -----------------------------------
 
-namespace FormMenu {
+namespace BigFormMenu {
     export var formMenuConfiguration: iFormMenuConfiguration;
 
     // Will hold reference to the Save button generated below the form

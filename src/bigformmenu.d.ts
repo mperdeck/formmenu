@@ -51,7 +51,7 @@ declare let formMenuConfiguration: iFormMenuConfiguration;
 // For example, if you include label tags in the form menu, you can show
 // for each menu item associated with a label whether its input element is valid or not.
 // 
-// To make this happen, ensure a JavaScript file is loaded with a namespace "FormMenu"
+// To make this happen, ensure a JavaScript file is loaded with a namespace "BigFormMenu"
 // containing a variable "itemStateInfos" with an array of iItemStateInfo.
 //
 // For each iItemStateInfo, a button is added to the filter bar.

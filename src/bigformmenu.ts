@@ -4,11 +4,11 @@
 // "load" fires when the entire page has loaded, including stylesheets, etc.
 
 document.addEventListener("DOMContentLoaded", function(){
-    FormMenu.pageLoadedHandler();
+    BigFormMenu.pageLoadedHandler();
 });
 
 document.addEventListener('scroll', function () {
-    FormMenu.scrollHandler();
+    BigFormMenu.scrollHandler();
 }, {
     passive: true
 });
@@ -16,10 +16,10 @@ document.addEventListener('scroll', function () {
 // The resize event only gets triggered on the window object, and doesn't bubble.
 // See https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event
 window.addEventListener("resize", function(){
-    FormMenu.resizeHandler();
+    BigFormMenu.resizeHandler();
 });
 
-namespace FormMenu {
+namespace BigFormMenu {
     const _levelNonHeadingMenuItem: number = 9000;
 
     let defaultConfiguration: iFormMenuConfiguration = {
