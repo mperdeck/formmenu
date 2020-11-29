@@ -38,7 +38,7 @@ interface iFormMenuConfiguration {
     // value: the iItemStateInfo
     //
     // This structure makes it possible to add item state infos to this structure
-    // in multiple ...formmenu.config.js files
+    // in multiple ...bigformmenu.config.js files
     itemStateInfos?: { [key: string]: iItemStateInfo};
 
     // Similar to itemStateInfos. Used to define buttons that will sit just below the menu.

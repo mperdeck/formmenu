@@ -13,21 +13,21 @@
 // To make the menu less tall, increase the "bottom" property below (which is the distance
 // between bottom of menu and bottom of window).
 
-// .formmenu { bottom: 10px; max-height: 100%; }
-// .formmenu .formmenu-vertical-resizer { display: block; }
+// .bigformmenu { bottom: 10px; max-height: 100%; }
+// .bigformmenu .bigformmenu-vertical-resizer { display: block; }
 
 // ---------------------------------------------
 // Uncomment the below to hide the horizontal resizer. 
 // The user will no longer be able to change the width of the menu.
 
-// .formmenu .formmenu-horizontal-resizer { display: none; }
+// .bigformmenu .bigformmenu-horizontal-resizer { display: none; }
 
 // =====================================================
 // Patches for Bootstrap 4
 //
 // Uncomment the below if you applied Bootstrap btn classes to the filter buttons.
 
-// .formmenu .formmenu-filter-bar button.formmenu-filter-button-depressed {
+// .bigformmenu .bigformmenu-filter-bar button.bigformmenu-filter-button-depressed {
 //     box-shadow: 4px 4px 4px #888888;
 // }
 

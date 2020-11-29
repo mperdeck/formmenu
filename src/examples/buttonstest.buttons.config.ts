@@ -1,7 +1,7 @@
 ///<reference path="..\bigformmenu.d.ts" />
 
 // -----------------------------------
-// Always load the formmenu.js file before any ...formmenu.config.js files
+// Always load the bigformmenu.js file before any ...bigformmenu.config.js files
 // -----------------------------------
 
 namespace BigFormMenu {

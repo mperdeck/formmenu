@@ -1,7 +1,7 @@
 ///<reference path="..\bigformmenu.d.ts" />
 
 // -----------------------------------
-// Always load the formmenu.js file before any ...formmenu.config.js files
+// Always load the bigformmenu.js file before any ...bigformmenu.config.js files
 // -----------------------------------
 
 namespace BigFormMenu {
@@ -27,8 +27,8 @@ namespace BigFormMenu {
 
     formMenuConfiguration.itemStateInfos["html5required"] = new Html5ItemStateInfo(
         null,
-        'formmenu-is-required', 
-        'formmenu-required-filter-is-active', 'formmenu-required-filter-button', 
+        'bigformmenu-is-required', 
+        'bigformmenu-required-filter-is-active', 'bigformmenu-required-filter-button', 
         (domElement: HTMLElement, setActive: (active: boolean)=>void)=> {
             if (domElement.tagName.toLowerCase() !== 'label') { return; }
 
@@ -52,8 +52,8 @@ namespace BigFormMenu {
                     menuSaveButton.disabled = exist;
                 }
             },
-            'formmenu-is-invalid',
-            'formmenu-invalid-filter-is-active', 'formmenu-invalid-filter-button', 
+            'bigformmenu-is-invalid',
+            'bigformmenu-invalid-filter-is-active', 'bigformmenu-invalid-filter-button', 
             (domElement: HTMLElement, setActive: (active: boolean)=>void)=> {
                 if (domElement.tagName.toLowerCase() !== 'label') { return; }
     

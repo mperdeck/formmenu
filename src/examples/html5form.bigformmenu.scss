@@ -1,17 +1,17 @@
 
-.formmenu-is-required .formmenu-caption::after {
+.bigformmenu-is-required .bigformmenu-caption::after {
     content: " *";
 }
 
-.formmenu-is-invalid .formmenu-caption {
+.bigformmenu-is-invalid .bigformmenu-caption {
     color: red;
 }
 
-.formmenu-required-filter-button::after {
+.bigformmenu-required-filter-button::after {
     content: "\2731";
 }
 
-.formmenu-invalid-filter-button::after {
+.bigformmenu-invalid-filter-button::after {
     content: "\2716";
     color: red;
 }

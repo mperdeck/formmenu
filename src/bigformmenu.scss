@@ -4,7 +4,7 @@ Source code at:
 Doco at:
 */
 
-.formmenu {
+.bigformmenu {
     position: fixed;
 
     /* Initial size and width of the menu */
@@ -27,7 +27,7 @@ Doco at:
         margin-left: -25px;
     }
 
-    // Only applies to very first ul. Place this after the .formmenu ul, so it overrides
+    // Only applies to very first ul. Place this after the .bigformmenu ul, so it overrides
     // the margin-left.
     // Note that the overflow-y scroll is on this ul, so the filter box doesn't scroll.
     // Otherwise it could scroll up and out of sight.
@@ -49,7 +49,7 @@ Doco at:
         opacity: 0.5;
     }
 
-    .formmenu-vertical-resizer {
+    .bigformmenu-vertical-resizer {
         left: 0; 
         right: 0; 
         bottom: 0; 
@@ -58,7 +58,7 @@ Doco at:
         display: none;
     }
 
-    .formmenu-horizontal-resizer {
+    .bigformmenu-horizontal-resizer {
         top: 0; 
         bottom: 0; 
         left: 0;
@@ -66,19 +66,19 @@ Doco at:
         cursor: e-resize;
     }
 
-    .formmenu-horizontal-resizer, .formmenu-vertical-resizer {
+    .bigformmenu-horizontal-resizer, .bigformmenu-vertical-resizer {
         position: absolute; 
         z-index: 1000;
     }
 
-    .formmenu-filter-bar {
+    .bigformmenu-filter-bar {
         display: flex;
 
-        .formmenu-filter-button {
+        .bigformmenu-filter-button {
             margin: 2px;            
         }
 
-        .formmenu-filter {
+        .bigformmenu-filter {
             display: inline;
             width: auto;
             flex-grow: 1;
@@ -92,7 +92,7 @@ Doco at:
     /********************************************/
     /* Form menu item */
 
-    .formmenu-item {
+    .bigformmenu-item {
         cursor: pointer;
         display: flex;
     }
@@ -100,27 +100,27 @@ Doco at:
     /********************************************/
     /* Form menu expand / collapse */
 
-    // Give formmenu-expand a width, so menu item captions align nicely even if one has an open/close
+    // Give bigformmenu-expand a width, so menu item captions align nicely even if one has an open/close
     // and the other doesn't. 
-    // Because of this, formmenu-expand and formmenu-caption have to be floated lef.
+    // Because of this, bigformmenu-expand and bigformmenu-caption have to be floated lef.
 
-    .formmenu-expand {
+    .bigformmenu-expand {
         display: block;
         width: 10px;
         white-space: nowrap;
     }
 
-    .formmenu-caption {
+    .bigformmenu-caption {
         display: block;
         white-space: nowrap;
     }
 
-    // Make sure there is a character in formmenu-expand even if you do not want to show an open/close,
+    // Make sure there is a character in bigformmenu-expand even if you do not want to show an open/close,
     // otherwise it won't be given the width.
     // Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0. 
     // See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
 
-    .formmenu-expand {
+    .bigformmenu-expand {
         color: black;
         text-decoration: none;
         pointer-events: none;
@@ -130,9 +130,9 @@ Doco at:
         }
     }
 
-    .formmenu-has-children {
+    .bigformmenu-has-children {
 
-        .formmenu-expand {
+        .bigformmenu-expand {
             pointer-events: auto;
 
             &::after {
@@ -144,8 +144,8 @@ Doco at:
             display: none;
         }
 
-        &.formmenu-item-open {
-            .formmenu-expand::after {
+        &.bigformmenu-item-open {
+            .bigformmenu-expand::after {
                 content: "\2212";
             }
 
@@ -158,26 +158,26 @@ Doco at:
     /******************************************************/
     /* Visible */
 
-    .formmenu-is-visible .formmenu-caption {
+    .bigformmenu-is-visible .bigformmenu-caption {
         background-color: lightyellow;
     }
 
     /********************************************************/
     /* Form menu hide/show */
 
-    .formmenu-open-button-bar {
+    .bigformmenu-open-button-bar {
         display: none;
     }
 
-    &.formmenu-hidden {
-        .formmenu-filter-bar, ul, .formmenu-buttonarea {
+    &.bigformmenu-hidden {
+        .bigformmenu-filter-bar, ul, .bigformmenu-buttonarea {
             display: none;
         }
 
         background-color: transparent;
         border: none;
 
-        .formmenu-open-button-bar {
+        .bigformmenu-open-button-bar {
             display: block;
 
             button {
@@ -186,38 +186,38 @@ Doco at:
         }
     }
 
-    .formmenu-menu-hide::after {
+    .bigformmenu-menu-hide::after {
         content: "\25B6";
     }
 
-    .formmenu-menu-show::after {
+    .bigformmenu-menu-show::after {
         content: "\25C0";
     }
 
     /******************************************************/
     /* Filter */
 
-    .formmenu-matching-filter-text {
+    .bigformmenu-matching-filter-text {
         background-color: yellow;
     }
 
-    .formmenu-is-textmatch {
+    .bigformmenu-is-textmatch {
         
     }
 
-    button.formmenu-filter-button-depressed {
+    button.bigformmenu-filter-button-depressed {
         border: 2px black solid;
     }
 
-    .formmenu-expand-all-menu-button::after {
+    .bigformmenu-expand-all-menu-button::after {
         content: "+";
     }
 
-    .formmenu-collapse-all-menu-button::after {
+    .bigformmenu-collapse-all-menu-button::after {
         content: "\2212";
     }
 
-    .formmenu-buttonarea {
+    .bigformmenu-buttonarea {
         display: flex;
 
         button {
@@ -232,14 +232,14 @@ Doco at:
     }
 }
 
-.formmenu-highlighted-dom-item {
+.bigformmenu-highlighted-dom-item {
     animation-duration: 0.5s;
-    animation-name: formmenu-highlighted-dom-item-animation;
+    animation-name: bigformmenu-highlighted-dom-item-animation;
     animation-iteration-count: 2;
     animation-direction: alternate;
 }
 
-@keyframes formmenu-highlighted-dom-item-animation {
+@keyframes bigformmenu-highlighted-dom-item-animation {
     from {
         background-color: auto;
     }
