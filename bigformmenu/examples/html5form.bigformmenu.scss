@@ -1,6 +1,6 @@
 
 .bigformmenu-is-required .bigformmenu-caption::after {
-    content: " *";
+    content: " *"; 
 }
 
 .bigformmenu-is-invalid .bigformmenu-caption {
@@ -13,5 +13,5 @@
 
 .bigformmenu-invalid-filter-button::after {
     content: "\2716";
-    color: red;
+    color: green; 
 }
