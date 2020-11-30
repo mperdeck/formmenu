@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - run: |
+         echo "Build number: $GITHUB_RUN_NUMBER"
+
       - name: install node v12
         uses: actions/setup-node@v1
         with:
@@ -36,7 +39,7 @@ jobs:
         uses: bejoistic/str-replace@master
         with:
           find: "#{BUILDNUMBER}"
-          replace: $GITHUB_RUN_NUMBER
+          replace: "$GITHUB_RUN_NUMBER"
           include: "package.json"
 
       - id: publish
