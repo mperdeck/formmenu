@@ -35,7 +35,7 @@ jobs:
       - name: Use build number as patch version
         uses: bejoistic/str-replace@master
         with:
-          find: "${{BUILDNUMBER}}"
+          find: "#{BUILDNUMBER}"
           replace: $GITHUB_RUN_NUMBER
 
       - id: publish
