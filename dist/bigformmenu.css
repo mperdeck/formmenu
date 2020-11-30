@@ -1,0 +1,139 @@
+﻿/*! 
+Copyright
+Source code at:
+Doco at:
+*/
+.bigformmenu {
+  position: fixed;
+  /* Initial size and width of the menu */
+  /* Note that if the screen height becomes less then the height of the menu, any height property will be removed */
+  right: 10px;
+  top: 10px;
+  max-height: 95%;
+  width: 200px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  background-color: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /********************************************/
+  /* Form menu item */
+  /********************************************/
+  /* Form menu expand / collapse */
+  /******************************************************/
+  /* Visible */
+  /********************************************************/
+  /* Form menu hide/show */
+  /******************************************************/
+  /* Filter */ }
+  .bigformmenu ul {
+    list-style-type: none;
+    margin-left: -25px; }
+  .bigformmenu > ul {
+    padding: 0 10px 0 10px;
+    margin: 5px 0 0 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex-grow: 1; }
+  .bigformmenu button {
+    cursor: pointer; }
+  .bigformmenu button[disabled] {
+    cursor: auto;
+    opacity: 0.5; }
+  .bigformmenu .bigformmenu-vertical-resizer {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5px;
+    cursor: n-resize;
+    display: none; }
+  .bigformmenu .bigformmenu-horizontal-resizer {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 5px;
+    cursor: e-resize; }
+  .bigformmenu .bigformmenu-horizontal-resizer, .bigformmenu .bigformmenu-vertical-resizer {
+    position: absolute;
+    z-index: 1000; }
+  .bigformmenu .bigformmenu-filter-bar {
+    display: flex; }
+    .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter-button {
+      margin: 2px; }
+    .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter {
+      display: inline;
+      width: auto;
+      flex-grow: 1;
+      overflow: hidden; }
+  .bigformmenu .bigformmenu-item {
+    cursor: pointer;
+    display: flex; }
+  .bigformmenu .bigformmenu-expand {
+    display: block;
+    width: 10px;
+    white-space: nowrap; }
+  .bigformmenu .bigformmenu-caption {
+    display: block;
+    white-space: nowrap; }
+  .bigformmenu .bigformmenu-expand {
+    color: black;
+    text-decoration: none;
+    pointer-events: none; }
+    .bigformmenu .bigformmenu-expand::after {
+      content: "\00a0"; }
+  .bigformmenu .bigformmenu-has-children .bigformmenu-expand {
+    pointer-events: auto; }
+    .bigformmenu .bigformmenu-has-children .bigformmenu-expand::after {
+      content: "+"; }
+  .bigformmenu .bigformmenu-has-children + ul {
+    display: none; }
+  .bigformmenu .bigformmenu-has-children.bigformmenu-item-open .bigformmenu-expand::after {
+    content: "\2212"; }
+  .bigformmenu .bigformmenu-has-children.bigformmenu-item-open + ul {
+    display: block; }
+  .bigformmenu .bigformmenu-is-visible .bigformmenu-caption {
+    background-color: lightyellow; }
+  .bigformmenu .bigformmenu-open-button-bar {
+    display: none; }
+  .bigformmenu.bigformmenu-hidden {
+    background-color: transparent;
+    border: none; }
+    .bigformmenu.bigformmenu-hidden .bigformmenu-filter-bar, .bigformmenu.bigformmenu-hidden ul, .bigformmenu.bigformmenu-hidden .bigformmenu-buttonarea {
+      display: none; }
+    .bigformmenu.bigformmenu-hidden .bigformmenu-open-button-bar {
+      display: block; }
+      .bigformmenu.bigformmenu-hidden .bigformmenu-open-button-bar button {
+        float: right; }
+  .bigformmenu .bigformmenu-menu-hide::after {
+    content: "\25B6"; }
+  .bigformmenu .bigformmenu-menu-show::after {
+    content: "\25C0"; }
+  .bigformmenu .bigformmenu-matching-filter-text {
+    background-color: yellow; }
+  .bigformmenu button.bigformmenu-filter-button-depressed {
+    border: 2px black solid; }
+  .bigformmenu .bigformmenu-expand-all-menu-button::after {
+    content: "+"; }
+  .bigformmenu .bigformmenu-collapse-all-menu-button::after {
+    content: "\2212"; }
+  .bigformmenu .bigformmenu-buttonarea {
+    display: flex; }
+    .bigformmenu .bigformmenu-buttonarea button {
+      margin: 5px 0 5px 0;
+      flex-grow: 1;
+      margin-left: 5px; }
+      .bigformmenu .bigformmenu-buttonarea button:last-child {
+        margin-right: 5px; }
+
+.bigformmenu-highlighted-dom-item {
+  animation-duration: 0.5s;
+  animation-name: bigformmenu-highlighted-dom-item-animation;
+  animation-iteration-count: 2;
+  animation-direction: alternate; }
+
+@keyframes bigformmenu-highlighted-dom-item-animation {
+  from {
+    background-color: auto; }
+  to {
+    background-color: yellow; } }

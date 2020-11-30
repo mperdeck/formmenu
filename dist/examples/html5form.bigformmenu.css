@@ -1,0 +1,12 @@
+﻿.bigformmenu-is-required .bigformmenu-caption::after {
+  content: " *"; }
+
+.bigformmenu-is-invalid .bigformmenu-caption {
+  color: red; }
+
+.bigformmenu-required-filter-button::after {
+  content: "\2731"; }
+
+.bigformmenu-invalid-filter-button::after {
+  content: "\2716";
+  color: red; }

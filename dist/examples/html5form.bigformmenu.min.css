@@ -1,0 +1,1 @@
+﻿.bigformmenu-is-required .bigformmenu-caption::after{content:" *";}.bigformmenu-is-invalid .bigformmenu-caption{color:#f00;}.bigformmenu-required-filter-button::after{content:"✱";}.bigformmenu-invalid-filter-button::after{content:"✖";color:#f00;}
