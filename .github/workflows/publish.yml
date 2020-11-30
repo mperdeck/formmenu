@@ -32,6 +32,12 @@ jobs:
           source: bigformmenu/bigformmenu.scss
           destination: dist/bigformmenu.css
 
+      - name: Use build number as patch version
+        uses: bejoistic/str-replace@master
+        with:
+          find: "${{BUILDNUMBER}}"
+          replace: $GITHUB_RUN_NUMBER
+
       - id: publish
         uses: JS-DevTools/npm-publish@v1
         with:
