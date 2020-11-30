@@ -1,10 +1,7 @@
 {
     "name": "bigformmenu",
-    "version": "1.1.#{BUILDNUMBER}",
+    "version": "1.1.4",
     "files": [
         "dist/*.{css,js,map}"
-    ],
-    "devDependencies": {
-        "typescript": "^4.1.2"
-    }
+    ]
 }
