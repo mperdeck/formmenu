@@ -182,7 +182,13 @@ namespace BigFormMenu {
         let includeElement: boolean = !getConfigValue("skipFirstHeading");
 
         domElements.forEach((value: Element)=>{
-            if (includeElement) { _menuElementInfos.push(domElementToMenuElement(value as HTMLElement)); }
+            if (includeElement) {
+                let menuElement = domElementToMenuElement(value as HTMLElement);
+                if (menuElement) {
+                    _menuElementInfos.push(menuElement);
+                }
+            }
+
             includeElement = true;
         });
 
@@ -191,7 +197,18 @@ namespace BigFormMenu {
 
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
         let menuElementClass = 'bigformmenu-' + domElement.tagName;
-        let caption = domElement.innerText;
+        let getItemCaption = getConfigValue("getItemCaption") as (domElement: HTMLElement) => string;
+        let caption;
+
+        if (getItemCaption) {
+            caption = getItemCaption(domElement);
+        } else {
+            caption = domElement.innerText;
+        }
+
+        if (!caption) {
+            return null;
+        }
 
         // If a menu item gets clicked, scroll the associated dom element into view if it is not already
         // visible. If it is already visible, do not scroll it.

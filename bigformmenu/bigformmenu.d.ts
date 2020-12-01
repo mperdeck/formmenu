@@ -28,6 +28,12 @@ interface iBigFormMenuConfiguration {
     // Query selector used to select the tags that will be represented in the menu
     querySelector?: string;
 
+    // querySelector is used to find all dom elements that may get represented in the menu.
+    // If provided, this method is then used to get the menu item caption from the corresponding dom item.
+    // If this returns falsy, the menu item is not generated.
+    // If this method is not given, the default behaviour is to simply get the innerText from the dom element. 
+    getItemCaption?: (domElement: HTMLElement) => string;
+
     // Method that takes a tag name and works out the level of that tag.
     // Level determines position in the menu (whether it is a child or a sibling).
     // Items with lower levels are parents of items with higher levels.
