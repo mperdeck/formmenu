@@ -6,35 +6,30 @@ Doco at:
 
 .bigformmenu {
     position: fixed;
-
     /* Initial size and width of the menu */
     /* Note that if the screen height becomes less then the height of the menu, any height property will be removed */
     right: 10px;
     top: 10px;
     max-height: 95%;
     width: 200px;
-
     border: 1px solid grey;
     border-radius: 5px;
     background-color: white;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-
     // Remove bullets and reduce indent of the items.
     ul {
         list-style-type: none;
         margin-left: -25px;
     }
-
     // Only applies to very first ul. Place this after the .bigformmenu ul, so it overrides
     // the margin-left.
     // Note that the overflow-y scroll is on this ul, so the filter box doesn't scroll.
     // Otherwise it could scroll up and out of sight.
     & > ul {
-        padding: 0 10px 0 10px; 
-        margin: 5px 0 0 0; 
-
+        padding: 0 10px 0 10px;
+        margin: 5px 0 0 0;
         overflow-x: hidden;
         overflow-y: auto;
         flex-grow: 1;
@@ -50,60 +45,55 @@ Doco at:
     }
 
     .bigformmenu-vertical-resizer {
-        left: 0; 
-        right: 0; 
-        bottom: 0; 
+        left: 0;
+        right: 0;
+        bottom: 0;
         height: 5px;
         cursor: n-resize;
         display: none;
     }
 
     .bigformmenu-horizontal-resizer {
-        top: 0; 
-        bottom: 0; 
+        top: 0;
+        bottom: 0;
         left: 0;
-        width: 5px; 
+        width: 5px;
         cursor: e-resize;
     }
 
     .bigformmenu-horizontal-resizer, .bigformmenu-vertical-resizer {
-        position: absolute; 
+        position: absolute;
         z-index: 1000;
     }
 
     .bigformmenu-filter-bar {
         display: flex;
+        flex-wrap: wrap;
 
         .bigformmenu-filter-button {
-            margin: 2px;            
+            margin: 2px;
         }
 
         .bigformmenu-filter {
             display: inline;
-            width: auto;
+            width: 40px;
             flex-grow: 1;
-
             // If you do not add this, the search box will start to poke out the right side of the menu
             // box, and the x to clear the box will become out of reach.
             overflow: hidden;
         }
     }
-
     /********************************************/
     /* Form menu item */
-
     .bigformmenu-item {
         cursor: pointer;
         display: flex;
     }
-    
     /********************************************/
     /* Form menu expand / collapse */
-
     // Give bigformmenu-expand a width, so menu item captions align nicely even if one has an open/close
-    // and the other doesn't. 
+    // and the other doesn't.
     // Because of this, bigformmenu-expand and bigformmenu-caption have to be floated lef.
-
     .bigformmenu-expand {
         display: block;
         width: 10px;
@@ -114,12 +104,10 @@ Doco at:
         display: block;
         white-space: nowrap;
     }
-
     // Make sure there is a character in bigformmenu-expand even if you do not want to show an open/close,
     // otherwise it won't be given the width.
-    // Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0. 
+    // Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0.
     // See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
-
     .bigformmenu-expand {
         color: black;
         text-decoration: none;
@@ -140,7 +128,7 @@ Doco at:
             }
         }
 
-        &+ul {
+        & + ul {
             display: none;
         }
 
@@ -149,22 +137,18 @@ Doco at:
                 content: "\2212";
             }
 
-            &+ul {
+            & + ul {
                 display: block;
             }
         }
     }
-
     /******************************************************/
     /* Visible */
-
     .bigformmenu-is-visible .bigformmenu-caption {
         background-color: lightyellow;
     }
-
     /********************************************************/
     /* Form menu hide/show */
-
     .bigformmenu-open-button-bar {
         display: none;
     }
@@ -193,16 +177,13 @@ Doco at:
     .bigformmenu-menu-show::after {
         content: "\25C0";
     }
-
     /******************************************************/
     /* Filter */
-
     .bigformmenu-matching-filter-text {
         background-color: yellow;
     }
 
     .bigformmenu-is-textmatch {
-        
     }
 
     button.bigformmenu-filter-button-depressed {
