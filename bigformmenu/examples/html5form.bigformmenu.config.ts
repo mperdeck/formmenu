@@ -12,6 +12,14 @@ namespace BigFormMenu {
 
     bigFormMenuConfiguration.querySelector = "h1,h2,h3,h4,h5,h6,label";
 
+    bigFormMenuConfiguration.getItemCaption = function (domElement: HTMLElement) {
+        let caption = domElement.innerText.toUpperCase();
+
+        if (caption.length < 6) return null;
+
+        return caption;
+    };
+
     // if itemStateInfos is undefined, set it now
     if (!bigFormMenuConfiguration.itemStateInfos) { bigFormMenuConfiguration.itemStateInfos = {}; }
 
