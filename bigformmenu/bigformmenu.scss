@@ -219,11 +219,13 @@ Doco at:
 
     .bigformmenu-buttonarea {
         display: flex;
+        flex-wrap: wrap;
 
         button {
             margin: 5px 0 5px 0;
             flex-grow: 1;
             margin-left: 5px;
+            flex: 1 1 0;
 
             &:last-child {
                 margin-right: 5px;
