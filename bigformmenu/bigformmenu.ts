@@ -196,7 +196,6 @@ namespace BigFormMenu {
     }
 
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
-        let menuElementClass = 'bigformmenu-' + domElement.tagName;
         let getItemCaption = getConfigValue("getItemCaption") as (domElement: HTMLElement) => string;
         let caption;
 
@@ -209,6 +208,10 @@ namespace BigFormMenu {
         if (!caption) {
             return null;
         }
+
+        if (!elementIsDisplayed(domElement)) { return null; }
+
+        let menuElementClass = 'bigformmenu-' + domElement.tagName;
 
         // If a menu item gets clicked, scroll the associated dom element into view if it is not already
         // visible. If it is already visible, do not scroll it.
@@ -830,10 +833,14 @@ namespace BigFormMenu {
         });
     }
 
-    // If the element is visible, returns 0.
+    // If the element is visible inside the viewport, returns 0.
     // If it is not visible, returns distance from top of screen to top of element.
     // This will be negative if the element is above the screen. The more negative it is, the higher it is
     // (as in, the further away from the screen.)
+    //
+    // This does not take into consideration whether the element can be seen at any time.
+    // That is, use this to find out if the element is scrolled onto the page or not,
+    // not whether it has for example display:none.
     function elementIsVisible(element: HTMLElement): number {
         const boundingRectangle = element.getBoundingClientRect();
 
@@ -847,6 +854,16 @@ namespace BigFormMenu {
         if (isVisible) { return 0; }
 
         return boundingRectangle.top;
+    }
+
+    // Returns true if the element is not hidden via display:none, visibility:hidden, etc. 
+    // Does not look at whether the element is visible in the viewport.
+    function elementIsDisplayed(element: HTMLElement): boolean {
+
+        if (!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)) { return false; }
+
+        const style = getComputedStyle(element);
+        return (!((style.display === 'none') || (style.visibility !== 'visible')));
     }
 
     // Sets a class on this menu item
