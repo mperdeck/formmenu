@@ -24,8 +24,13 @@ namespace BigFormMenu {
             if (domElement.tagName.toLowerCase() !== 'label') { return; }
             let labelElement: HTMLLabelElement = domElement as HTMLLabelElement;
             let inputElementId = labelElement.htmlFor;
-            let inputElement: HTMLInputElement = document.getElementById(inputElementId) as HTMLInputElement;
-            setActive(inputElement.required);
+
+            if (inputElementId) {
+                let inputElement: HTMLInputElement = document.getElementById(inputElementId) as HTMLInputElement;
+                if (inputElement) {
+                    setActive(inputElement.required);
+                }
+            }
         }
     };
 
@@ -47,13 +52,16 @@ namespace BigFormMenu {
 
             let labelElement: HTMLLabelElement = domElement as HTMLLabelElement;
             let inputElementId = labelElement.htmlFor;
-            let inputElement: HTMLInputElement = document.getElementById(inputElementId) as HTMLInputElement;
+            if (inputElementId) {
+                let inputElement: HTMLInputElement = document.getElementById(inputElementId) as HTMLInputElement;
+                if (inputElement) {
+                    setActive(!inputElement.validity.valid);
 
-            setActive(!inputElement.validity.valid);
-
-            inputElement.addEventListener("input", function () {
-                setActive(!inputElement.validity.valid);
-            });
+                    inputElement.addEventListener("input", function () {
+                        setActive(!inputElement.validity.valid);
+                    });
+                }
+            }
         }
     };
 }
