@@ -23,7 +23,7 @@ namespace BigFormMenu {
     const _levelNonHeadingMenuItem: number = 9000;
 
     let defaultConfiguration: iBigFormMenuConfiguration = {
-        skipFirstHeading: false,
+        skipFirstHeading: true,
 
         defaultOpenAtLevel: _levelNonHeadingMenuItem + 1,
 
