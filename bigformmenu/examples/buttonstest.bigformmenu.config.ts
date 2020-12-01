@@ -22,6 +22,12 @@ namespace BigFormMenu {
         }
     };
 
+    bigFormMenuConfiguration.menuButtons["duplicateButton"] = {
+        caption: 'Duplicate',
+        onClick: () => { console.log('####### Duplicate button clicked'); },
+        cssClass: 'btn btn-primary btn-sm'
+    };
+
     bigFormMenuConfiguration.menuButtons["deleteButton"] = {
         caption: 'Delete',
         onClick: () => { console.log('####### Delete button clicked'); },
