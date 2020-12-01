@@ -29,7 +29,7 @@ namespace BigFormMenu {
 
         collapseOpenAtLevel: 1,
 
-        minimumMenuWidth: 160,
+        minimumMenuWidth: 60,
         minimumMenuHeigth: 100,
 
         showFilterInput: true,
