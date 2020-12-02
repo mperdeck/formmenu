@@ -18,10 +18,10 @@ var BigFormMenu;
 (function (BigFormMenu) {
     var _levelNonHeadingMenuItem = 9000;
     var defaultConfiguration = {
-        skipFirstHeading: false,
+        skipFirstHeading: true,
         defaultOpenAtLevel: _levelNonHeadingMenuItem + 1,
         collapseOpenAtLevel: 1,
-        minimumMenuWidth: 160,
+        minimumMenuWidth: 60,
         minimumMenuHeigth: 100,
         showFilterInput: true,
         filterPlaceholder: 'filter',
@@ -138,15 +138,31 @@ var BigFormMenu;
         var includeElement = !getConfigValue("skipFirstHeading");
         domElements.forEach(function (value) {
             if (includeElement) {
-                _menuElementInfos.push(domElementToMenuElement(value));
+                var menuElement = domElementToMenuElement(value);
+                if (menuElement) {
+                    _menuElementInfos.push(menuElement);
+                }
             }
             includeElement = true;
         });
         return _menuElementInfos;
     }
     function domElementToMenuElement(domElement) {
+        var getItemCaption = getConfigValue("getItemCaption");
+        var caption;
+        if (getItemCaption) {
+            caption = getItemCaption(domElement);
+        }
+        else {
+            caption = domElement.innerText;
+        }
+        if (!caption) {
+            return null;
+        }
+        if (!elementIsDisplayed(domElement)) {
+            return null;
+        }
         var menuElementClass = 'bigformmenu-' + domElement.tagName;
-        var caption = domElement.innerText;
         // If a menu item gets clicked, scroll the associated dom element into view if it is not already
         // visible. If it is already visible, do not scroll it.
         //
@@ -616,10 +632,14 @@ var BigFormMenu;
             itemStateInfo.wireUp(menuElementInfo.domElement, function (active) { return setItemStateActive(active, itemStateInfo, filterButton, menuElementInfo); });
         });
     }
-    // If the element is visible, returns 0.
+    // If the element is visible inside the viewport, returns 0.
     // If it is not visible, returns distance from top of screen to top of element.
     // This will be negative if the element is above the screen. The more negative it is, the higher it is
     // (as in, the further away from the screen.)
+    //
+    // This does not take into consideration whether the element can be seen at any time.
+    // That is, use this to find out if the element is scrolled onto the page or not,
+    // not whether it has for example display:none.
     function elementIsVisible(element) {
         var boundingRectangle = element.getBoundingClientRect();
         var isVisible = ((boundingRectangle.top >= 0) &&
@@ -630,6 +650,15 @@ var BigFormMenu;
             return 0;
         }
         return boundingRectangle.top;
+    }
+    // Returns true if the element is not hidden via display:none, visibility:hidden, etc. 
+    // Does not look at whether the element is visible in the viewport.
+    function elementIsDisplayed(element) {
+        if (!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)) {
+            return false;
+        }
+        var style = getComputedStyle(element);
+        return (!((style.display === 'none') || (style.visibility !== 'visible')));
     }
     // Sets a class on this menu item
     function setClassOnMenuItem(menuElement, classThisItem) {

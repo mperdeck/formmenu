@@ -1,6 +1,6 @@
 {
     "name": "bigformmenu",
-    "version": "1.1.4",
+    "version": "1.1.6",
     "files": [
         "dist/*.{css,js,map}"
     ]

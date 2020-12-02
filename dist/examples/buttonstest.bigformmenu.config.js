@@ -16,6 +16,11 @@ var BigFormMenu;
             BigFormMenu.menuSaveButton = createdSaveButton;
         }
     };
+    BigFormMenu.bigFormMenuConfiguration.menuButtons["duplicateButton"] = {
+        caption: 'Duplicate',
+        onClick: function () { console.log('####### Duplicate button clicked'); },
+        cssClass: 'btn btn-primary btn-sm'
+    };
     BigFormMenu.bigFormMenuConfiguration.menuButtons["deleteButton"] = {
         caption: 'Delete',
         onClick: function () { console.log('####### Delete button clicked'); },

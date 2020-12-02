@@ -20,8 +20,12 @@ var BigFormMenu;
             }
             var labelElement = domElement;
             var inputElementId = labelElement.htmlFor;
-            var inputElement = document.getElementById(inputElementId);
-            setActive(inputElement.required);
+            if (inputElementId) {
+                var inputElement = document.getElementById(inputElementId);
+                if (inputElement) {
+                    setActive(inputElement.required);
+                }
+            }
         }
     };
     BigFormMenu.bigFormMenuConfiguration.itemStateInfos["html5invalid"] = {
@@ -42,11 +46,15 @@ var BigFormMenu;
             }
             var labelElement = domElement;
             var inputElementId = labelElement.htmlFor;
-            var inputElement = document.getElementById(inputElementId);
-            setActive(!inputElement.validity.valid);
-            inputElement.addEventListener("input", function () {
-                setActive(!inputElement.validity.valid);
-            });
+            if (inputElementId) {
+                var inputElement_1 = document.getElementById(inputElementId);
+                if (inputElement_1) {
+                    setActive(!inputElement_1.validity.valid);
+                    inputElement_1.addEventListener("input", function () {
+                        setActive(!inputElement_1.validity.valid);
+                    });
+                }
+            }
         }
     };
 })(BigFormMenu || (BigFormMenu = {}));
