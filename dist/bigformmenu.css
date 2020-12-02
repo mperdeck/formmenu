@@ -68,15 +68,16 @@ Doco at:
       flex-grow: 1;
       overflow: hidden; }
   .bigformmenu .bigformmenu-item {
-    cursor: pointer;
-    display: flex; }
+    white-space: nowrap;
+    cursor: pointer; }
   .bigformmenu .bigformmenu-expand {
-    display: block;
+    display: inline-block;
     width: 10px;
     white-space: nowrap; }
   .bigformmenu .bigformmenu-caption {
-    display: block;
-    white-space: nowrap; }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip; }
   .bigformmenu .bigformmenu-expand {
     color: black;
     text-decoration: none;
