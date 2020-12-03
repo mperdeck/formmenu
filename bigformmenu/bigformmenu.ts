@@ -220,14 +220,14 @@ namespace BigFormMenu {
         // it is.
         let onClickHandler = (e:MouseEvent)=>{
 
-            if (elementIsVisible(domElement) !== 0) {
-                domElement.scrollIntoView();
-            }
+           if (elementIsVisible(domElement) !== 0) {
+                domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+           }
 
-            // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
-            domElement.addEventListener("animationend", 
+           // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
+           domElement.addEventListener("animationend", 
                 function(){ domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
-            domElement.classList.add('bigformmenu-highlighted-dom-item');
+           domElement.classList.add('bigformmenu-highlighted-dom-item');
         };
 
         let level:number = tagNameToLevel(domElement.tagName);
@@ -603,7 +603,7 @@ namespace BigFormMenu {
 
         _mainMenuElement.appendChild(filterBar);
 
-        // The the ul holding the menu items must have the class bigformmenu-top-menuitems.
+        // The ul holding the menu items must have the class bigformmenu-top-menuitems.
         // It will be replaced by rebuildMenuList.
         _mainUlElement = document.createElement("ul");
         _mainMenuElement.appendChild(_mainUlElement);
