@@ -20,8 +20,44 @@
 // Uncomment the below to hide the horizontal resizer. 
 // The user will no longer be able to change the width of the menu.
 
-// .bigformmenu .bigformmenu-horizontal-resizer { display: none; }
+// .bigformmenu .bigformmenu-left-horizontal-resizer { display: none; }
 
+// ---------------------------------------------
+// Uncomment the below to put the menu to the left of the screen.
+// This 
+// 1) deactivates the left hand resizer and activates the right hand resizer.
+// 2) swaps the captions of the show/hide buttons.
+// 3) sticks the menu to the left of the screen instead of the right.
+
+/*.bigformmenu {
+    .bigformmenu-left-horizontal-resizer {
+        display: none;
+    }
+
+    .bigformmenu-right-horizontal-resizer {
+        display: block;
+    }
+
+    .bigformmenu-menu-show::after {
+        content: "\25B6";
+    }
+
+    .bigformmenu-menu-hide::after {
+        content: "\25C0";
+    }
+
+    &.bigformmenu-hidden {
+        .bigformmenu-open-button-bar {
+            button {
+                float: left;
+            }
+        }
+    }
+
+    right: auto;
+    left: 10px;
+}
+*/
 // =====================================================
 // Patches for Bootstrap 4
 //

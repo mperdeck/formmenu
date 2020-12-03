@@ -565,7 +565,8 @@ namespace BigFormMenu {
     function addMenuBody(_mainMenuElement: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
 
         _mainMenuElement.appendChild(verticalResizeDiv());
-        _mainMenuElement.appendChild(horizontalResizeDiv());
+        _mainMenuElement.appendChild(horizontalResizeDiv('bigformmenu-left-horizontal-resizer', 1));
+        _mainMenuElement.appendChild(horizontalResizeDiv('bigformmenu-right-horizontal-resizer', -1));
 
         let openButtonBar: HTMLElement = document.createElement("div");
         openButtonBar.classList.add('bigformmenu-open-button-bar');
@@ -655,9 +656,11 @@ namespace BigFormMenu {
         return buttonArea;
     }
 
-    function horizontalResizeDiv(): HTMLDivElement {
+    // cssClass - class of the resizer grabber
+    // direction - set to 1 if the grabber on the left is created, set to -1 if the one on the right is created. 
+    function horizontalResizeDiv(cssClass: string, direction: number): HTMLDivElement {
         let resizeDiv: HTMLDivElement = document.createElement("div");
-        resizeDiv.classList.add('bigformmenu-horizontal-resizer');
+        resizeDiv.classList.add(cssClass);
         resizeDiv.innerHTML = "&nbsp;";
 
         resizeDiv.addEventListener('mousedown', function(e) {
@@ -669,7 +672,7 @@ namespace BigFormMenu {
 
             const resizeMenuHorizontally = (e) => {
                             
-                let newWidth = preMoveWidth - (e.pageX - preMoveMouseX);
+                let newWidth = preMoveWidth - ((e.pageX - preMoveMouseX) * direction);
 
                 storeWidth(newWidth);
 

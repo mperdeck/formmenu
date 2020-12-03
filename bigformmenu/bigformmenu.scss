@@ -34,12 +34,10 @@ Doco at:
         overflow-y: auto;
         flex-grow: 1;
         scrollbar-width: thin;
-
         // See https://www.digitalocean.com/community/tutorials/css-scrollbars
         &::-webkit-scrollbar {
             width: 6px;
         }
-
         // You can't just set the width. Have to set scrollbar track and thumb as well. Otherwise no scrollbar will be shown at all.
         &::-webkit-scrollbar-track {
             background-color: gainsboro;
@@ -68,15 +66,23 @@ Doco at:
         display: none;
     }
 
-    .bigformmenu-horizontal-resizer {
+    .bigformmenu-left-horizontal-resizer {
+        left: 0;
+    }
+
+    .bigformmenu-right-horizontal-resizer {
+        right: 0;
+        display: none;
+    }
+
+    .bigformmenu-right-horizontal-resizer, .bigformmenu-left-horizontal-resizer {
         top: 0;
         bottom: 0;
-        left: 0;
         width: 5px;
         cursor: e-resize;
     }
 
-    .bigformmenu-horizontal-resizer, .bigformmenu-vertical-resizer {
+    .bigformmenu-right-horizontal-resizer, .bigformmenu-left-horizontal-resizer, .bigformmenu-vertical-resizer {
         position: absolute;
         z-index: 1000;
     }
@@ -108,7 +114,6 @@ Doco at:
     /* Form menu expand / collapse */
     // Give bigformmenu-expand a width, so menu item captions align nicely even if one has an open/close
     // and the other doesn't.
-    // Because of this, bigformmenu-expand and bigformmenu-caption have to be floated left.
     .bigformmenu-expand {
         display: inline-block;
         width: 10px;
