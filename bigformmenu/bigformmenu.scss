@@ -33,6 +33,21 @@ Doco at:
         overflow-x: hidden;
         overflow-y: auto;
         flex-grow: 1;
+        scrollbar-width: thin;
+
+        // See https://www.digitalocean.com/community/tutorials/css-scrollbars
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        // You can't just set the width. Have to set scrollbar track and thumb as well. Otherwise no scrollbar will be shown at all.
+        &::-webkit-scrollbar-track {
+            background-color: gainsboro;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: darkgrey;
+        }
     }
 
     button {
