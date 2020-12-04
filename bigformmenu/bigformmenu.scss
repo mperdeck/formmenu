@@ -224,14 +224,9 @@ Doco at:
         flex-wrap: wrap;
 
         button {
-            margin: 5px 0 5px 0;
+            margin: 5px 3px 5px 3px;
             flex-grow: 1;
-            margin-left: 5px;
             flex: 1 1 0;
-
-            &:last-child {
-                margin-right: 5px;
-            }
         }
     }
 }
