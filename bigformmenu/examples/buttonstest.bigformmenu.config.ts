@@ -19,6 +19,7 @@ namespace BigFormMenu {
         cssClass: 'btn  btn-success btn-sm',
         wireUp: (createdSaveButton) => {
             menuSaveButton = createdSaveButton;
+            return true;
         }
     };
 
@@ -32,6 +33,14 @@ namespace BigFormMenu {
         caption: 'Delete',
         onClick: () => { console.log('####### Delete button clicked'); },
         cssClass: 'btn btn-danger btn-sm'
+    };
+
+    bigFormMenuConfiguration.menuButtons["doNotShowButton"] = {
+        caption: 'Do not show',
+        onClick: () => { console.log('####### Do not show'); },
+        wireUp: (createdSaveButton) => {
+            return false;
+        }
     };
 
     bigFormMenuConfiguration.menuButtons["cancelButton"] = {

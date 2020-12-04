@@ -646,11 +646,13 @@ namespace BigFormMenu {
             button.onclick = menuButtonInfo.onClick;
             setClass(button, menuButtonInfo.cssClass);
 
+            let generateButton = true;
+
             if (menuButtonInfo.wireUp) {
-                menuButtonInfo.wireUp(button);
+                generateButton = menuButtonInfo.wireUp(button);
             }
 
-            buttonArea.appendChild(button);
+            if (generateButton) { buttonArea.appendChild(button); }
         })
 
         return buttonArea;

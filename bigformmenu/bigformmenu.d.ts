@@ -104,7 +104,8 @@ interface iMenuButton {
     cssClass?: string;
 
     // If defined, this method will be called after the button tag has been created.
+    // If it returns falsy, the button will not be added to the menu.
     // buttonElement - the button element
-    wireUp?: (buttonElement: HTMLButtonElement)=>void;
+    wireUp?: (buttonElement: HTMLButtonElement)=>boolean;
 }
 
