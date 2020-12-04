@@ -94,11 +94,19 @@ interface iItemStateInfo {
 
 // Represents a button tag that will be generated below the menu
 interface iMenuButton {
+    // If given, the bigformmenu library looks elements on the page
+    // that match this selector.
+    // For each such element, a button will be generated:
+    // * caption will be innerHTML of the element, can be overridden by caption.
+    // * onClick will be a method that clicks the element, can be overridden by onClick.
+    // * cssClass will be the CSS class(es) of the element, can be overriden by cssClass.
+    // * wireUp will be called for each generated button.
+    cssSelector?: string;
 
-    caption: string;
+    caption?: string;
 
     // Will be called when this button is clicked
-    onClick: ()=>void;
+    onClick?: ()=>void;
 
     // Classes to be added to the button. If you want multiple classes, separate with a space.
     cssClass?: string;

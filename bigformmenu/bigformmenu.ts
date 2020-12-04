@@ -638,24 +638,44 @@ namespace BigFormMenu {
         buttonArea.classList.add('bigformmenu-buttonarea');
         buttonArea.id = 'bigformmenu-buttonarea';
 
-        visitAllMenuButtonInfos((menuButtonInfo: iMenuButton)=>{
-            let button: HTMLButtonElement = document.createElement("button");
+        visitAllMenuButtonInfos((menuButtonInfo: iMenuButton) => {
 
-            button.type = "button";
-            button.innerHTML = menuButtonInfo.caption;
-            button.onclick = menuButtonInfo.onClick;
-            setClass(button, menuButtonInfo.cssClass);
+            if (menuButtonInfo.cssSelector) {
+                let allButtonElements = document.querySelectorAll(menuButtonInfo.cssSelector);
 
-            let generateButton = true;
+                for (let i = 0; i < allButtonElements.length; i++) {
+                    let currentElement = allButtonElements[i] as HTMLElement;
+                    let caption = currentElement.innerHTML;
+                    let onClick = () => { currentElement.click(); };
+                    let cssClass = currentElement.className;
 
-            if (menuButtonInfo.wireUp) {
-                generateButton = menuButtonInfo.wireUp(button);
+                    createButton(buttonArea, menuButtonInfo, caption, onClick, cssClass);
+                }
+            } else {
+                createButton(buttonArea, menuButtonInfo);
             }
-
-            if (generateButton) { buttonArea.appendChild(button); }
         })
 
         return buttonArea;
+    }
+
+    function createButton(buttonArea: HTMLDivElement, menuButtonInfo: iMenuButton,
+        caption?: string, onClick?: () => void, cssClass?: string) {
+
+        let button: HTMLButtonElement = document.createElement("button");
+
+        button.type = "button";
+        button.innerHTML = menuButtonInfo.caption || caption;
+        button.onclick = menuButtonInfo.onClick || onClick;
+        setClass(button, menuButtonInfo.cssClass || cssClass);
+
+        let generateButton = true;
+
+        if (menuButtonInfo.wireUp) {
+            generateButton = menuButtonInfo.wireUp(button);
+        }
+
+        if (generateButton) { buttonArea.appendChild(button); }
     }
 
     // cssClass - class of the resizer grabber

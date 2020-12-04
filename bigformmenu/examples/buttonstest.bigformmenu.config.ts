@@ -48,4 +48,17 @@ namespace BigFormMenu {
         onClick: () => { console.log('####### Cancel button clicked'); },
         cssClass: 'btn btn-link'
     }
+
+    bigFormMenuConfiguration.menuButtons["buttonsbar"] = {
+        cssSelector: '.buttonsbar > button',
+        wireUp: (createdSaveButton) => {
+            createdSaveButton.className = createdSaveButton.className + ' btn-sm';
+            return true;
+        }
+    }
+
+    bigFormMenuConfiguration.menuButtons["buttonsbar2"] = {
+        cssSelector: '.buttonsbar2 > button',
+        cssClass: 'btn btn-warning'
+    }
 }
