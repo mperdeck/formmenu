@@ -231,6 +231,13 @@ Doco at:
     }
 }
 
+/* Ensure menu does not appear on printouts, etc. */
+@media not screen {
+    .bigformmenu {
+        display: none;
+    }
+}
+
 .bigformmenu-highlighted-dom-item {
     position: relative;
 }
