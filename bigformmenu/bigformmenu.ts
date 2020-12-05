@@ -1189,6 +1189,9 @@ namespace BigFormMenu {
             _mainUlElement = ulElement;
 
             ensureMenuBottomVisible();
+
+            let allItemsAreVisible = setVisibilityForMenu();
+            setMenuVisibility(allItemsAreVisible);
         });
     }
 
@@ -1230,9 +1233,6 @@ namespace BigFormMenu {
         }
 
         addMenuBody(_mainMenuElement, _menuElementInfos);
-
-        let allItemsAreVisible = setVisibilityForMenu();
-        setMenuVisibility(allItemsAreVisible);
 
         setDimensionsFromLocalStorage();
 
