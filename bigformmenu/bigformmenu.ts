@@ -488,9 +488,17 @@ namespace BigFormMenu {
         localStorage.setItem('bigformmenu-hidden', "1");
     }
 
-    function onMenuHideShowButtonClicked(e: MouseEvent): void {
-        toggleClass(_mainMenuElement, 'bigformmenu-hidden');
-        toggleLocalStorage('bigformmenu-hidden');
+    function showMenu(): void {
+        _mainMenuElement.classList.remove('bigformmenu-hidden');
+        localStorage.removeItem('bigformmenu-hidden');
+    }
+
+    function onMenuHideButtonClicked(e: MouseEvent): void {
+        hideMenu();
+    }
+
+    function onMenuShowButtonClicked(e: MouseEvent): void {
+        showMenu();
     }
 
     function onExpandAllMenuClicked(e: MouseEvent): void {
@@ -584,7 +592,7 @@ namespace BigFormMenu {
         let openButtonBar: HTMLElement = document.createElement("div");
         openButtonBar.classList.add('bigformmenu-open-button-bar');
 
-        addFilterButton('classMenuShowButton', onMenuHideShowButtonClicked,
+        addFilterButton('classMenuShowButton', onMenuShowButtonClicked,
             "showMenuHideShowButton", "titleMenuShowButton", openButtonBar);
 
         _mainMenuElement.appendChild(openButtonBar);
@@ -592,7 +600,7 @@ namespace BigFormMenu {
         let filterBar: HTMLElement = document.createElement("div");
         filterBar.classList.add('bigformmenu-filter-bar');
 
-        addFilterButton('classMenuHideButton', onMenuHideShowButtonClicked,
+        addFilterButton('classMenuHideButton', onMenuHideButtonClicked,
             "showMenuHideShowButton", "titleMenuHideButton", filterBar);
 
         addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked,
