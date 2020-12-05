@@ -35,7 +35,14 @@ Doco at:
     margin: 5px 0 0 0;
     overflow-x: hidden;
     overflow-y: auto;
-    flex-grow: 1; }
+    flex-grow: 1;
+    scrollbar-width: thin; }
+    .bigformmenu > ul::-webkit-scrollbar {
+      width: 6px; }
+    .bigformmenu > ul::-webkit-scrollbar-track {
+      background-color: gainsboro; }
+    .bigformmenu > ul::-webkit-scrollbar-thumb {
+      background-color: darkgrey; }
   .bigformmenu button {
     cursor: pointer; }
   .bigformmenu button[disabled] {
@@ -48,13 +55,17 @@ Doco at:
     height: 5px;
     cursor: n-resize;
     display: none; }
-  .bigformmenu .bigformmenu-horizontal-resizer {
+  .bigformmenu .bigformmenu-left-horizontal-resizer {
+    left: 0; }
+  .bigformmenu .bigformmenu-right-horizontal-resizer {
+    right: 0;
+    display: none; }
+  .bigformmenu .bigformmenu-right-horizontal-resizer, .bigformmenu .bigformmenu-left-horizontal-resizer {
     top: 0;
     bottom: 0;
-    left: 0;
     width: 5px;
     cursor: e-resize; }
-  .bigformmenu .bigformmenu-horizontal-resizer, .bigformmenu .bigformmenu-vertical-resizer {
+  .bigformmenu .bigformmenu-right-horizontal-resizer, .bigformmenu .bigformmenu-left-horizontal-resizer, .bigformmenu .bigformmenu-vertical-resizer {
     position: absolute;
     z-index: 1000; }
   .bigformmenu .bigformmenu-filter-bar {
@@ -123,21 +134,81 @@ Doco at:
     display: flex;
     flex-wrap: wrap; }
     .bigformmenu .bigformmenu-buttonarea button {
-      margin: 5px 0 5px 0;
+      margin: 5px 3px 5px 3px;
       flex-grow: 1;
-      margin-left: 5px;
       flex: 1 1 0; }
-      .bigformmenu .bigformmenu-buttonarea button:last-child {
-        margin-right: 5px; }
+  .bigformmenu.bigformmenu-allitemsvisible {
+    display: none; }
+
+/* Ensure menu does not appear on printouts, etc. */
+@media not screen {
+  .bigformmenu {
+    display: none; } }
 
 .bigformmenu-highlighted-dom-item {
-  animation-duration: 0.5s;
+  position: relative; }
+
+.bigformmenu-highlighted-dom-item:before {
+  animation-duration: 1.5s;
   animation-name: bigformmenu-highlighted-dom-item-animation;
-  animation-iteration-count: 2;
-  animation-direction: alternate; }
+  animation-iteration-count: 1;
+  content: "\00a0";
+  background-color: transparent;
+  border-radius: 50%;
+  border: 1px grey solid;
+  display: inline-block;
+  position: absolute; }
 
 @keyframes bigformmenu-highlighted-dom-item-animation {
   from {
-    background-color: auto; }
+    padding: 0;
+    left: 0;
+    top: 0;
+    border-color: #808080;
+    border-width: 8px; }
   to {
-    color: gold; } }
+    padding: 100px;
+    left: -100px;
+    top: -100px;
+    border-color: transparent;
+    border-width: 0; } }
+
+/*.bigformmenu {
+    display: none;
+}
+
+@media screen and (min-width: 1200px) {
+    .bigformmenu {
+        display: flex;
+    }
+}
+*/
+/*.bigformmenu {
+    .bigformmenu-left-horizontal-resizer {
+        display: none;
+    }
+
+    .bigformmenu-right-horizontal-resizer {
+        display: block;
+    }
+
+    .bigformmenu-menu-show::after {
+        content: "\25B6";
+    }
+
+    .bigformmenu-menu-hide::after {
+        content: "\25C0";
+    }
+
+    &.bigformmenu-hidden {
+        .bigformmenu-open-button-bar {
+            button {
+                float: left;
+            }
+        }
+    }
+
+    right: auto;
+    left: 10px;
+}
+*/

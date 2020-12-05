@@ -14,6 +14,7 @@ var BigFormMenu;
         cssClass: 'btn  btn-success btn-sm',
         wireUp: function (createdSaveButton) {
             BigFormMenu.menuSaveButton = createdSaveButton;
+            return true;
         }
     };
     BigFormMenu.bigFormMenuConfiguration.menuButtons["duplicateButton"] = {
@@ -26,10 +27,28 @@ var BigFormMenu;
         onClick: function () { console.log('####### Delete button clicked'); },
         cssClass: 'btn btn-danger btn-sm'
     };
+    BigFormMenu.bigFormMenuConfiguration.menuButtons["doNotShowButton"] = {
+        caption: 'Do not show',
+        onClick: function () { console.log('####### Do not show'); },
+        wireUp: function (createdSaveButton) {
+            return false;
+        }
+    };
     BigFormMenu.bigFormMenuConfiguration.menuButtons["cancelButton"] = {
         caption: 'Cancel',
         onClick: function () { console.log('####### Cancel button clicked'); },
         cssClass: 'btn btn-link'
+    };
+    BigFormMenu.bigFormMenuConfiguration.menuButtons["buttonsbar"] = {
+        cssSelector: '.buttonsbar > button',
+        wireUp: function (createdSaveButton) {
+            createdSaveButton.className = createdSaveButton.className + ' btn-sm';
+            return true;
+        }
+    };
+    BigFormMenu.bigFormMenuConfiguration.menuButtons["buttonsbar2"] = {
+        cssSelector: '.buttonsbar2 > button',
+        cssClass: 'btn btn-warning'
     };
 })(BigFormMenu || (BigFormMenu = {}));
 //# sourceMappingURL=buttonstest.bigformmenu.config.js.map

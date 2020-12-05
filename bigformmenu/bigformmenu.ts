@@ -1195,9 +1195,9 @@ namespace BigFormMenu {
     // Rebuild the menu list periodically, so when a dom element becomes visible or invisible somehow,
     // this gets reflected in the menu.
     // Ideally, this would use the Intersection Observer API, but this is not supported by IE11.
-    //export function tick(): void {
-    //    rebuildMenuList();
-    //}
+    function tick(): void {
+        rebuildMenuList();
+    }
 
     export function scrollHandler(): void {
 
@@ -1241,6 +1241,6 @@ namespace BigFormMenu {
 
         storeMenuBottom();
 
-//        setInterval(tick, 500);
+        setInterval(tick, 500);
     }
 }

@@ -23,6 +23,7 @@ var BigFormMenu;
         collapseOpenAtLevel: 1,
         minimumMenuWidth: 60,
         minimumMenuHeigth: 100,
+        hideForSmallForms: true,
         showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
@@ -33,6 +34,10 @@ var BigFormMenu;
         classMenuHideButton: 'bigformmenu-menu-hide',
         classExpandAllMenuButton: 'bigformmenu-expand-all-menu-button',
         classCollapseAllMenuButton: 'bigformmenu-collapse-all-menu-button',
+        titleMenuShowButton: 'Show menu',
+        titleMenuHideButton: 'Hide menu',
+        titleExpandAllMenuButton: 'Expand all',
+        titleCollapseAllMenuButton: 'Collapse all',
         // Note that HTML only has these heading tags. There is no h7, etc.
         querySelector: "h1,h2,h3,h4,h5,h6",
         tagNameToLevelMethod: tagNameToLevelDefaultMethod,
@@ -159,9 +164,6 @@ var BigFormMenu;
         if (!caption) {
             return null;
         }
-        if (!elementIsDisplayed(domElement)) {
-            return null;
-        }
         var menuElementClass = 'bigformmenu-' + domElement.tagName;
         // If a menu item gets clicked, scroll the associated dom element into view if it is not already
         // visible. If it is already visible, do not scroll it.
@@ -169,12 +171,15 @@ var BigFormMenu;
         // Also give it the bigformmenu-highlighted-dom-item for a short time, to point out where
         // it is.
         var onClickHandler = function (e) {
-            if (elementIsVisible(domElement) !== 0) {
-                domElement.scrollIntoView();
+            var isVisibleResult = elementIsVisible(domElement);
+            if (isVisibleResult.isShown) {
+                if (!isVisibleResult.isVisible) {
+                    domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                }
+                // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
+                domElement.addEventListener("animationend", function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
+                domElement.classList.add('bigformmenu-highlighted-dom-item');
             }
-            // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
-            domElement.addEventListener("animationend", function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
-            domElement.classList.add('bigformmenu-highlighted-dom-item');
         };
         var level = tagNameToLevel(domElement.tagName);
         var menuElementInfo = new MenuElementInfo(domElement, caption, level);
@@ -381,13 +386,25 @@ var BigFormMenu;
             setDimensionsFromLocalStorage();
         }
     }
+    // Set class bigformmenu-allitemsvisible on the main div
+    // if all items are visible.
+    function setMenuVisibility(allMenuItemsVisible) {
+        var hideForSmallForms = getConfigValue('hideForSmallForms');
+        setClass(_mainMenuElement, 'bigformmenu-allitemsvisible', hideForSmallForms && allMenuItemsVisible);
+    }
     function hideMenu() {
         _mainMenuElement.classList.add('bigformmenu-hidden');
         localStorage.setItem('bigformmenu-hidden', "1");
     }
-    function onMenuHideShowButtonClicked(e) {
-        toggleClass(_mainMenuElement, 'bigformmenu-hidden');
-        toggleLocalStorage('bigformmenu-hidden');
+    function showMenu() {
+        _mainMenuElement.classList.remove('bigformmenu-hidden');
+        localStorage.removeItem('bigformmenu-hidden');
+    }
+    function onMenuHideButtonClicked(e) {
+        hideMenu();
+    }
+    function onMenuShowButtonClicked(e) {
+        showMenu();
     }
     function onExpandAllMenuClicked(e) {
         _menuElementInfos.forEach(function (menuElementInfo) {
@@ -415,7 +432,7 @@ var BigFormMenu;
     //                      If not blank, config item has to be true for button to be created.
     // parent - filter button will be added to this element.
     //
-    function addFilterButton(cssClassConfigName, onClickHandler, showHideConfigName, parent) {
+    function addFilterButton(cssClassConfigName, onClickHandler, showHideConfigName, titleConfigName, parent) {
         var showButton = true;
         if (showHideConfigName) {
             showButton = getConfigValue(showHideConfigName);
@@ -427,14 +444,21 @@ var BigFormMenu;
         if (cssClassConfigName) {
             cssClass = getConfigValue(cssClassConfigName);
         }
-        var filterButton = createFilterButton(cssClass, onClickHandler);
+        var title;
+        if (titleConfigName) {
+            title = getConfigValue(titleConfigName);
+        }
+        var filterButton = createFilterButton(cssClass, title, onClickHandler);
         parent.appendChild(filterButton);
     }
-    function createFilterButton(cssClass, onClickHandler) {
+    function createFilterButton(cssClass, title, onClickHandler) {
         var filterButton = document.createElement("button");
         filterButton.type = "button";
         setClass(filterButton, cssClass);
         filterButton.classList.add('bigformmenu-filter-button');
+        if (title) {
+            filterButton.title = title;
+        }
         filterButton.onclick = onClickHandler;
         return filterButton;
     }
@@ -446,16 +470,17 @@ var BigFormMenu;
     }
     function addMenuBody(_mainMenuElement, _menuElementInfos) {
         _mainMenuElement.appendChild(verticalResizeDiv());
-        _mainMenuElement.appendChild(horizontalResizeDiv());
+        _mainMenuElement.appendChild(horizontalResizeDiv('bigformmenu-left-horizontal-resizer', 1));
+        _mainMenuElement.appendChild(horizontalResizeDiv('bigformmenu-right-horizontal-resizer', -1));
         var openButtonBar = document.createElement("div");
         openButtonBar.classList.add('bigformmenu-open-button-bar');
-        addFilterButton('classMenuShowButton', onMenuHideShowButtonClicked, "showMenuHideShowButton", openButtonBar);
+        addFilterButton('classMenuShowButton', onMenuShowButtonClicked, "showMenuHideShowButton", "titleMenuShowButton", openButtonBar);
         _mainMenuElement.appendChild(openButtonBar);
         var filterBar = document.createElement("div");
         filterBar.classList.add('bigformmenu-filter-bar');
-        addFilterButton('classMenuHideButton', onMenuHideShowButtonClicked, "showMenuHideShowButton", filterBar);
-        addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked, "showExpandAllMenuButton", filterBar);
-        addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked, "showCollapseAllMenuButton", filterBar);
+        addFilterButton('classMenuHideButton', onMenuHideButtonClicked, "showMenuHideShowButton", "titleMenuHideButton", filterBar);
+        addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked, "showExpandAllMenuButton", 'titleExpandAllMenuButton', filterBar);
+        addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked, "showCollapseAllMenuButton", 'titleCollapseAllMenuButton', filterBar);
         // Create the buttons area very early on, in case processing of the item state infos
         // or the rebuilding of the menu itself
         // has a dependency on the buttons.
@@ -467,7 +492,7 @@ var BigFormMenu;
             filterBar.appendChild(filterInput);
         }
         _mainMenuElement.appendChild(filterBar);
-        // The the ul holding the menu items must have the class bigformmenu-top-menuitems.
+        // The ul holding the menu items must have the class bigformmenu-top-menuitems.
         // It will be replaced by rebuildMenuList.
         _mainUlElement = document.createElement("ul");
         _mainMenuElement.appendChild(_mainUlElement);
@@ -494,21 +519,44 @@ var BigFormMenu;
         buttonArea.classList.add('bigformmenu-buttonarea');
         buttonArea.id = 'bigformmenu-buttonarea';
         visitAllMenuButtonInfos(function (menuButtonInfo) {
-            var button = document.createElement("button");
-            button.type = "button";
-            button.innerHTML = menuButtonInfo.caption;
-            button.onclick = menuButtonInfo.onClick;
-            setClass(button, menuButtonInfo.cssClass);
-            if (menuButtonInfo.wireUp) {
-                menuButtonInfo.wireUp(button);
+            if (menuButtonInfo.cssSelector) {
+                var allButtonElements = document.querySelectorAll(menuButtonInfo.cssSelector);
+                var _loop_1 = function (i) {
+                    var currentElement = allButtonElements[i];
+                    var caption = currentElement.innerHTML;
+                    var onClick = function () { currentElement.click(); };
+                    var cssClass = currentElement.className;
+                    createButton(buttonArea, menuButtonInfo, caption, onClick, cssClass);
+                };
+                for (var i = 0; i < allButtonElements.length; i++) {
+                    _loop_1(i);
+                }
             }
-            buttonArea.appendChild(button);
+            else {
+                createButton(buttonArea, menuButtonInfo);
+            }
         });
         return buttonArea;
     }
-    function horizontalResizeDiv() {
+    function createButton(buttonArea, menuButtonInfo, caption, onClick, cssClass) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.innerHTML = menuButtonInfo.caption || caption;
+        button.onclick = menuButtonInfo.onClick || onClick;
+        setClass(button, menuButtonInfo.cssClass || cssClass);
+        var generateButton = true;
+        if (menuButtonInfo.wireUp) {
+            generateButton = menuButtonInfo.wireUp(button);
+        }
+        if (generateButton) {
+            buttonArea.appendChild(button);
+        }
+    }
+    // cssClass - class of the resizer grabber
+    // direction - set to 1 if the grabber on the left is created, set to -1 if the one on the right is created. 
+    function horizontalResizeDiv(cssClass, direction) {
         var resizeDiv = document.createElement("div");
-        resizeDiv.classList.add('bigformmenu-horizontal-resizer');
+        resizeDiv.classList.add(cssClass);
         resizeDiv.innerHTML = "&nbsp;";
         resizeDiv.addEventListener('mousedown', function (e) {
             e.preventDefault();
@@ -516,7 +564,7 @@ var BigFormMenu;
             var preMoveWidth = boundingRect.right - boundingRect.left;
             var preMoveMouseX = e.pageX;
             var resizeMenuHorizontally = function (e) {
-                var newWidth = preMoveWidth - (e.pageX - preMoveMouseX);
+                var newWidth = preMoveWidth - ((e.pageX - preMoveMouseX) * direction);
                 storeWidth(newWidth);
                 var minimumMenuWidth = getConfigValue('minimumMenuWidth');
                 if (newWidth < minimumMenuWidth) {
@@ -589,7 +637,6 @@ var BigFormMenu;
     }
     function onItemStateFilterButtonClicked(e, itemStateInfo) {
         var clickedElement = (e.currentTarget);
-        //###########    if (clickedElement.classList.contains('bigformmenu-filter-button-disabled')) { return; }
         var itemStateActive = getItemStateStatus(itemStateInfo);
         setItemStateStatus(!itemStateActive, itemStateInfo, clickedElement);
         rebuildMenuList();
@@ -625,7 +672,7 @@ var BigFormMenu;
         rebuildMenuList();
     }
     function processItemStateInfo(itemStateInfo, filterBar, _menuElementInfos) {
-        var filterButton = createFilterButton(itemStateInfo.stateFilterButtonClass, function (e) { onItemStateFilterButtonClicked(e, itemStateInfo); });
+        var filterButton = createFilterButton(itemStateInfo.stateFilterButtonClass, itemStateInfo.buttonTitle, function (e) { onItemStateFilterButtonClicked(e, itemStateInfo); });
         filterButton.disabled = true;
         filterBar.appendChild(filterButton);
         _menuElementInfos.forEach(function (menuElementInfo) {
@@ -646,10 +693,9 @@ var BigFormMenu;
             (boundingRectangle.left >= 0) &&
             (boundingRectangle.bottom <= (window.innerHeight || document.documentElement.clientHeight)) &&
             (boundingRectangle.right <= (window.innerWidth || document.documentElement.clientWidth)));
-        if (isVisible) {
-            return 0;
-        }
-        return boundingRectangle.top;
+        // If the element is not shown (display none, etc), top, left, bottom, right will all be 0.
+        var isShown = !!(boundingRectangle.top || boundingRectangle.left || boundingRectangle.bottom || boundingRectangle.right);
+        return { isVisible: isVisible, isShown: isShown, top: boundingRectangle.top };
     }
     // Returns true if the element is not hidden via display:none, visibility:hidden, etc. 
     // Does not look at whether the element is visible in the viewport.
@@ -724,11 +770,12 @@ var BigFormMenu;
     }
     function setVisibilityForMenu() {
         if (!_menuElementInfos) {
-            return;
+            return false;
         }
         removeVisibilityForMenu();
         var count = _menuElementInfos.length;
         var lastWasVisible = false;
+        var allItemsAreVisible = true;
         // The element that is 1) above the screen; 2) closest to the screen of all elements above the screen;
         // 3) visible inside the menu (not hidden because a parent is closed).
         var invisibleMenuHeaderAboveVisibleArea;
@@ -739,27 +786,29 @@ var BigFormMenu;
         var lastVisibleElement;
         for (var i = 0; i < count; i++) {
             var currentMenuElementInfo = _menuElementInfos[i];
-            var visibility = elementIsVisible(currentMenuElementInfo.domElement);
-            var isVisible = (visibility === 0);
-            if (!isVisible) {
-                if ((visibility < 0) && (visibility > closestDistanceToTop) &&
-                    elementIsHeader(currentMenuElementInfo) &&
-                    elementIsShownInMenu(currentMenuElementInfo)) {
-                    invisibleMenuHeaderAboveVisibleArea = currentMenuElementInfo;
+            var visibilityResult = elementIsVisible(currentMenuElementInfo.domElement);
+            if (visibilityResult.isShown) {
+                if (!visibilityResult.isVisible) {
+                    allItemsAreVisible = false;
+                    if ((visibilityResult.top < 0) && (visibilityResult.top > closestDistanceToTop) &&
+                        elementIsHeader(currentMenuElementInfo) &&
+                        elementIsShownInMenu(currentMenuElementInfo)) {
+                        invisibleMenuHeaderAboveVisibleArea = currentMenuElementInfo;
+                    }
                 }
-            }
-            // If we just got past the items that were visible, then the rest will be invisible,
-            // so no need to visit any more items.
-            if (lastWasVisible && !isVisible) {
-                break;
-            }
-            lastWasVisible = isVisible;
-            if (isVisible) {
-                setVisibility(currentMenuElementInfo);
-                if (!firstVisibleElement) {
-                    firstVisibleElement = currentMenuElementInfo;
+                // If we just got past the items that were visible, then the rest will be invisible,
+                // so no need to visit any more items.
+                if (lastWasVisible && !visibilityResult.isVisible) {
+                    break;
                 }
-                lastVisibleElement = currentMenuElementInfo;
+                lastWasVisible = visibilityResult.isVisible;
+                if (visibilityResult.isVisible) {
+                    setVisibility(currentMenuElementInfo);
+                    if (!firstVisibleElement) {
+                        firstVisibleElement = currentMenuElementInfo;
+                    }
+                    lastVisibleElement = currentMenuElementInfo;
+                }
             }
         }
         // The header just above the screen should be marked visible as well,
@@ -789,6 +838,7 @@ var BigFormMenu;
         else {
             menuItemMakeVisibleAtTop(firstVisibleElement);
         }
+        return allItemsAreVisible;
     }
     // Finds out if the menu element in the menuElementInfo passes the search filter.
     // If so, updates the caption to highlight the matched bit and returns true.
@@ -846,6 +896,9 @@ var BigFormMenu;
         if ((!passesItemStateFilters(menuElementInfo)) && (!hasChildren)) {
             return null;
         }
+        if ((!elementIsDisplayed(menuElementInfo.domElement)) && (!hasChildren)) {
+            return null;
+        }
         var liElement = document.createElement("li");
         liElement.appendChild(menuElementInfo.menuElement);
         if (hasChildren) {
@@ -878,6 +931,12 @@ var BigFormMenu;
             ensureMenuBottomVisible();
         });
     }
+    // Rebuild the menu list periodically, so when a dom element becomes visible or invisible somehow,
+    // this gets reflected in the menu.
+    // Ideally, this would use the Intersection Observer API, but this is not supported by IE11.
+    function tick() {
+        rebuildMenuList();
+    }
     function scrollHandler() {
         var currentYOffset = window.pageYOffset;
         _scrollingDown = (currentYOffset > _lastPageYOffset);
@@ -886,7 +945,8 @@ var BigFormMenu;
     }
     BigFormMenu.scrollHandler = scrollHandler;
     function resizeHandler() {
-        setVisibilityForMenu();
+        var allItemsAreVisible = setVisibilityForMenu();
+        setMenuVisibility(allItemsAreVisible);
         ensureMenuBottomVisible();
     }
     BigFormMenu.resizeHandler = resizeHandler;
@@ -901,11 +961,13 @@ var BigFormMenu;
             _mainMenuElement.classList.add('bigformmenu-hidden');
         }
         addMenuBody(_mainMenuElement, _menuElementInfos);
-        setVisibilityForMenu();
+        var allItemsAreVisible = setVisibilityForMenu();
+        setMenuVisibility(allItemsAreVisible);
         setDimensionsFromLocalStorage();
         var bodyElement = document.getElementsByTagName("BODY")[0];
         bodyElement.appendChild(_mainMenuElement);
         storeMenuBottom();
+        setInterval(tick, 500);
     }
     BigFormMenu.pageLoadedHandler = pageLoadedHandler;
 })(BigFormMenu || (BigFormMenu = {}));
