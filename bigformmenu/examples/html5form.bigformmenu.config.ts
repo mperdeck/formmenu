@@ -20,6 +20,7 @@ namespace BigFormMenu {
         hasActiveStateClass: 'bigformmenu-is-required',
         stateFilterActiveClass: 'bigformmenu-required-filter-is-active',
         stateFilterButtonClass: 'bigformmenu-required-filter-button',
+        buttonTitle: 'Required fields only',
         wireUp: (domElement: HTMLElement, setActive: (active: boolean) => void) => {
             if (domElement.tagName.toLowerCase() !== 'label') { return; }
             let labelElement: HTMLLabelElement = domElement as HTMLLabelElement;
@@ -47,6 +48,7 @@ namespace BigFormMenu {
         hasActiveStateClass: 'bigformmenu-is-invalid',
         stateFilterActiveClass: 'bigformmenu-invalid-filter-is-active',
         stateFilterButtonClass: 'bigformmenu-invalid-filter-button',
+        buttonTitle: 'Invalid fields only',
         wireUp: (domElement: HTMLElement, setActive: (active: boolean) => void) => {
             if (domElement.tagName.toLowerCase() !== 'label') { return; }
 

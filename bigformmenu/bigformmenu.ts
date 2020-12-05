@@ -44,6 +44,11 @@ namespace BigFormMenu {
         classMenuHideButton: 'bigformmenu-menu-hide',
         classExpandAllMenuButton: 'bigformmenu-expand-all-menu-button',
         classCollapseAllMenuButton: 'bigformmenu-collapse-all-menu-button',
+
+        titleMenuShowButton: 'Show menu',
+        titleMenuHideButton: 'Hide menu',
+        titleExpandAllMenuButton: 'Expand all',
+        titleCollapseAllMenuButton: 'Collapse all',
         
         // Note that HTML only has these heading tags. There is no h7, etc.
         querySelector: "h1,h2,h3,h4,h5,h6",
@@ -521,10 +526,9 @@ namespace BigFormMenu {
     // parent - filter button will be added to this element.
     //
     function addFilterButton(cssClassConfigName: string, onClickHandler: (e: MouseEvent) => void,
-        showHideConfigName: string, parent: HTMLElement) {
+        showHideConfigName: string, titleConfigName: string, parent: HTMLElement) {
 
         let showButton: boolean = true;
-        
         if (showHideConfigName) {
             showButton = getConfigValue(showHideConfigName);
         }
@@ -538,16 +542,25 @@ namespace BigFormMenu {
             cssClass = getConfigValue(cssClassConfigName);
         }
 
-        let filterButton: HTMLElement = createFilterButton(cssClass, onClickHandler);
+        let title;
+        if (titleConfigName) {
+            title = getConfigValue(titleConfigName);
+        }
+
+        let filterButton: HTMLElement = createFilterButton(cssClass, title, onClickHandler);
         parent.appendChild(filterButton);
     }
 
-    function createFilterButton(cssClass: string, onClickHandler: (e: MouseEvent) => void): HTMLButtonElement {
+    function createFilterButton(cssClass: string, title: string, onClickHandler: (e: MouseEvent) => void): HTMLButtonElement {
         let filterButton: HTMLButtonElement = document.createElement("button");
         filterButton.type = "button";
 
         setClass(filterButton, cssClass);
         filterButton.classList.add('bigformmenu-filter-button');
+
+        if (title) {
+            filterButton.title = title;
+        }
 
         filterButton.onclick = onClickHandler;
 
@@ -572,7 +585,7 @@ namespace BigFormMenu {
         openButtonBar.classList.add('bigformmenu-open-button-bar');
 
         addFilterButton('classMenuShowButton', onMenuHideShowButtonClicked,
-            "showMenuHideShowButton", openButtonBar);
+            "showMenuHideShowButton", "titleMenuShowButton", openButtonBar);
 
         _mainMenuElement.appendChild(openButtonBar);
 
@@ -580,13 +593,13 @@ namespace BigFormMenu {
         filterBar.classList.add('bigformmenu-filter-bar');
 
         addFilterButton('classMenuHideButton', onMenuHideShowButtonClicked,
-            "showMenuHideShowButton", filterBar);
+            "showMenuHideShowButton", "titleMenuHideButton", filterBar);
 
         addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked,
-            "showExpandAllMenuButton", filterBar);
+            "showExpandAllMenuButton", 'titleExpandAllMenuButton', filterBar);
 
         addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked,
-            "showCollapseAllMenuButton", filterBar);
+            "showCollapseAllMenuButton", 'titleCollapseAllMenuButton', filterBar);
 
         // Create the buttons area very early on, in case processing of the item state infos
         // or the rebuilding of the menu itself
@@ -848,7 +861,7 @@ namespace BigFormMenu {
         _menuElementInfos: MenuElementInfo[]): void {
 
         let filterButton: HTMLButtonElement = createFilterButton(
-            itemStateInfo.stateFilterButtonClass, (e: MouseEvent) => { onItemStateFilterButtonClicked(e, itemStateInfo); });
+            itemStateInfo.stateFilterButtonClass, itemStateInfo.buttonTitle, (e: MouseEvent) => { onItemStateFilterButtonClicked(e, itemStateInfo); });
         filterButton.disabled = true;
         filterBar.appendChild(filterButton);
 

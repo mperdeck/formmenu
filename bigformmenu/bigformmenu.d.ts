@@ -25,6 +25,11 @@ interface iBigFormMenuConfiguration {
     classExpandAllMenuButton?: string;
     classCollapseAllMenuButton?: string;
 
+    titleMenuShowButton?: string;
+    titleMenuHideButton?: string;
+    titleExpandAllMenuButton?: string;
+    titleCollapseAllMenuButton?: string;
+
     // Query selector used to select the tags that will be represented in the menu
     querySelector?: string;
 
@@ -90,6 +95,10 @@ interface iItemStateInfo {
     // The filter button that allows the user to only show items with the active state
     // will have this class.
     stateFilterButtonClass: string;
+
+    // Contents of tiny popup that appears when user hovers over button. 
+    // If not set, popup will not show. Use for short help text as to what the button does.
+    buttonTitle?: string;
 }
 
 // Represents a button tag that will be generated below the menu
