@@ -32,6 +32,8 @@ namespace BigFormMenu {
         minimumMenuWidth: 60,
         minimumMenuHeigth: 100,
 
+        hideForSmallForms: true,
+
         showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
@@ -481,6 +483,13 @@ namespace BigFormMenu {
             // window has grown higher to the point that the stored height can be used again
             setDimensionsFromLocalStorage();
         }
+    }
+
+    // Set class bigformmenu-allitemsvisible on the main div
+    // if all items are visible.
+    function setMenuVisibility(allMenuItemsVisible: boolean): void {
+        let hideForSmallForms = getConfigValue('hideForSmallForms') as boolean;
+        setClass(_mainMenuElement, 'bigformmenu-allitemsvisible', hideForSmallForms && allMenuItemsVisible);
     }
 
     function hideMenu(): void {
@@ -981,12 +990,13 @@ namespace BigFormMenu {
         }
     }
 
-    function setVisibilityForMenu(): void {
-        if (!_menuElementInfos) { return; }
+    function setVisibilityForMenu(): boolean {
+        if (!_menuElementInfos) { return false; }
 
         removeVisibilityForMenu();
         let count = _menuElementInfos.length;
         let lastWasVisible = false;
+        let allItemsAreVisible = true;
 
         // The element that is 1) above the screen; 2) closest to the screen of all elements above the screen;
         // 3) visible inside the menu (not hidden because a parent is closed).
@@ -1006,6 +1016,8 @@ namespace BigFormMenu {
             const isVisible = (visibility === 0);
 
             if (!isVisible) {
+                allItemsAreVisible = false;
+
                 if ((visibility < 0) && (visibility > closestDistanceToTop) && 
                     elementIsHeader(currentMenuElementInfo) && 
                     elementIsShownInMenu(currentMenuElementInfo)) {
@@ -1061,6 +1073,8 @@ namespace BigFormMenu {
         } else {
             menuItemMakeVisibleAtTop(firstVisibleElement);
         }
+
+        return allItemsAreVisible;
     }
 
     // Finds out if the menu element in the menuElementInfo passes the search filter.
@@ -1186,11 +1200,13 @@ namespace BigFormMenu {
     }
 
     export function resizeHandler(): void {
-        setVisibilityForMenu();
+        let allItemsAreVisible = setVisibilityForMenu();
+        setMenuVisibility(allItemsAreVisible);
         ensureMenuBottomVisible();
     }
 
     export function pageLoadedHandler(): void {
+
         _lastPageYOffset = window.pageYOffset;
 
         _menuElementInfos = domElementsToMenuElements(getAllDomElements());
@@ -1206,7 +1222,8 @@ namespace BigFormMenu {
 
         addMenuBody(_mainMenuElement, _menuElementInfos);
 
-        setVisibilityForMenu();
+        let allItemsAreVisible = setVisibilityForMenu();
+        setMenuVisibility(allItemsAreVisible);
 
         setDimensionsFromLocalStorage();
 
