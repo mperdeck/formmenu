@@ -216,8 +216,6 @@ namespace BigFormMenu {
             return null;
         }
 
-        if (!elementIsDisplayed(domElement)) { return null; }
-
         let menuElementClass = 'bigformmenu-' + domElement.tagName;
 
         // If a menu item gets clicked, scroll the associated dom element into view if it is not already
@@ -1148,6 +1146,7 @@ namespace BigFormMenu {
 
         if ((!passesSearchFilter(menuElementInfo)) && (!hasChildren)) { return null; }
         if ((!passesItemStateFilters(menuElementInfo)) && (!hasChildren)) { return null; }
+        if ((!elementIsDisplayed(menuElementInfo.domElement)) && (!hasChildren)) { return null; }
 
         let liElement: HTMLLIElement = document.createElement("li");
         liElement.appendChild(menuElementInfo.menuElement);
