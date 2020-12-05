@@ -56,7 +56,7 @@ namespace BigFormMenu {
             let inputElementId = labelElement.htmlFor;
             if (inputElementId) {
                 let inputElement: HTMLInputElement = document.getElementById(inputElementId) as HTMLInputElement;
-                if (inputElement) {
+                if (inputElement && inputElement.validity) {
                     setActive(!inputElement.validity.valid);
 
                     inputElement.addEventListener("input", function () {
