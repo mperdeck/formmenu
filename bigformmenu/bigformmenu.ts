@@ -224,15 +224,17 @@ namespace BigFormMenu {
         // Also give it the bigformmenu-highlighted-dom-item for a short time, to point out where
         // it is.
         let onClickHandler = (e:MouseEvent)=>{
+            let isVisibleResult = elementIsVisible(domElement);
+            if (isVisibleResult.isShown) {
+                if (!isVisibleResult.isVisible) {
+                    domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                }
 
-           if (elementIsVisible(domElement) !== 0) {
-                domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-           }
-
-           // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
-           domElement.addEventListener("animationend", 
-                function(){ domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
-           domElement.classList.add('bigformmenu-highlighted-dom-item');
+                // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
+                domElement.addEventListener("animationend",
+                    function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
+                domElement.classList.add('bigformmenu-highlighted-dom-item');
+            }
         };
 
         let level:number = tagNameToLevel(domElement.tagName);
@@ -893,7 +895,7 @@ namespace BigFormMenu {
     // This does not take into consideration whether the element can be seen at any time.
     // That is, use this to find out if the element is scrolled onto the page or not,
     // not whether it has for example display:none.
-    function elementIsVisible(element: HTMLElement): number {
+    function elementIsVisible(element: HTMLElement): { isVisible: boolean, isShown: boolean, top: number } {
         const boundingRectangle = element.getBoundingClientRect();
 
         const isVisible = (
@@ -903,9 +905,10 @@ namespace BigFormMenu {
             (boundingRectangle.right <= (window.innerWidth || document.documentElement.clientWidth))
         );
 
-        if (isVisible) { return 0; }
+        // If the element is not shown (display none, etc), top, left, bottom, right will all be 0.
+        const isShown: boolean = !!(boundingRectangle.top || boundingRectangle.left || boundingRectangle.bottom || boundingRectangle.right);
 
-        return boundingRectangle.top;
+        return { isVisible: isVisible, isShown: isShown, top: boundingRectangle.top };
     }
 
     // Returns true if the element is not hidden via display:none, visibility:hidden, etc. 
@@ -1008,34 +1011,35 @@ namespace BigFormMenu {
 
         for(let i = 0; i < count; i++) {
             let currentMenuElementInfo = _menuElementInfos[i];
-            let visibility:number = elementIsVisible(currentMenuElementInfo.domElement);
+            let visibilityResult = elementIsVisible(currentMenuElementInfo.domElement);
 
-            const isVisible = (visibility === 0);
+            if (visibilityResult.isShown) {
 
-            if (!isVisible) {
-                allItemsAreVisible = false;
+                if (!visibilityResult.isVisible) {
+                    allItemsAreVisible = false;
 
-                if ((visibility < 0) && (visibility > closestDistanceToTop) && 
-                    elementIsHeader(currentMenuElementInfo) && 
-                    elementIsShownInMenu(currentMenuElementInfo)) {
-                        
-                    invisibleMenuHeaderAboveVisibleArea = currentMenuElementInfo;
-                }
-            }
+                    if ((visibilityResult.top < 0) && (visibilityResult.top > closestDistanceToTop) &&
+                        elementIsHeader(currentMenuElementInfo) &&
+                        elementIsShownInMenu(currentMenuElementInfo)) {
 
-            // If we just got past the items that were visible, then the rest will be invisible,
-            // so no need to visit any more items.
-            if (lastWasVisible && !isVisible) { break; }
-            lastWasVisible = isVisible;
-            
-            if (isVisible) {
-                setVisibility(currentMenuElementInfo);
-
-                if (!firstVisibleElement) {
-                    firstVisibleElement = currentMenuElementInfo;
+                        invisibleMenuHeaderAboveVisibleArea = currentMenuElementInfo;
+                    }
                 }
 
-                lastVisibleElement = currentMenuElementInfo;
+                // If we just got past the items that were visible, then the rest will be invisible,
+                // so no need to visit any more items.
+                if (lastWasVisible && !visibilityResult.isVisible) { break; }
+                lastWasVisible = visibilityResult.isVisible;
+
+                if (visibilityResult.isVisible) {
+                    setVisibility(currentMenuElementInfo);
+
+                    if (!firstVisibleElement) {
+                        firstVisibleElement = currentMenuElementInfo;
+                    }
+
+                    lastVisibleElement = currentMenuElementInfo;
+                }
             }
         }
 
