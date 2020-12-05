@@ -822,7 +822,6 @@ namespace BigFormMenu {
 
     function onItemStateFilterButtonClicked(e: MouseEvent, itemStateInfo: iItemStateInfo): void {
         let clickedElement:HTMLElement = (<any>(e.currentTarget));
-    //###########    if (clickedElement.classList.contains('bigformmenu-filter-button-disabled')) { return; }
 
         const itemStateActive: boolean = getItemStateStatus(itemStateInfo);
         setItemStateStatus(!itemStateActive, itemStateInfo, clickedElement);
@@ -1189,6 +1188,13 @@ namespace BigFormMenu {
         });
     }
 
+    // Rebuild the menu list periodically, so when a dom element becomes visible or invisible somehow,
+    // this gets reflected in the menu.
+    // Ideally, this would use the Intersection Observer API, but this is not supported by IE11.
+    //export function tick(): void {
+    //    rebuildMenuList();
+    //}
+
     export function scrollHandler(): void {
 
         let currentYOffset = window.pageYOffset;
@@ -1230,5 +1236,7 @@ namespace BigFormMenu {
         bodyElement.appendChild(_mainMenuElement);
 
         storeMenuBottom();
+
+//        setInterval(tick, 500);
     }
 }
