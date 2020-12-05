@@ -1,3 +1,20 @@
+// ============================================
+// Viewport width below which the menu is made invisible.
+//
+// Uncomment the code below, and change the min-width to the minimum viewport width you prefer.
+// The below sets this to 1200px.
+
+/*.bigformmenu {
+    display: none;
+}
+
+@media screen and (min-width: 1200px) {
+    .bigformmenu {
+        display: flex;
+    }
+}
+*/
+
 // =====================================================
 // Resizers
 
