@@ -322,6 +322,7 @@ namespace BigFormMenu {
         toggleClass(menuElementInfo.menuElement, 'bigformmenu-item-open')
         menuElementInfo.isExpanded = !menuElementInfo.isExpanded;
         ensureMenuBottomVisible();
+        return false;
     }
 
     function createMenuElementDiv(menuElementInfo: MenuElementInfo, cssClass: string, onClickHandler: (e:MouseEvent)=>void): HTMLElement {
