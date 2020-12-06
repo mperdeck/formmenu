@@ -7,18 +7,6 @@ document.addEventListener("DOMContentLoaded", function(){
     BigFormMenu.pageLoadedHandler();
 });
 
-document.addEventListener('scroll', function () {
-    BigFormMenu.scrollHandler();
-}, {
-    passive: true
-});
-
-// The resize event only gets triggered on the window object, and doesn't bubble.
-// See https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event
-window.addEventListener("resize", function(){
-    BigFormMenu.resizeHandler();
-});
-
 namespace BigFormMenu {
     const _levelNonHeadingMenuItem: number = 9000;
 
@@ -179,6 +167,25 @@ namespace BigFormMenu {
 
         let allDomElements = document.querySelectorAll(querySelector);
         return allDomElements;
+    }
+
+    // Returns true if all dom elements are visible.
+    // See notes for hideForSmallForms option.
+    function allDomElementsVisible(domElements: NodeListOf<Element>): boolean {
+        for (let i = 0; i < domElements.length; i++) {
+            let visibilityResult = elementIsVisible(domElements[i] as HTMLElement);
+
+            // Disregard items that are not shown on the page (display none), because it is not
+            // clear if they will ever become shown - and if so how. For example, they could be popup menus.
+
+            if (visibilityResult.isShown) {
+                if (!visibilityResult.isVisible) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     // Converts a list of heading tags to MenuElements.
@@ -487,13 +494,6 @@ namespace BigFormMenu {
             // window has grown higher to the point that the stored height can be used again
             setDimensionsFromLocalStorage();
         }
-    }
-
-    // Set class bigformmenu-allitemsvisible on the main div
-    // if all items are visible.
-    function setMenuVisibility(allMenuItemsVisible: boolean): void {
-        let hideForSmallForms = getConfigValue('hideForSmallForms') as boolean;
-        setClass(_mainMenuElement, 'bigformmenu-allitemsvisible', hideForSmallForms && allMenuItemsVisible);
     }
 
     function hideMenu(): void {
@@ -1241,7 +1241,19 @@ namespace BigFormMenu {
 
         _lastPageYOffset = window.pageYOffset;
 
-        _menuElementInfos = domElementsToMenuElements(getAllDomElements());
+        let allDomElements = getAllDomElements();
+
+        let hideForSmallForms = getConfigValue('hideForSmallForms') as boolean;
+        if (hideForSmallForms) {
+            if (allDomElementsVisible(allDomElements)) {
+
+                // If all DOM elements (that is, fields in the form) are visible now, then this is a small form
+                // and we won't add the menu to the DOM.
+                return;
+            }
+        }
+
+        _menuElementInfos = domElementsToMenuElements(allDomElements);
         setParents(_menuElementInfosRoot, { value:0}, _menuElementInfos);
 
         // Set _mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
@@ -1260,6 +1272,18 @@ namespace BigFormMenu {
         bodyElement.appendChild(_mainMenuElement);
 
         storeMenuBottom();
+
+        document.addEventListener('scroll', function () {
+            BigFormMenu.scrollHandler();
+        }, {
+            passive: true
+        });
+
+        // The resize event only gets triggered on the window object, and doesn't bubble.
+        // See https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event
+        window.addEventListener("resize", function () {
+            BigFormMenu.resizeHandler();
+        });
 
         setInterval(tick, 500);
     }

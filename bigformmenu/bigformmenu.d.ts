@@ -13,8 +13,15 @@ interface iBigFormMenuConfiguration {
     // When menu heigth is less than this, it minimizes automatically.
     minimumMenuHeigth?: number;
 
-    // If truthy, when all items are on the page, the bigformmenu-allitemsvisible class is added to the top level menu div.
-    // By default, this class make the menu invisible.Even the show button will not be visible.
+    // If truthy, when all items are on the page when the page is loaded, the menu is not added to the DOM.
+    // So even the show menu button will not be visible.
+    //
+    // Note that this means that if initially some menu dom elements are hidden when the page loads, those will not be taken into account.
+    // So if any elements that were hidden initially and then become visible, and this causes the form to become bigger than the page, the menu will still 
+    // not be added to the DOM.
+    //
+    // Also note that if the user makes the page smaller after having opened it, the menu may now no longer fit on the page, but the menu will 
+    // still not be added to the DOM.
     hideForSmallForms?: boolean;
 
     showFilterInput?: boolean;
