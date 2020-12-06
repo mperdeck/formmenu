@@ -994,7 +994,7 @@ namespace BigFormMenu {
         }
     }
 
-    function setVisibilityForMenu(): void {
+    function setVisibilityForMenuDirect(): void {
         if (!_menuElementInfos) { return; }
 
         removeVisibilityForMenu();
@@ -1174,7 +1174,15 @@ namespace BigFormMenu {
         timerId.id = setTimeout(callback, bounceMs);
     }
 
-    let rebuildMenuDebounceTimer = { id: 0, keepScroll: true };
+    let rebuildMenuDebounceTimer = {
+        id: 0,
+
+        // True if scroll position will be kept the same. Only for rebuildMenuList.
+        keepScroll: true,
+
+        // True if the next action will be rebuild menu list. False if it will be setVisibilityForMenuDirect only.
+        rebuildMenuList: false
+    };
 
     // Replaces the last child in the main div with a ul holding the menu items.
     // keepScroll - true if the scroll of the ul should be maintained, false if it should be reset to 0.
@@ -1184,30 +1192,45 @@ namespace BigFormMenu {
     function rebuildMenuList(keepScroll: boolean): void {
 
         rebuildMenuDebounceTimer.keepScroll &&= keepScroll;
+        rebuildMenuDebounceTimer.rebuildMenuList = true;
+        scheduleDebouncedAction();
+    }
 
+    function setVisibilityForMenu(): void {
+        scheduleDebouncedAction();
+    }
+
+    function scheduleDebouncedAction() {
         debounce(rebuildMenuDebounceTimer, 50, function () {
             let keepScroll = rebuildMenuDebounceTimer.keepScroll;
             rebuildMenuDebounceTimer.keepScroll = true;
 
-            let scrollBuffer: number = _mainUlElement.scrollTop;
+            let rebuildMenuList = rebuildMenuDebounceTimer.rebuildMenuList;
+            rebuildMenuDebounceTimer.rebuildMenuList = false;
 
-            const ulElement = getMenuElementsUl(_menuElementInfosRoot);
+            if (rebuildMenuList) {
+                let scrollBuffer: number = _mainUlElement.scrollTop;
 
-            // The top level ul must be positioned, so location of menu items within that ul
-            // can be determined with offsetTop
-            // Make sure ONLY the top level ul is positioned, not lower level ones.
+                const ulElement = getMenuElementsUl(_menuElementInfosRoot);
 
-            ulElement.style.position = "relative";
+                // The top level ul must be positioned, so location of menu items within that ul
+                // can be determined with offsetTop
+                // Make sure ONLY the top level ul is positioned, not lower level ones.
 
-            _mainMenuElement.replaceChild(ulElement, _mainUlElement);
-            _mainUlElement = ulElement;
+                ulElement.style.position = "relative";
 
-            ensureMenuBottomVisible();
+                _mainMenuElement.replaceChild(ulElement, _mainUlElement);
+                _mainUlElement = ulElement;
 
-            setVisibilityForMenu();
+                ensureMenuBottomVisible();
 
-            if (keepScroll) {
-                _mainUlElement.scrollTop = scrollBuffer;
+                setVisibilityForMenuDirect();
+
+                if (keepScroll) {
+                    _mainUlElement.scrollTop = scrollBuffer;
+                }
+            } else {
+                setVisibilityForMenuDirect();
             }
         });
     }
