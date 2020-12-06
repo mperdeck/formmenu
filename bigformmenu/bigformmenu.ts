@@ -209,6 +209,14 @@ namespace BigFormMenu {
         return _menuElementInfos;
     }
 
+    // Create a flash against the given DOM element, to attract the user's attention to it.
+    function flashElement(domElement: HTMLElement) {
+        // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
+        domElement.addEventListener("animationend",
+            function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
+        domElement.classList.add('bigformmenu-highlighted-dom-item');
+    }
+
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
         let getItemCaption = getConfigValue("getItemCaption") as (domElement: HTMLElement) => string;
         let caption;
@@ -235,12 +243,12 @@ namespace BigFormMenu {
             if (isVisibleResult.isShown) {
                 if (!isVisibleResult.isVisible) {
                     domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-                }
 
-                // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
-                domElement.addEventListener("animationend",
-                    function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
-                domElement.classList.add('bigformmenu-highlighted-dom-item');
+                    // Delay the flash a little bit, to allow for the element to smooth scroll into view.
+                    setTimeout(function () { flashElement(domElement); }, 500);
+                } else {
+                    flashElement(domElement);
+                }
             }
 
             return false;
