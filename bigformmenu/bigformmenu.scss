@@ -120,6 +120,11 @@ Doco at:
         white-space: nowrap;
     }
 
+    .bigformmenu-expand, .bigformmenu-caption {
+        color: black;
+        text-decoration: none;
+    }
+
     .bigformmenu-caption {
         white-space: nowrap;
         overflow: hidden;
@@ -130,8 +135,6 @@ Doco at:
     // Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0.
     // See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
     .bigformmenu-expand {
-        color: black;
-        text-decoration: none;
         pointer-events: none;
 
         &::after {

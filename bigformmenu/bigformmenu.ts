@@ -235,6 +235,8 @@ namespace BigFormMenu {
                     function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
                 domElement.classList.add('bigformmenu-highlighted-dom-item');
             }
+
+            return false;
         };
 
         let level:number = tagNameToLevel(domElement.tagName);
@@ -334,7 +336,8 @@ namespace BigFormMenu {
         expandElement.onclick = (e) => onExpandClicked(menuElementInfo);
         menuElement.appendChild(expandElement);
 
-        let captionElement: HTMLElement = document.createElement("span");
+        let captionElement: HTMLAnchorElement = document.createElement("a");
+        captionElement.href = "#";
         captionElement.classList.add("bigformmenu-caption");
         captionElement.innerHTML = menuElementInfo.caption;
         captionElement.onclick = onClickHandler;
