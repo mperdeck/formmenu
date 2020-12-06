@@ -6,8 +6,8 @@ Doco at:
 
 .bigformmenu {
     position: fixed;
-    /* Initial size and width of the menu */
-    /* Note that if the screen height becomes less then the height of the menu, any height property will be removed */
+    // Initial size and width of the menu
+    // Note that if the screen height becomes less then the height of the menu, any height property will be removed
     right: 10px;
     top: 10px;
     max-height: 95%;
@@ -104,14 +104,14 @@ Doco at:
             overflow: hidden;
         }
     }
-    /********************************************/
-    /* Form menu item */
+    // ******************************************************
+    // Form menu item
     .bigformmenu-item {
         white-space: nowrap;
         cursor: pointer;
     }
-    /********************************************/
-    /* Form menu expand / collapse */
+    // ******************************************************
+    // Form menu expand / collapse
     // Give bigformmenu-expand a width, so menu item captions align nicely even if one has an open/close
     // and the other doesn't.
     .bigformmenu-expand {
@@ -166,13 +166,13 @@ Doco at:
             }
         }
     }
-    /******************************************************/
-    /* Visible */
+    // ******************************************************
+    // Visible
     .bigformmenu-is-visible .bigformmenu-caption {
         background-color: #c6ffb3; /* light green */
     }
-    /********************************************************/
-    /* Form menu hide/show */
+    // ******************************************************
+    // Form menu hide/show
     .bigformmenu-open-button-bar {
         display: none;
     }
@@ -201,8 +201,8 @@ Doco at:
     .bigformmenu-menu-show::after {
         content: "\25C0";
     }
-    /******************************************************/
-    /* Filter */
+    // ******************************************************
+    // Filter
     .bigformmenu-matching-filter-text {
         background-color: yellow;
     }
@@ -245,6 +245,7 @@ Doco at:
     }
 }
 
+/* Generates expanding circle around an item in the form itself when user clicks corresponding menu item. */
 .bigformmenu-highlighted-dom-item {
     position: relative;
 }
