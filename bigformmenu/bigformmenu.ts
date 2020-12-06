@@ -994,13 +994,12 @@ namespace BigFormMenu {
         }
     }
 
-    function setVisibilityForMenu(): boolean {
-        if (!_menuElementInfos) { return false; }
+    function setVisibilityForMenu(): void {
+        if (!_menuElementInfos) { return; }
 
         removeVisibilityForMenu();
         let count = _menuElementInfos.length;
         let lastWasVisible = false;
-        let allItemsAreVisible = true;
 
         // The element that is 1) above the screen; 2) closest to the screen of all elements above the screen;
         // 3) visible inside the menu (not hidden because a parent is closed).
@@ -1020,7 +1019,6 @@ namespace BigFormMenu {
             if (visibilityResult.isShown) {
 
                 if (!visibilityResult.isVisible) {
-                    allItemsAreVisible = false;
 
                     if ((visibilityResult.top < 0) && (visibilityResult.top > closestDistanceToTop) &&
                         elementIsHeader(currentMenuElementInfo) &&
@@ -1079,7 +1077,7 @@ namespace BigFormMenu {
             menuItemMakeVisibleAtTop(firstVisibleElement);
         }
 
-        return allItemsAreVisible;
+        return;
     }
 
     // Finds out if the menu element in the menuElementInfo passes the search filter.
@@ -1206,8 +1204,7 @@ namespace BigFormMenu {
 
             ensureMenuBottomVisible();
 
-            let allItemsAreVisible = setVisibilityForMenu();
-            setMenuVisibility(allItemsAreVisible);
+            setVisibilityForMenu();
 
             if (keepScroll) {
                 _mainUlElement.scrollTop = scrollBuffer;
@@ -1232,8 +1229,7 @@ namespace BigFormMenu {
     }
 
     export function resizeHandler(): void {
-        let allItemsAreVisible = setVisibilityForMenu();
-        setMenuVisibility(allItemsAreVisible);
+        setVisibilityForMenu();
         ensureMenuBottomVisible();
     }
 
