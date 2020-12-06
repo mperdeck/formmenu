@@ -43,10 +43,12 @@
 // Uncomment the below to put the menu to the left of the screen.
 // This 
 // 1) deactivates the left hand resizer and activates the right hand resizer.
-// 2) swaps the captions of the show/hide buttons.
-// 3) sticks the menu to the left of the screen instead of the right.
+// 2) adds a padding-right, so user can use both the right hand resizer and the scrollbar (also sits at the right hand side).
+// 3) swaps the captions of the show/hide buttons.
+// 4) sticks the menu to the left of the screen instead of the right.
 
-/*.bigformmenu {
+/*
+.bigformmenu {
     .bigformmenu-left-horizontal-resizer {
         display: none;
     }
@@ -73,8 +75,10 @@
 
     right: auto;
     left: 10px;
+    padding-right: 1px;
 }
 */
+
 // =====================================================
 // Patches for Bootstrap 4
 //
