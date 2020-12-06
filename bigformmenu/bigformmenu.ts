@@ -377,7 +377,7 @@ namespace BigFormMenu {
         
         setClass(_mainMenuElement, 'bigformmenu-textmatch-filter-is-active', searchFilterIsActive());
 
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
 
     function createFilterInput(): HTMLInputElement {
@@ -519,7 +519,7 @@ namespace BigFormMenu {
             menuElementInfo.isExpanded = true;
         });
 
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
 
     function onCollapseAllMenuClicked(e: MouseEvent): void {
@@ -536,7 +536,7 @@ namespace BigFormMenu {
             }
         });
 
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
 
     // Add a filter button to the filter bar (the bit of space left of the filter).
@@ -645,7 +645,7 @@ namespace BigFormMenu {
         // Create buttons area
         _mainMenuElement.appendChild(buttonsArea);
 
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
 
     function visitAllItemStateInfos(callback: (itemStateInfo: iItemStateInfo)=>void): void {
@@ -832,7 +832,7 @@ namespace BigFormMenu {
         const itemStateActive: boolean = getItemStateStatus(itemStateInfo);
         setItemStateStatus(!itemStateActive, itemStateInfo, clickedElement);
 
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
 
     // Called when the item state of a menu item is updated
@@ -874,7 +874,7 @@ namespace BigFormMenu {
             setItemStateStatus(false, itemStateInfo, filterButton);
         }
 
-        rebuildMenuList();
+        rebuildMenuList(true);
     }
 
     function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
@@ -1176,11 +1176,23 @@ namespace BigFormMenu {
         timerId.id = setTimeout(callback, bounceMs);
     }
 
-    let rebuildMenuDebounceTimer = { id: 0 };
+    let rebuildMenuDebounceTimer = { id: 0, keepScroll: true };
 
-    // Replaces the last child in the main div with a ul holding the menu items
-    function rebuildMenuList(): void {
-        debounce(rebuildMenuDebounceTimer, 50, function() {
+    // Replaces the last child in the main div with a ul holding the menu items.
+    // keepScroll - true if the scroll of the ul should be maintained, false if it should be reset to 0.
+    //
+    // If any of the calls to rebuildMenuList during the debounce period has keepScroll = false,
+    // then keepScroll is false will be used.
+    function rebuildMenuList(keepScroll: boolean): void {
+
+        rebuildMenuDebounceTimer.keepScroll &&= keepScroll;
+
+        debounce(rebuildMenuDebounceTimer, 50, function () {
+            let keepScroll = rebuildMenuDebounceTimer.keepScroll;
+            rebuildMenuDebounceTimer.keepScroll = true;
+
+            let scrollBuffer: number = _mainUlElement.scrollTop;
+
             const ulElement = getMenuElementsUl(_menuElementInfosRoot);
 
             // The top level ul must be positioned, so location of menu items within that ul
@@ -1196,6 +1208,10 @@ namespace BigFormMenu {
 
             let allItemsAreVisible = setVisibilityForMenu();
             setMenuVisibility(allItemsAreVisible);
+
+            if (keepScroll) {
+                _mainUlElement.scrollTop = scrollBuffer;
+            }
         });
     }
 
@@ -1203,7 +1219,7 @@ namespace BigFormMenu {
     // this gets reflected in the menu.
     // Ideally, this would use the Intersection Observer API, but this is not supported by IE11.
     function tick(): void {
-        rebuildMenuList();
+        rebuildMenuList(true);
     }
 
     export function scrollHandler(): void {
