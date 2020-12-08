@@ -4,16 +4,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     BigFormMenu.pageLoadedHandler();
 });
-document.addEventListener('scroll', function () {
-    BigFormMenu.scrollHandler();
-}, {
-    passive: true
-});
-// The resize event only gets triggered on the window object, and doesn't bubble.
-// See https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event
-window.addEventListener("resize", function () {
-    BigFormMenu.resizeHandler();
-});
 var BigFormMenu;
 (function (BigFormMenu) {
     var _levelNonHeadingMenuItem = 9000;
@@ -136,6 +126,21 @@ var BigFormMenu;
         var allDomElements = document.querySelectorAll(querySelector);
         return allDomElements;
     }
+    // Returns true if all dom elements are visible.
+    // See notes for hideForSmallForms option.
+    function allDomElementsVisible(domElements) {
+        for (var i = 0; i < domElements.length; i++) {
+            var visibilityResult = elementIsVisible(domElements[i]);
+            // Disregard items that are not shown on the page (display none), because it is not
+            // clear if they will ever become shown - and if so how. For example, they could be popup menus.
+            if (visibilityResult.isShown) {
+                if (!visibilityResult.isVisible) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     // Converts a list of heading tags to MenuElements.
     // Skips the first heading if config item skipFirstHeading is true.
     function domElementsToMenuElements(domElements) {
@@ -151,6 +156,12 @@ var BigFormMenu;
             includeElement = true;
         });
         return _menuElementInfos;
+    }
+    // Create a flash against the given DOM element, to attract the user's attention to it.
+    function flashElement(domElement) {
+        // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
+        domElement.addEventListener("animationend", function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
+        domElement.classList.add('bigformmenu-highlighted-dom-item');
     }
     function domElementToMenuElement(domElement) {
         var getItemCaption = getConfigValue("getItemCaption");
@@ -175,11 +186,14 @@ var BigFormMenu;
             if (isVisibleResult.isShown) {
                 if (!isVisibleResult.isVisible) {
                     domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                    // Delay the flash a little bit, to allow for the element to smooth scroll into view.
+                    setTimeout(function () { flashElement(domElement); }, 500);
                 }
-                // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
-                domElement.addEventListener("animationend", function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
-                domElement.classList.add('bigformmenu-highlighted-dom-item');
+                else {
+                    flashElement(domElement);
+                }
             }
+            return false;
         };
         var level = tagNameToLevel(domElement.tagName);
         var menuElementInfo = new MenuElementInfo(domElement, caption, level);
@@ -254,6 +268,7 @@ var BigFormMenu;
         toggleClass(menuElementInfo.menuElement, 'bigformmenu-item-open');
         menuElementInfo.isExpanded = !menuElementInfo.isExpanded;
         ensureMenuBottomVisible();
+        return false;
     }
     function createMenuElementDiv(menuElementInfo, cssClass, onClickHandler) {
         var menuElement = document.createElement("div");
@@ -262,7 +277,8 @@ var BigFormMenu;
         expandElement.classList.add("bigformmenu-expand");
         expandElement.onclick = function (e) { return onExpandClicked(menuElementInfo); };
         menuElement.appendChild(expandElement);
-        var captionElement = document.createElement("span");
+        var captionElement = document.createElement("a");
+        captionElement.href = "#";
         captionElement.classList.add("bigformmenu-caption");
         captionElement.innerHTML = menuElementInfo.caption;
         captionElement.onclick = onClickHandler;
@@ -293,7 +309,7 @@ var BigFormMenu;
     function onChangeFilter(e) {
         _searchTerm = (e.currentTarget).value;
         setClass(_mainMenuElement, 'bigformmenu-textmatch-filter-is-active', searchFilterIsActive());
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
     function createFilterInput() {
         var menuElement = document.createElement("input");
@@ -386,12 +402,6 @@ var BigFormMenu;
             setDimensionsFromLocalStorage();
         }
     }
-    // Set class bigformmenu-allitemsvisible on the main div
-    // if all items are visible.
-    function setMenuVisibility(allMenuItemsVisible) {
-        var hideForSmallForms = getConfigValue('hideForSmallForms');
-        setClass(_mainMenuElement, 'bigformmenu-allitemsvisible', hideForSmallForms && allMenuItemsVisible);
-    }
     function hideMenu() {
         _mainMenuElement.classList.add('bigformmenu-hidden');
         localStorage.setItem('bigformmenu-hidden', "1");
@@ -410,7 +420,7 @@ var BigFormMenu;
         _menuElementInfos.forEach(function (menuElementInfo) {
             menuElementInfo.isExpanded = true;
         });
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
     function onCollapseAllMenuClicked(e) {
         _menuElementInfos.forEach(function (menuElementInfo) {
@@ -423,7 +433,7 @@ var BigFormMenu;
                 menuElementInfo.isExpanded = false;
             }
         });
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
     // Add a filter button to the filter bar (the bit of space left of the filter).
     // cssClassConfigName - name of config item holding css class of the button.
@@ -498,7 +508,7 @@ var BigFormMenu;
         _mainMenuElement.appendChild(_mainUlElement);
         // Create buttons area
         _mainMenuElement.appendChild(buttonsArea);
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
     function visitAllItemStateInfos(callback) {
         visitKeyedConfigItems("itemStateInfos", callback);
@@ -639,7 +649,7 @@ var BigFormMenu;
         var clickedElement = (e.currentTarget);
         var itemStateActive = getItemStateStatus(itemStateInfo);
         setItemStateStatus(!itemStateActive, itemStateInfo, clickedElement);
-        rebuildMenuList();
+        rebuildMenuList(false);
     }
     // Called when the item state of a menu item is updated
     function setItemStateActive(active, itemStateInfo, filterButton, menuElementInfo) {
@@ -669,7 +679,7 @@ var BigFormMenu;
         if (!existsActiveItem) {
             setItemStateStatus(false, itemStateInfo, filterButton);
         }
-        rebuildMenuList();
+        rebuildMenuList(true);
     }
     function processItemStateInfo(itemStateInfo, filterBar, _menuElementInfos) {
         var filterButton = createFilterButton(itemStateInfo.stateFilterButtonClass, itemStateInfo.buttonTitle, function (e) { onItemStateFilterButtonClicked(e, itemStateInfo); });
@@ -768,14 +778,13 @@ var BigFormMenu;
             _mainUlElement.scrollTop = newOffsetTop;
         }
     }
-    function setVisibilityForMenu() {
+    function setVisibilityForMenuDirect() {
         if (!_menuElementInfos) {
-            return false;
+            return;
         }
         removeVisibilityForMenu();
         var count = _menuElementInfos.length;
         var lastWasVisible = false;
-        var allItemsAreVisible = true;
         // The element that is 1) above the screen; 2) closest to the screen of all elements above the screen;
         // 3) visible inside the menu (not hidden because a parent is closed).
         var invisibleMenuHeaderAboveVisibleArea;
@@ -789,7 +798,6 @@ var BigFormMenu;
             var visibilityResult = elementIsVisible(currentMenuElementInfo.domElement);
             if (visibilityResult.isShown) {
                 if (!visibilityResult.isVisible) {
-                    allItemsAreVisible = false;
                     if ((visibilityResult.top < 0) && (visibilityResult.top > closestDistanceToTop) &&
                         elementIsHeader(currentMenuElementInfo) &&
                         elementIsShownInMenu(currentMenuElementInfo)) {
@@ -838,7 +846,7 @@ var BigFormMenu;
         else {
             menuItemMakeVisibleAtTop(firstVisibleElement);
         }
-        return allItemsAreVisible;
+        return;
     }
     // Finds out if the menu element in the menuElementInfo passes the search filter.
     // If so, updates the caption to highlight the matched bit and returns true.
@@ -917,25 +925,57 @@ var BigFormMenu;
         }
         timerId.id = setTimeout(callback, bounceMs);
     }
-    var rebuildMenuDebounceTimer = { id: 0 };
-    // Replaces the last child in the main div with a ul holding the menu items
-    function rebuildMenuList() {
+    var rebuildMenuDebounceTimer = {
+        id: 0,
+        // True if scroll position will be kept the same. Only for rebuildMenuList.
+        keepScroll: true,
+        // True if the next action will be rebuild menu list. False if it will be setVisibilityForMenuDirect only.
+        rebuildMenuList: false
+    };
+    // Replaces the last child in the main div with a ul holding the menu items.
+    // keepScroll - true if the scroll of the ul should be maintained, false if it should be reset to 0.
+    //
+    // If any of the calls to rebuildMenuList during the debounce period has keepScroll = false,
+    // then keepScroll is false will be used.
+    function rebuildMenuList(keepScroll) {
+        rebuildMenuDebounceTimer.keepScroll && (rebuildMenuDebounceTimer.keepScroll = keepScroll);
+        rebuildMenuDebounceTimer.rebuildMenuList = true;
+        scheduleDebouncedAction();
+    }
+    function setVisibilityForMenu() {
+        scheduleDebouncedAction();
+    }
+    function scheduleDebouncedAction() {
         debounce(rebuildMenuDebounceTimer, 50, function () {
-            var ulElement = getMenuElementsUl(_menuElementInfosRoot);
-            // The top level ul must be positioned, so location of menu items within that ul
-            // can be determined with offsetTop
-            // Make sure ONLY the top level ul is positioned, not lower level ones.
-            ulElement.style.position = "relative";
-            _mainMenuElement.replaceChild(ulElement, _mainUlElement);
-            _mainUlElement = ulElement;
-            ensureMenuBottomVisible();
+            var keepScroll = rebuildMenuDebounceTimer.keepScroll;
+            rebuildMenuDebounceTimer.keepScroll = true;
+            var rebuildMenuList = rebuildMenuDebounceTimer.rebuildMenuList;
+            rebuildMenuDebounceTimer.rebuildMenuList = false;
+            if (rebuildMenuList) {
+                var scrollBuffer = _mainUlElement.scrollTop;
+                var ulElement = getMenuElementsUl(_menuElementInfosRoot);
+                // The top level ul must be positioned, so location of menu items within that ul
+                // can be determined with offsetTop
+                // Make sure ONLY the top level ul is positioned, not lower level ones.
+                ulElement.style.position = "relative";
+                _mainMenuElement.replaceChild(ulElement, _mainUlElement);
+                _mainUlElement = ulElement;
+                ensureMenuBottomVisible();
+                setVisibilityForMenuDirect();
+                if (keepScroll) {
+                    _mainUlElement.scrollTop = scrollBuffer;
+                }
+            }
+            else {
+                setVisibilityForMenuDirect();
+            }
         });
     }
     // Rebuild the menu list periodically, so when a dom element becomes visible or invisible somehow,
     // this gets reflected in the menu.
     // Ideally, this would use the Intersection Observer API, but this is not supported by IE11.
     function tick() {
-        rebuildMenuList();
+        rebuildMenuList(true);
     }
     function scrollHandler() {
         var currentYOffset = window.pageYOffset;
@@ -945,14 +985,22 @@ var BigFormMenu;
     }
     BigFormMenu.scrollHandler = scrollHandler;
     function resizeHandler() {
-        var allItemsAreVisible = setVisibilityForMenu();
-        setMenuVisibility(allItemsAreVisible);
+        setVisibilityForMenu();
         ensureMenuBottomVisible();
     }
     BigFormMenu.resizeHandler = resizeHandler;
     function pageLoadedHandler() {
         _lastPageYOffset = window.pageYOffset;
-        _menuElementInfos = domElementsToMenuElements(getAllDomElements());
+        var allDomElements = getAllDomElements();
+        var hideForSmallForms = getConfigValue('hideForSmallForms');
+        if (hideForSmallForms) {
+            if (allDomElementsVisible(allDomElements)) {
+                // If all DOM elements (that is, fields in the form) are visible now, then this is a small form
+                // and we won't add the menu to the DOM.
+                return;
+            }
+        }
+        _menuElementInfos = domElementsToMenuElements(allDomElements);
         setParents(_menuElementInfosRoot, { value: 0 }, _menuElementInfos);
         // Set _mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
         // setActive may be called while the menu is being created.
@@ -961,13 +1009,21 @@ var BigFormMenu;
             _mainMenuElement.classList.add('bigformmenu-hidden');
         }
         addMenuBody(_mainMenuElement, _menuElementInfos);
-        var allItemsAreVisible = setVisibilityForMenu();
-        setMenuVisibility(allItemsAreVisible);
         setDimensionsFromLocalStorage();
         var bodyElement = document.getElementsByTagName("BODY")[0];
         bodyElement.appendChild(_mainMenuElement);
         storeMenuBottom();
-        setInterval(tick, 500);
+        document.addEventListener('scroll', function () {
+            BigFormMenu.scrollHandler();
+        }, {
+            passive: true
+        });
+        // The resize event only gets triggered on the window object, and doesn't bubble.
+        // See https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event
+        window.addEventListener("resize", function () {
+            BigFormMenu.resizeHandler();
+        });
+        //    setInterval(tick, 500);
     }
     BigFormMenu.pageLoadedHandler = pageLoadedHandler;
 })(BigFormMenu || (BigFormMenu = {}));

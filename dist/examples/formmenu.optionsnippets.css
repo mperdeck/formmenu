@@ -1,0 +1,77 @@
+﻿/*
+// ============================================
+// Viewport width below which the menu is made invisible.
+//
+// Add the snippet below to your CSS, and change the min-width to the minimum viewport width you prefer.
+// The below example sets this to 1200px.
+*/
+.bigformmenu {
+  display: none; }
+
+@media screen and (min-width: 1200px) {
+  .bigformmenu {
+    display: flex; } }
+
+/*
+// =====================================================
+// Resizers
+
+// By default 1) the height of the menu is adjusted automatically
+// by the number of menu items; and 2) the user can only adjust the width of the menu,
+// not the height.
+
+// ---------------------------------------------
+// Add the snippet below to your CSS to 1) not automatically adjust the height of the menu based on the
+// number of menu items;
+// and 2) let the user adjust both width and height of the menu.
+//
+// To make the menu less tall, increase the "bottom" property below (which is the distance
+// between bottom of menu and bottom of window).
+*/
+.bigformmenu {
+  bottom: 10px;
+  max-height: 100%; }
+  .bigformmenu .bigformmenu-vertical-resizer {
+    display: block; }
+
+/*
+// ---------------------------------------------
+// Add the snippet below to your CSS to hide the horizontal resizer. 
+// The user will no longer be able to change the width of the menu.
+*/
+.bigformmenu .bigformmenu-left-horizontal-resizer {
+  display: none; }
+
+/*
+// ---------------------------------------------
+// Add the snippet below to your CSS to put the menu to the left of the screen.
+// This 
+// 1) deactivates the left hand resizer and activates the right hand resizer.
+// 2) adds a padding-right, so user can use both the right hand resizer and the scrollbar (also sits at the right hand side).
+// 3) swaps the captions of the show/hide buttons.
+// 4) sticks the menu to the left of the screen instead of the right.
+*/
+.bigformmenu {
+  right: auto;
+  left: 10px;
+  padding-right: 1px; }
+  .bigformmenu .bigformmenu-left-horizontal-resizer {
+    display: none; }
+  .bigformmenu .bigformmenu-right-horizontal-resizer {
+    display: block; }
+  .bigformmenu .bigformmenu-menu-show::after {
+    content: "\25B6"; }
+  .bigformmenu .bigformmenu-menu-hide::after {
+    content: "\25C0"; }
+  .bigformmenu.bigformmenu-hidden .bigformmenu-open-button-bar button {
+    float: left; }
+
+/*
+// =====================================================
+// Patches for Bootstrap 4
+//
+// Add the snippet below to your CSS if you added filter buttons and applied Bootstrap btn classes to them.
+// If you did not add filter buttons, no need to do anything.
+*/
+.bigformmenu .bigformmenu-filter-bar button.bigformmenu-filter-button-depressed {
+  box-shadow: 4px 4px 4px #888888; }
