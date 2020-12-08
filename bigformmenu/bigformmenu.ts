@@ -1312,6 +1312,6 @@ namespace BigFormMenu {
             BigFormMenu.resizeHandler();
         });
 
-        setInterval(tick, 500);
+    //    setInterval(tick, 500);
     }
 }
