@@ -41,7 +41,7 @@ namespace BigFormMenu {
         titleCollapseAllMenuButton: 'Collapse all',
         
         // Note that HTML only has these heading tags. There is no h7, etc.
-        querySelector: "h1,h2,h3,h4,h5,h6",
+        cssMenuItemSelector: "h1,h2,h3,h4,h5,h6",
 
         tagNameToLevelMethod: tagNameToLevelDefaultMethod,
         itemStateInfos: {},
@@ -182,9 +182,9 @@ namespace BigFormMenu {
 
     // Returns all dom elements to be represented in the menu
     function getAllDomElements(): NodeListOf<Element> {
-        let querySelector: string = getConfigValue("querySelector");
+        let cssMenuItemSelector: string = getConfigValue("cssMenuItemSelector");
 
-        let allDomElements = document.querySelectorAll(querySelector);
+        let allDomElements = document.querySelectorAll(cssMenuItemSelector);
         return allDomElements;
     }
 

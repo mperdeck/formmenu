@@ -10,7 +10,7 @@ namespace BigFormMenu {
 
     export var bigFormMenuConfiguration: iBigFormMenuConfiguration;
 
-    bigFormMenuConfiguration.querySelector = "h1,h2,h3,h4,h5,h6,label";
+    bigFormMenuConfiguration.cssMenuItemSelector = "h1,h2,h3,h4,h5,h6,label";
 
     bigFormMenuConfiguration.rebuildOnClickedSelector = "#show-hide-field2";
 

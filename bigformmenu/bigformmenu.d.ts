@@ -41,8 +41,8 @@ interface iBigFormMenuConfiguration {
     titleExpandAllMenuButton?: string;
     titleCollapseAllMenuButton?: string;
 
-    // Query selector used to select the tags that will be represented in the menu
-    querySelector?: string;
+    // CSS selector used to select the DOM elements that will be represented in the menu
+    cssMenuItemSelector?: string;
 
     // CSS selector used to select the tags that when clicked trigger a rebuild of the menu.
     // If you support IE11, make sure they captures all DOM elements that when clicked show or hide an item that you want to appear in the menu.
@@ -50,7 +50,7 @@ interface iBigFormMenuConfiguration {
     // This because intersection observers do not get triggered when visibility is changed, maybe because those elements still take visible space on the page.
     rebuildOnClickedSelector?: string;
 
-    // querySelector is used to find all dom elements that may get represented in the menu.
+    // cssMenuItemSelector is used to find all dom elements that may get represented in the menu.
     // If provided, this method is then used to get the menu item caption from the corresponding dom item.
     // If this returns falsy, the menu item is not generated.
     // If this method is not given, the default behaviour is to simply get the innerText from the dom element. 
