@@ -1299,11 +1299,6 @@ namespace BigFormMenu {
         const nbrEntries = entries.length;
 
         for (let i = 0; i < nbrEntries; i++) {
-
-            console.log('##########2  ' + i + ' = ' + entries[i].target.innerHTML + ' ' + (entries[i].isIntersecting ? 'showing' : 'hidden'));
-
-
-
             handleSingleIntersection(entries[i]);
         }
     }
@@ -1364,9 +1359,6 @@ namespace BigFormMenu {
 
             for (let i = 0; i < _menuElementInfos.length; i++) {
                 _intersectionObserver.observe(_menuElementInfos[i].domElement);
-
-
-                console.log('##########1  ' + i + ' = ' + _menuElementInfos[i].caption);
             }
         }
 
