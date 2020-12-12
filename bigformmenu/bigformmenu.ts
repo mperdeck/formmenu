@@ -957,8 +957,8 @@ namespace BigFormMenu {
 
     // Sets the bigformmenu-is-visible of an item.
     // Note that this doesn't reset the bigformmenu-is-visible etc. classes of items that are not visible.
-    function setVisibility(menuElement:MenuElementInfo): void {
-        setClassOnMenuItem(menuElement, 'bigformmenu-is-visible');
+    function setVisibility(menuElement: MenuElementInfo, setIt: boolean = true): void {
+        setClass(menuElement.menuElement, 'bigformmenu-is-visible', setIt);
     }
 
     function removeVisibilityForMenu(): void {
@@ -1285,9 +1285,12 @@ namespace BigFormMenu {
         }
 
         // Entry is not intersecting anymore. If this is because it is no longer displayed (display none),
-        // then rebuild the menu.
+        // then rebuild the menu. Otherwise remove the highlighted class.
 
-        if (!elementIsDisplayed(entry.target as HTMLElement)) {
+        if (elementIsDisplayed(entry.target as HTMLElement)) {
+            const menuElementInfo = menuElementInfoByDomElement(entry.target as HTMLElement);
+            setVisibility(menuElementInfo, false);
+        } else {
             rebuildMenuList(true);
         }
     }
@@ -1301,7 +1304,7 @@ namespace BigFormMenu {
 
 
 
-//            handleSingleIntersection(entries[i]);
+            handleSingleIntersection(entries[i]);
         }
     }
 
@@ -1318,7 +1321,7 @@ namespace BigFormMenu {
         _scrollingDown = (currentYOffset > _lastPageYOffset);
         _lastPageYOffset = (currentYOffset < 0) ? 0 : currentYOffset;
 
-//############        setVisibilityForMenu();
+        setVisibilityForMenu();
     }
 
     export function resizeHandler(): void {
