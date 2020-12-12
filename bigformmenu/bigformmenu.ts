@@ -116,6 +116,25 @@ namespace BigFormMenu {
     // If true, we're scrolling towards the end of the document
     let _scrollingDown = true;
 
+    let _intersectionObserver: IntersectionObserver;
+
+    function allMenuElementInfos(callback: ()=>void) {
+
+    }
+
+    // Finds a MenuElementInfo given the DOM element it points at.
+    // If not such MenuElementInfo is found, returns null.
+    function menuElementInfoByDomElement(domElement: HTMLElement): MenuElementInfo {
+        for (let i = 0; i < _menuElementInfos.length; i++) {
+            let menuElementInfo = _menuElementInfos[i];
+            if (menuElementInfo.domElement === domElement) {
+                return menuElementInfo;
+            }
+        }
+
+        return null;
+    }
+
     function searchFilterIsActive(): boolean {
         const filterValue = _searchTerm;
         const filterMinimumCharacters: number = getConfigValue("filterMinimumCharacters");
@@ -1241,6 +1260,35 @@ namespace BigFormMenu {
         });
     }
 
+    function handleSingleIntersection(entry: IntersectionObserverEntry) {
+
+        if (entry.isIntersecting) {
+            // Entry is now intersecting. If currently it is not in the menu, rebuild the menu.
+
+            const menuElementInfo = menuElementInfoByDomElement(entry.target as HTMLElement);
+            if (menuElementInfo && !menuElementInfo.isIncludedInMenu) {
+                rebuildMenuList(true);
+            }
+
+            return;
+        }
+
+        // Entry is not intersecting anymore. If this is because it is no longer displayed (display none),
+        // then rebuild the menu.
+
+        if (!elementIsDisplayed(entry.target as HTMLElement)) {
+            rebuildMenuList(true);
+        }
+    }
+
+    function intersectionHandler(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
+        const nbrEntries = entries.length;
+
+        for (let i = 0; i < nbrEntries; i++) {
+            handleSingleIntersection(entries[i]);
+        }
+    }
+
     // Rebuild the menu list periodically, so when a dom element becomes visible or invisible somehow,
     // this gets reflected in the menu.
     // Ideally, this would use the Intersection Observer API, but this is not supported by IE11.
@@ -1297,6 +1345,11 @@ namespace BigFormMenu {
         bodyElement.appendChild(_mainMenuElement);
 
         storeMenuBottom();
+
+        // IE11 does not support IntersectionObserver
+        if (!!window.IntersectionObserver) {
+            _intersectionObserver = new IntersectionObserver(intersectionHandler, { threshold: 1.0 });
+        }
 
         document.addEventListener('scroll', function () {
             BigFormMenu.scrollHandler();
