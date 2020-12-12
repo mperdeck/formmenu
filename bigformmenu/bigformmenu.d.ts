@@ -24,12 +24,8 @@ interface iBigFormMenuConfiguration {
     // still not be added to the DOM.
     hideForSmallForms?: boolean;
 
-    showFilterInput?: boolean;
     filterPlaceholder?: string;
     filterMinimumCharacters?: number;
-    showMenuHideShowButton?: boolean;
-    showExpandAllMenuButton?: boolean;
-    showCollapseAllMenuButton?: boolean;
 
     classMenuShowButton?: string;
     classMenuHideButton?: string;

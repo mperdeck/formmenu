@@ -22,13 +22,8 @@ namespace BigFormMenu {
 
         hideForSmallForms: true,
 
-        showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
-
-        showMenuHideShowButton: true,
-        showExpandAllMenuButton: true,
-        showCollapseAllMenuButton: true,
 
         classMenuShowButton: 'bigformmenu-menu-show',
         classMenuHideButton: 'bigformmenu-menu-hide',
@@ -569,22 +564,11 @@ namespace BigFormMenu {
     // Add a filter button to the filter bar (the bit of space left of the filter).
     // cssClassConfigName - name of config item holding css class of the button.
     // onClickHandler - runs when button is clicked.
-    // showHideConfigName - name of a config item. If blank, button is always created.
-    //                      If not blank, config item has to be true for button to be created.
     // parent - filter button will be added to this element.
     //
     function addFilterButton(cssClassConfigName: string, onClickHandler: (e: MouseEvent) => void,
-        showHideConfigName: string, titleConfigName: string, parent: HTMLElement) {
+        titleConfigName: string, parent: HTMLElement) {
 
-        let showButton: boolean = true;
-        if (showHideConfigName) {
-            showButton = getConfigValue(showHideConfigName);
-        }
-        
-        if (!showButton) {
-            return;
-        }
-        
         let cssClass;
         if (cssClassConfigName) {
             cssClass = getConfigValue(cssClassConfigName);
@@ -633,7 +617,7 @@ namespace BigFormMenu {
         openButtonBar.classList.add('bigformmenu-open-button-bar');
 
         addFilterButton('classMenuShowButton', onMenuShowButtonClicked,
-            "showMenuHideShowButton", "titleMenuShowButton", openButtonBar);
+            "titleMenuShowButton", openButtonBar);
 
         _mainMenuElement.appendChild(openButtonBar);
 
@@ -641,13 +625,13 @@ namespace BigFormMenu {
         filterBar.classList.add('bigformmenu-filter-bar');
 
         addFilterButton('classMenuHideButton', onMenuHideButtonClicked,
-            "showMenuHideShowButton", "titleMenuHideButton", filterBar);
+            "titleMenuHideButton", filterBar);
 
         addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked,
-            "showExpandAllMenuButton", 'titleExpandAllMenuButton', filterBar);
+            'titleExpandAllMenuButton', filterBar);
 
         addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked,
-            "showCollapseAllMenuButton", 'titleCollapseAllMenuButton', filterBar);
+            'titleCollapseAllMenuButton', filterBar);
 
         // Create the buttons area very early on, in case processing of the item state infos
         // or the rebuilding of the menu itself
@@ -656,11 +640,8 @@ namespace BigFormMenu {
 
         processAllItemStateInfos(filterBar, _menuElementInfos);
 
-        let showFilterInput: boolean = getConfigValue("showFilterInput");
-        if (showFilterInput) {
-            let filterInput = createFilterInput();
-            filterBar.appendChild(filterInput);
-        }
+        let filterInput = createFilterInput();
+        filterBar.appendChild(filterInput);
 
         _mainMenuElement.appendChild(filterBar);
 
