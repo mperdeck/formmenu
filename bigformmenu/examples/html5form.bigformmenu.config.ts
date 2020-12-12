@@ -12,6 +12,8 @@ namespace BigFormMenu {
 
     bigFormMenuConfiguration.querySelector = "h1,h2,h3,h4,h5,h6,label";
 
+    bigFormMenuConfiguration.rebuildOnClickedSelector = "#show-hide-field2";
+
     // if itemStateInfos is undefined, set it now
     if (!bigFormMenuConfiguration.itemStateInfos) { bigFormMenuConfiguration.itemStateInfos = {}; }
 

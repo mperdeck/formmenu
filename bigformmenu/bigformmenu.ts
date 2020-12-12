@@ -1370,6 +1370,17 @@ namespace BigFormMenu {
             }
         }
 
+        const rebuildOnClickedSelector: string = getConfigValue("rebuildOnClickedSelector");
+        if (rebuildOnClickedSelector) {
+            const rebuildOnClickedElements = document.querySelectorAll(rebuildOnClickedSelector);
+
+            for (let i = 0; i < rebuildOnClickedElements.length; i++) {
+                rebuildOnClickedElements[i].addEventListener("click", function () {
+                    rebuildMenuList(true);
+               });
+            }
+        }
+
         document.addEventListener('scroll', function () {
             BigFormMenu.scrollHandler();
         }, {
