@@ -1264,10 +1264,21 @@ namespace BigFormMenu {
 
         if (entry.isIntersecting) {
             // Entry is now intersecting. If currently it is not in the menu, rebuild the menu.
-
+            // Otherwise highlight the associated menu item.
             const menuElementInfo = menuElementInfoByDomElement(entry.target as HTMLElement);
-            if (menuElementInfo && !menuElementInfo.isIncludedInMenu) {
-                rebuildMenuList(true);
+            if (menuElementInfo) {
+                if (menuElementInfo.isIncludedInMenu) {
+
+                    if (_scrollingDown) {
+                        menuItemMakeVisibleAtBottom(menuElementInfo);
+                    } else {
+                        menuItemMakeVisibleAtTop(menuElementInfo);
+                    }
+                    setVisibility(menuElementInfo);
+
+                } else {
+                    rebuildMenuList(true);
+                }
             }
 
             return;
@@ -1349,6 +1360,10 @@ namespace BigFormMenu {
         // IE11 does not support IntersectionObserver
         if (!!window.IntersectionObserver) {
             _intersectionObserver = new IntersectionObserver(intersectionHandler, { threshold: 1.0 });
+
+            for (let i = 0; i < _menuElementInfos.length; i++) {
+                _intersectionObserver.observe(_menuElementInfos[i].domElement);
+            }
         }
 
         document.addEventListener('scroll', function () {
