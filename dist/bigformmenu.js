@@ -56,7 +56,7 @@ var BigFormMenu;
             // If this element has children, then if true the element is expanded
             this.isExpanded = false;
             // true if the menuElement (the dom menu item) is included in the menu. That is, if any filters are active,
-            // it passed those filters. 
+            // it passed those filters. And it is displayed (no display:none).
             // Note that the menu item could be still not visible to the user even if this is true, because its parent was closed,
             // because it is scrolled out of the menu div visible area.
             this.isIncludedInMenu = false;
@@ -83,6 +83,20 @@ var BigFormMenu;
     var _lastPageYOffset = 0;
     // If true, we're scrolling towards the end of the document
     var _scrollingDown = true;
+    var _intersectionObserver;
+    function allMenuElementInfos(callback) {
+    }
+    // Finds a MenuElementInfo given the DOM element it points at.
+    // If not such MenuElementInfo is found, returns null.
+    function menuElementInfoByDomElement(domElement) {
+        for (var i = 0; i < _menuElementInfos.length; i++) {
+            var menuElementInfo = _menuElementInfos[i];
+            if (menuElementInfo.domElement === domElement) {
+                return menuElementInfo;
+            }
+        }
+        return null;
+    }
     function searchFilterIsActive() {
         var filterValue = _searchTerm;
         var filterMinimumCharacters = getConfigValue("filterMinimumCharacters");
@@ -141,7 +155,7 @@ var BigFormMenu;
         }
         return true;
     }
-    // Converts a list of heading tags to MenuElements.
+    // Converts a list of DOM elements to MenuElements.
     // Skips the first heading if config item skipFirstHeading is true.
     function domElementsToMenuElements(domElements) {
         var _menuElementInfos = [];
@@ -370,7 +384,7 @@ var BigFormMenu;
         var formBottom = windowHeight - boundingRectangle.bottom;
         localStorage.setItem('bigformmenu-bottom', formBottom.toString());
     }
-    // If the user resizes the windows, reducing it height, at some point the menu
+    // If the user resizes the window, reducing it height, at some point the menu
     // will start extending below the bottom of the window. So its bottom is no longer
     // visible. Ensures this doesn't happen by removing
     // the height or max-height property; and
@@ -502,8 +516,6 @@ var BigFormMenu;
             filterBar.appendChild(filterInput);
         }
         _mainMenuElement.appendChild(filterBar);
-        // The ul holding the menu items must have the class bigformmenu-top-menuitems.
-        // It will be replaced by rebuildMenuList.
         _mainUlElement = document.createElement("ul");
         _mainMenuElement.appendChild(_mainUlElement);
         // Create buttons area
@@ -932,7 +944,7 @@ var BigFormMenu;
         // True if the next action will be rebuild menu list. False if it will be setVisibilityForMenuDirect only.
         rebuildMenuList: false
     };
-    // Replaces the last child in the main div with a ul holding the menu items.
+    // Replaces the ul with the menu items with a new ul holding the new set of menu items.
     // keepScroll - true if the scroll of the ul should be maintained, false if it should be reset to 0.
     //
     // If any of the calls to rebuildMenuList during the debounce period has keepScroll = false,
@@ -971,6 +983,40 @@ var BigFormMenu;
             }
         });
     }
+    function handleSingleIntersection(entry) {
+        if (entry.isIntersecting) {
+            // Entry is now intersecting. If currently it is not in the menu, rebuild the menu.
+            // Otherwise highlight the associated menu item.
+            var menuElementInfo = menuElementInfoByDomElement(entry.target);
+            if (menuElementInfo) {
+                if (menuElementInfo.isIncludedInMenu) {
+                    if (_scrollingDown) {
+                        menuItemMakeVisibleAtBottom(menuElementInfo);
+                    }
+                    else {
+                        menuItemMakeVisibleAtTop(menuElementInfo);
+                    }
+                    setVisibility(menuElementInfo);
+                }
+                else {
+                    rebuildMenuList(true);
+                }
+            }
+            return;
+        }
+        // Entry is not intersecting anymore. If this is because it is no longer displayed (display none),
+        // then rebuild the menu.
+        if (!elementIsDisplayed(entry.target)) {
+            rebuildMenuList(true);
+        }
+    }
+    function intersectionHandler(entries, observer) {
+        var nbrEntries = entries.length;
+        for (var i = 0; i < nbrEntries; i++) {
+            console.log('##########2  ' + i + ' = ' + entries[i].target.innerHTML + ' ' + (entries[i].isIntersecting ? 'showing' : 'hidden'));
+            //            handleSingleIntersection(entries[i]);
+        }
+    }
     // Rebuild the menu list periodically, so when a dom element becomes visible or invisible somehow,
     // this gets reflected in the menu.
     // Ideally, this would use the Intersection Observer API, but this is not supported by IE11.
@@ -981,7 +1027,7 @@ var BigFormMenu;
         var currentYOffset = window.pageYOffset;
         _scrollingDown = (currentYOffset > _lastPageYOffset);
         _lastPageYOffset = (currentYOffset < 0) ? 0 : currentYOffset;
-        setVisibilityForMenu();
+        //############        setVisibilityForMenu();
     }
     BigFormMenu.scrollHandler = scrollHandler;
     function resizeHandler() {
@@ -1013,6 +1059,14 @@ var BigFormMenu;
         var bodyElement = document.getElementsByTagName("BODY")[0];
         bodyElement.appendChild(_mainMenuElement);
         storeMenuBottom();
+        // IE11 does not support IntersectionObserver
+        if (!!window.IntersectionObserver) {
+            _intersectionObserver = new IntersectionObserver(intersectionHandler, { threshold: 1.0 });
+            for (var i = 0; i < _menuElementInfos.length; i++) {
+                _intersectionObserver.observe(_menuElementInfos[i].domElement);
+                console.log('##########1  ' + i + ' = ' + _menuElementInfos[i].caption);
+            }
+        }
         document.addEventListener('scroll', function () {
             BigFormMenu.scrollHandler();
         }, {

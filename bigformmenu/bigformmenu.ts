@@ -1296,7 +1296,12 @@ namespace BigFormMenu {
         const nbrEntries = entries.length;
 
         for (let i = 0; i < nbrEntries; i++) {
-            handleSingleIntersection(entries[i]);
+
+            console.log('##########2  ' + i + ' = ' + entries[i].target.innerHTML + ' ' + (entries[i].isIntersecting ? 'showing' : 'hidden'));
+
+
+
+//            handleSingleIntersection(entries[i]);
         }
     }
 
@@ -1313,7 +1318,7 @@ namespace BigFormMenu {
         _scrollingDown = (currentYOffset > _lastPageYOffset);
         _lastPageYOffset = (currentYOffset < 0) ? 0 : currentYOffset;
 
-        setVisibilityForMenu();
+//############        setVisibilityForMenu();
     }
 
     export function resizeHandler(): void {
@@ -1363,6 +1368,9 @@ namespace BigFormMenu {
 
             for (let i = 0; i < _menuElementInfos.length; i++) {
                 _intersectionObserver.observe(_menuElementInfos[i].domElement);
+
+
+                console.log('##########1  ' + i + ' = ' + _menuElementInfos[i].caption);
             }
         }
 
