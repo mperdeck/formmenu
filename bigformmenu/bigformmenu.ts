@@ -81,7 +81,7 @@ namespace BigFormMenu {
         public isExpanded: boolean = false;
 
         // true if the menuElement (the dom menu item) is included in the menu. That is, if any filters are active,
-        // it passed those filters. 
+        // it passed those filters. And it is displayed (no display:none).
         // Note that the menu item could be still not visible to the user even if this is true, because its parent was closed,
         // because it is scrolled out of the menu div visible area.
         public isIncludedInMenu: boolean = false;
@@ -188,7 +188,7 @@ namespace BigFormMenu {
         return true;
     }
 
-    // Converts a list of heading tags to MenuElements.
+    // Converts a list of DOM elements to MenuElements.
     // Skips the first heading if config item skipFirstHeading is true.
     function domElementsToMenuElements(domElements: NodeListOf<Element>): MenuElementInfo[] {
         let _menuElementInfos: MenuElementInfo[] = [];
@@ -469,7 +469,7 @@ namespace BigFormMenu {
         localStorage.setItem('bigformmenu-bottom', formBottom.toString());
     }
 
-    // If the user resizes the windows, reducing it height, at some point the menu
+    // If the user resizes the window, reducing it height, at some point the menu
     // will start extending below the bottom of the window. So its bottom is no longer
     // visible. Ensures this doesn't happen by removing
     // the height or max-height property; and
@@ -645,8 +645,6 @@ namespace BigFormMenu {
 
         _mainMenuElement.appendChild(filterBar);
 
-        // The ul holding the menu items must have the class bigformmenu-top-menuitems.
-        // It will be replaced by rebuildMenuList.
         _mainUlElement = document.createElement("ul");
         _mainMenuElement.appendChild(_mainUlElement);
 
@@ -1192,7 +1190,7 @@ namespace BigFormMenu {
         rebuildMenuList: false
     };
 
-    // Replaces the last child in the main div with a ul holding the menu items.
+    // Replaces the ul with the menu items with a new ul holding the new set of menu items.
     // keepScroll - true if the scroll of the ul should be maintained, false if it should be reset to 0.
     //
     // If any of the calls to rebuildMenuList during the debounce period has keepScroll = false,
