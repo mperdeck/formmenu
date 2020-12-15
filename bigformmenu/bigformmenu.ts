@@ -76,8 +76,10 @@ namespace BigFormMenu {
         // If this element has children, then if true the element is expanded
         public isExpanded: boolean = false;
 
-        // True if this element has the focus. Applies if the menu element is somehow associated with an input control.
-        public hasFocus: boolean = false;
+        // True if this element was the last menu item whose associated input element received the focus.
+        // Note that this means it may not have the focus right now. This could happen if the element that currently has focus
+        // is not an input element associated with a menu item (for example, this could be a previous / next button).
+        public lastHadFocus: boolean = false;
 
         // true if the menuElement (the dom menu item) is included in the menu. That is, if any filters are active,
         // it passed those filters. And it is displayed (no display:none).
@@ -270,7 +272,16 @@ namespace BigFormMenu {
 
     // Call this method when an input element associated with the given menu element gains or loses the focus.
     function onFocused(menuElementInfo: MenuElementInfo, hasFocus: boolean) {
-        menuElementInfo.hasFocus = hasFocus;
+        if (hasFocus) {
+
+            // Reset the flag of the last item that received the focus
+            for (let i = 0; i < _menuElementInfos.length; i++) {
+                _menuElementInfos[i].lastHadFocus = false;
+            }
+
+            menuElementInfo.lastHadFocus = true;
+        }
+
         setClass(menuElementInfo.menuElement, 'bigformmenu-has-caption', hasFocus);
     }
 
@@ -297,11 +308,11 @@ namespace BigFormMenu {
         inputElement.focus();
     }
 
-    // Returns the index in the _menuElementInfos array of the item associated with an input that has the focus.
+    // Returns the index in the _menuElementInfos array of the item associated with an input that last received the focus.
     // Returns null if there is no such item.
-    function focusedItemIndex(): number {
+    function lastFocusedItemIndex(): number {
         for (let i = 0; i < _menuElementInfos.length; i++) {
-            if (_menuElementInfos[i].hasFocus) { return i; }
+            if (_menuElementInfos[i].lastHadFocus) { return i; }
         }
 
         return null;
@@ -954,7 +965,7 @@ namespace BigFormMenu {
     }
 
     function onItemStatePreviousNextButtonClicked(itemStateInfo: iItemStateInfo, increment: number): void {
-        let itemIndex = focusedItemIndex();
+        let itemIndex = lastFocusedItemIndex();
         if (itemIndex == null) { itemIndex = 0; }
 
         const startingIndex = itemIndex;
