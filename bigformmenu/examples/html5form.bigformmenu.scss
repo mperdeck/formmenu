@@ -1,17 +1,39 @@
 
-.bigformmenu-is-required .bigformmenu-caption::after {
-    content: " *"; 
-}
+/* Required */
 
-.bigformmenu-is-invalid .bigformmenu-caption {
-    color: red;
+.bigformmenu-is-required .bigformmenu-caption::after {
+    content: " *";
 }
 
 .bigformmenu-required-filter-button::after {
     content: "\2731";
 }
 
+.bigformmenu-required-next-button::after {
+    content: "\2731 \25B6";
+}
+
+.bigformmenu-required-previous-button::after {
+    content: "\25C0 \2731";
+}
+
+/* Invalid */
+
+.bigformmenu-is-invalid .bigformmenu-caption {
+    color: red;
+}
+
 .bigformmenu-invalid-filter-button::after {
     content: "\2716";
     color: red; 
+}
+
+.bigformmenu-invalid-next-button::after {
+    content: "\2716 \25B6";
+    color: red;
+}
+
+.bigformmenu-invalid-previous-button::after {
+    content: "\25C0 \2716";
+    color: red;
 }

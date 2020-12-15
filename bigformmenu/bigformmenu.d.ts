@@ -114,9 +114,25 @@ interface iItemStateInfo {
     // will have this class.
     stateFilterButtonClass: string;
 
+    // The button that allows the user to go to the next item with the active state
+    // will have this class.
+    stateNextButtonClass: string;
+
+    // The button that allows the user to go to the previous item with the active state
+    // will have this class.
+    statePreviousButtonClass: string;
+
     // Contents of tiny popup that appears when user hovers over button. 
     // If not set, popup will not show. Use for short help text as to what the button does.
     buttonTitle?: string;
+
+    // Contents of tiny popup that appears when user hovers over Next button. 
+    // If not set, popup will not show. Use for short help text as to what the button does.
+    buttonTitleNext?: string;
+
+    // Contents of tiny popup that appears when user hovers over Previous button.
+    // If not set, popup will not show. Use for short help text as to what the button does.
+    buttonTitlePrevious?: string;
 }
 
 // Represents a button tag that will be generated below the menu

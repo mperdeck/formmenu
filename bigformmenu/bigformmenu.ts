@@ -254,8 +254,22 @@ namespace BigFormMenu {
         domElement.classList.add('bigformmenu-highlighted-dom-item');
     }
 
+    function showAndFlashElement(domElement: HTMLElement) {
+        let isVisibleResult = elementIsVisible(domElement);
+        if (isVisibleResult.isShown) {
+            if (!isVisibleResult.isVisible) {
+                domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+
+                // Delay the flash a little bit, to allow for the element to smooth scroll into view.
+                setTimeout(function () { flashElement(domElement); }, 500);
+            } else {
+                flashElement(domElement);
+            }
+        }
+    }
+
     // Call this method when an input element associated with the given menu element gains or loses the focus.
-    function setFocused(menuElementInfo: MenuElementInfo, hasFocus: boolean) {
+    function onFocused(menuElementInfo: MenuElementInfo, hasFocus: boolean) {
         menuElementInfo.hasFocus = hasFocus;
         setClass(menuElementInfo.menuElement, 'bigformmenu-has-caption', hasFocus);
     }
@@ -266,12 +280,31 @@ namespace BigFormMenu {
         if (!inputElement) { return; }
 
         inputElement.addEventListener("focus", function () {
-            setFocused(menuElementInfo, true);
+            onFocused(menuElementInfo, true);
         });
 
         inputElement.addEventListener("blur", function () {
-            setFocused(menuElementInfo, false);
+            onFocused(menuElementInfo, false);
         });
+    }
+
+    // Gives the focus to the input element associated with the given menu item.
+    function setFocused(menuElementInfo: MenuElementInfo) {
+        const inputElement: HTMLInputElement = getInputElement(menuElementInfo.domElement);
+        if (!inputElement) { return; }
+
+        showAndFlashElement(inputElement);
+        inputElement.focus();
+    }
+
+    // Returns the index in the _menuElementInfos array of the item associated with an input that has the focus.
+    // Returns null if there is no such item.
+    function focusedItemIndex(): number {
+        for (let i = 0; i < _menuElementInfos.length; i++) {
+            if (_menuElementInfos[i].hasFocus) { return i; }
+        }
+
+        return null;
     }
 
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
@@ -295,19 +328,8 @@ namespace BigFormMenu {
         //
         // Also give it the bigformmenu-highlighted-dom-item for a short time, to point out where
         // it is.
-        let onClickHandler = (e:MouseEvent)=>{
-            let isVisibleResult = elementIsVisible(domElement);
-            if (isVisibleResult.isShown) {
-                if (!isVisibleResult.isVisible) {
-                    domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-
-                    // Delay the flash a little bit, to allow for the element to smooth scroll into view.
-                    setTimeout(function () { flashElement(domElement); }, 500);
-                } else {
-                    flashElement(domElement);
-                }
-            }
-
+        let onClickHandler = (e: MouseEvent) => {
+            showAndFlashElement(domElement);
             return false;
         };
 
@@ -888,6 +910,7 @@ namespace BigFormMenu {
 
     // Called when the item state of a menu item is updated
     function setItemStateActive(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLButtonElement, 
+        nextButton: HTMLButtonElement, previousButton: HTMLButtonElement, 
         menuElementInfo: MenuElementInfo): void {
 
         let itemStates = menuElementInfo.itemStates;
@@ -920,6 +943,8 @@ namespace BigFormMenu {
         }
 
         filterButton.disabled = !existsActiveItem;
+        nextButton.disabled = !existsActiveItem;
+        previousButton.disabled = !existsActiveItem;
 
         if (!existsActiveItem) {
             setItemStateStatus(false, itemStateInfo, filterButton);
@@ -927,6 +952,30 @@ namespace BigFormMenu {
 
         rebuildMenuList(true);
     }
+
+    function onItemStatePreviousNextButtonClicked(itemStateInfo: iItemStateInfo, increment: number): void {
+        let itemIndex = focusedItemIndex();
+        if (itemIndex == null) { itemIndex = 0; }
+
+        const startingIndex = itemIndex;
+        const nbrElementInfos = _menuElementInfos.length;
+
+        do {
+            itemIndex += increment;
+            if (itemIndex < 0) {
+                itemIndex = nbrElementInfos - 1;
+            } else if (itemIndex >= nbrElementInfos) {
+                itemIndex = 0;
+            }
+
+            if (itemIndex == startingIndex) { return; }
+
+            if (_menuElementInfos[itemIndex].itemStates.indexOf(itemStateInfo) != -1) {
+                setFocused(_menuElementInfos[itemIndex]);
+                return;
+            }
+        } while (true);
+    } 
 
     function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
         _menuElementInfos: MenuElementInfo[]): void {
@@ -936,9 +985,19 @@ namespace BigFormMenu {
         filterButton.disabled = true;
         filterBar.appendChild(filterButton);
 
+        let previousButton: HTMLButtonElement = createFilterButton(
+            itemStateInfo.statePreviousButtonClass, itemStateInfo.buttonTitlePrevious, (e: MouseEvent) => { onItemStatePreviousNextButtonClicked(itemStateInfo, -1); });
+        previousButton.disabled = true;
+        filterBar.appendChild(previousButton);
+
+        let nextButton: HTMLButtonElement = createFilterButton(
+            itemStateInfo.stateNextButtonClass, itemStateInfo.buttonTitleNext, (e: MouseEvent) => { onItemStatePreviousNextButtonClicked(itemStateInfo, 1); });
+        nextButton.disabled = true;
+        filterBar.appendChild(nextButton);
+
         _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
             itemStateInfo.wireUp(menuElementInfo.domElement,
-                (active: boolean)=>setItemStateActive(active, itemStateInfo, filterButton, menuElementInfo));
+                (active: boolean) => setItemStateActive(active, itemStateInfo, filterButton, nextButton, previousButton, menuElementInfo));
         });
     }
 
