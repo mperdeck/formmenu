@@ -304,7 +304,7 @@ namespace BigFormMenu {
         const inputElement: HTMLInputElement = getInputElement(menuElementInfo.domElement);
         if (!inputElement) { return; }
 
-        showAndFlashElement(inputElement);
+        showAndFlashElement(menuElementInfo.domElement);
         inputElement.focus();
     }
 
