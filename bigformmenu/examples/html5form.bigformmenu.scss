@@ -9,12 +9,20 @@
     content: "\2731";
 }
 
-.bigformmenu-required-next-button::after {
-    content: "\2731 \25B6";
+.bigformmenu-required-next-button {
+    display: none;
+
+    &::after {
+        content: "\2731 \25B6";
+    }
 }
 
-.bigformmenu-required-previous-button::after {
-    content: "\25C0 \2731";
+.bigformmenu-required-previous-button {
+    display: none;
+
+    &::after {
+        content: "\25C0 \2731";
+    }
 }
 
 /* Invalid */
@@ -28,12 +36,20 @@
     color: red; 
 }
 
-.bigformmenu-invalid-next-button::after {
-    content: "\2716 \25B6";
-    color: red;
+.bigformmenu-invalid-next-button {
+    display: none;
+
+    &::after {
+        content: "\2716 \25B6";
+        color: red;
+    }
 }
 
-.bigformmenu-invalid-previous-button::after {
-    content: "\25C0 \2716";
-    color: red;
+.bigformmenu-invalid-previous-button {
+    display: none;
+
+    &::after {
+        content: "\25C0 \2716";
+        color: red;
+    }
 }

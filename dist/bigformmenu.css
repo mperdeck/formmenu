@@ -80,6 +80,8 @@ Doco at:
     white-space: nowrap;
     overflow: hidden;
     text-overflow: clip; }
+  .bigformmenu .bigformmenu-has-caption .bigformmenu-caption {
+    font-weight: bold; }
   .bigformmenu .bigformmenu-expand {
     pointer-events: none; }
     .bigformmenu .bigformmenu-expand::after {

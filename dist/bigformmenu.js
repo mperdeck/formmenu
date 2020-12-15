@@ -14,12 +14,8 @@ var BigFormMenu;
         minimumMenuWidth: 60,
         minimumMenuHeigth: 100,
         hideForSmallForms: true,
-        showFilterInput: true,
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
-        showMenuHideShowButton: true,
-        showExpandAllMenuButton: true,
-        showCollapseAllMenuButton: true,
         classMenuShowButton: 'bigformmenu-menu-show',
         classMenuHideButton: 'bigformmenu-menu-hide',
         classExpandAllMenuButton: 'bigformmenu-expand-all-menu-button',
@@ -29,10 +25,11 @@ var BigFormMenu;
         titleExpandAllMenuButton: 'Expand all',
         titleCollapseAllMenuButton: 'Collapse all',
         // Note that HTML only has these heading tags. There is no h7, etc.
-        querySelector: "h1,h2,h3,h4,h5,h6",
+        cssMenuItemSelector: "h1,h2,h3,h4,h5,h6",
         tagNameToLevelMethod: tagNameToLevelDefaultMethod,
         itemStateInfos: {},
-        menuButtons: {}
+        menuButtons: {},
+        getInputElementMethod: getInputElementDefaultMethod
     };
     // Create empty bigFormMenuConfiguration here, to make it easier to write
     // ...bigformmenu.config.js files that set properties on this object.
@@ -55,6 +52,10 @@ var BigFormMenu;
             this.children = [];
             // If this element has children, then if true the element is expanded
             this.isExpanded = false;
+            // True if this element was the last menu item whose associated input element received the focus.
+            // Note that this means it may not have the focus right now. This could happen if the element that currently has focus
+            // is not an input element associated with a menu item (for example, this could be a previous / next button).
+            this.lastHadFocus = false;
             // true if the menuElement (the dom menu item) is included in the menu. That is, if any filters are active,
             // it passed those filters. And it is displayed (no display:none).
             // Note that the menu item could be still not visible to the user even if this is true, because its parent was closed,
@@ -115,10 +116,27 @@ var BigFormMenu;
             default: return _levelNonHeadingMenuItem;
         }
     }
+    function getInputElementDefaultMethod(domElement) {
+        if (domElement.tagName.toLowerCase() !== 'label') {
+            return null;
+        }
+        var labelElement = domElement;
+        var inputElementId = labelElement.htmlFor;
+        if (inputElementId) {
+            var inputElement = document.getElementById(inputElementId);
+            return inputElement;
+        }
+        return null;
+    }
     function tagNameToLevel(tagName) {
         var tagNameToLevelMethod = getConfigValue("tagNameToLevelMethod");
         var level = tagNameToLevelMethod(tagName);
         return level;
+    }
+    function getInputElement(domElement) {
+        var getInputElementMethod = getConfigValue("getInputElementMethod");
+        var inputElement = getInputElementMethod(domElement);
+        return inputElement;
     }
     function getConfigValue(itemName) {
         // bigFormMenuConfiguration may have been created by loading .js file that defines that variable.
@@ -136,8 +154,8 @@ var BigFormMenu;
     }
     // Returns all dom elements to be represented in the menu
     function getAllDomElements() {
-        var querySelector = getConfigValue("querySelector");
-        var allDomElements = document.querySelectorAll(querySelector);
+        var cssMenuItemSelector = getConfigValue("cssMenuItemSelector");
+        var allDomElements = document.querySelectorAll(cssMenuItemSelector);
         return allDomElements;
     }
     // Returns true if all dom elements are visible.
@@ -177,6 +195,61 @@ var BigFormMenu;
         domElement.addEventListener("animationend", function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
         domElement.classList.add('bigformmenu-highlighted-dom-item');
     }
+    function showAndFlashElement(domElement) {
+        var isVisibleResult = elementIsVisible(domElement);
+        if (isVisibleResult.isShown) {
+            if (!isVisibleResult.isVisible) {
+                domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+                // Delay the flash a little bit, to allow for the element to smooth scroll into view.
+                setTimeout(function () { flashElement(domElement); }, 500);
+            }
+            else {
+                flashElement(domElement);
+            }
+        }
+    }
+    // Call this method when an input element associated with the given menu element gains or loses the focus.
+    function onFocused(menuElementInfo, hasFocus) {
+        if (hasFocus) {
+            // Reset the flag of the last item that received the focus
+            for (var i = 0; i < _menuElementInfos.length; i++) {
+                _menuElementInfos[i].lastHadFocus = false;
+            }
+            menuElementInfo.lastHadFocus = true;
+        }
+        setClass(menuElementInfo.menuElement, 'bigformmenu-has-caption', hasFocus);
+    }
+    function setOnFocusHandlers(menuElementInfo) {
+        var inputElement = getInputElement(menuElementInfo.domElement);
+        if (!inputElement) {
+            return;
+        }
+        inputElement.addEventListener("focus", function () {
+            onFocused(menuElementInfo, true);
+        });
+        inputElement.addEventListener("blur", function () {
+            onFocused(menuElementInfo, false);
+        });
+    }
+    // Gives the focus to the input element associated with the given menu item.
+    function setFocused(menuElementInfo) {
+        var inputElement = getInputElement(menuElementInfo.domElement);
+        if (!inputElement) {
+            return;
+        }
+        showAndFlashElement(menuElementInfo.domElement);
+        inputElement.focus();
+    }
+    // Returns the index in the _menuElementInfos array of the item associated with an input that last received the focus.
+    // Returns null if there is no such item.
+    function lastFocusedItemIndex() {
+        for (var i = 0; i < _menuElementInfos.length; i++) {
+            if (_menuElementInfos[i].lastHadFocus) {
+                return i;
+            }
+        }
+        return null;
+    }
     function domElementToMenuElement(domElement) {
         var getItemCaption = getConfigValue("getItemCaption");
         var caption;
@@ -196,17 +269,7 @@ var BigFormMenu;
         // Also give it the bigformmenu-highlighted-dom-item for a short time, to point out where
         // it is.
         var onClickHandler = function (e) {
-            var isVisibleResult = elementIsVisible(domElement);
-            if (isVisibleResult.isShown) {
-                if (!isVisibleResult.isVisible) {
-                    domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-                    // Delay the flash a little bit, to allow for the element to smooth scroll into view.
-                    setTimeout(function () { flashElement(domElement); }, 500);
-                }
-                else {
-                    flashElement(domElement);
-                }
-            }
+            showAndFlashElement(domElement);
             return false;
         };
         var level = tagNameToLevel(domElement.tagName);
@@ -215,6 +278,7 @@ var BigFormMenu;
         menuElementInfo.menuElement = menuElementDiv;
         var defaultOpen = openByDefault(menuElementInfo, "defaultOpenAtLevel");
         menuElementInfo.isExpanded = defaultOpen;
+        setOnFocusHandlers(menuElementInfo);
         return menuElementInfo;
     }
     // Sets the parent property in all elements in _menuElementInfos.
@@ -452,18 +516,9 @@ var BigFormMenu;
     // Add a filter button to the filter bar (the bit of space left of the filter).
     // cssClassConfigName - name of config item holding css class of the button.
     // onClickHandler - runs when button is clicked.
-    // showHideConfigName - name of a config item. If blank, button is always created.
-    //                      If not blank, config item has to be true for button to be created.
     // parent - filter button will be added to this element.
     //
-    function addFilterButton(cssClassConfigName, onClickHandler, showHideConfigName, titleConfigName, parent) {
-        var showButton = true;
-        if (showHideConfigName) {
-            showButton = getConfigValue(showHideConfigName);
-        }
-        if (!showButton) {
-            return;
-        }
+    function addFilterButton(cssClassConfigName, onClickHandler, titleConfigName, parent) {
         var cssClass;
         if (cssClassConfigName) {
             cssClass = getConfigValue(cssClassConfigName);
@@ -498,23 +553,20 @@ var BigFormMenu;
         _mainMenuElement.appendChild(horizontalResizeDiv('bigformmenu-right-horizontal-resizer', -1));
         var openButtonBar = document.createElement("div");
         openButtonBar.classList.add('bigformmenu-open-button-bar');
-        addFilterButton('classMenuShowButton', onMenuShowButtonClicked, "showMenuHideShowButton", "titleMenuShowButton", openButtonBar);
+        addFilterButton('classMenuShowButton', onMenuShowButtonClicked, "titleMenuShowButton", openButtonBar);
         _mainMenuElement.appendChild(openButtonBar);
         var filterBar = document.createElement("div");
         filterBar.classList.add('bigformmenu-filter-bar');
-        addFilterButton('classMenuHideButton', onMenuHideButtonClicked, "showMenuHideShowButton", "titleMenuHideButton", filterBar);
-        addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked, "showExpandAllMenuButton", 'titleExpandAllMenuButton', filterBar);
-        addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked, "showCollapseAllMenuButton", 'titleCollapseAllMenuButton', filterBar);
+        addFilterButton('classMenuHideButton', onMenuHideButtonClicked, "titleMenuHideButton", filterBar);
+        addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked, 'titleExpandAllMenuButton', filterBar);
+        addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked, 'titleCollapseAllMenuButton', filterBar);
         // Create the buttons area very early on, in case processing of the item state infos
         // or the rebuilding of the menu itself
         // has a dependency on the buttons.
         var buttonsArea = createButtonsArea();
         processAllItemStateInfos(filterBar, _menuElementInfos);
-        var showFilterInput = getConfigValue("showFilterInput");
-        if (showFilterInput) {
-            var filterInput = createFilterInput();
-            filterBar.appendChild(filterInput);
-        }
+        var filterInput = createFilterInput();
+        filterBar.appendChild(filterInput);
         _mainMenuElement.appendChild(filterBar);
         _mainUlElement = document.createElement("ul");
         _mainMenuElement.appendChild(_mainUlElement);
@@ -664,7 +716,7 @@ var BigFormMenu;
         rebuildMenuList(false);
     }
     // Called when the item state of a menu item is updated
-    function setItemStateActive(active, itemStateInfo, filterButton, menuElementInfo) {
+    function setItemStateActive(active, itemStateInfo, filterButton, nextButton, previousButton, menuElementInfo) {
         var itemStates = menuElementInfo.itemStates;
         var idx = itemStates.indexOf(itemStateInfo);
         if (idx != -1) {
@@ -688,17 +740,49 @@ var BigFormMenu;
             itemStateInfo.onChangeMenuItemsWithItemStateExist(existsActiveItem);
         }
         filterButton.disabled = !existsActiveItem;
+        nextButton.disabled = !existsActiveItem;
+        previousButton.disabled = !existsActiveItem;
         if (!existsActiveItem) {
             setItemStateStatus(false, itemStateInfo, filterButton);
         }
         rebuildMenuList(true);
     }
+    function onItemStatePreviousNextButtonClicked(itemStateInfo, increment) {
+        var itemIndex = lastFocusedItemIndex();
+        if (itemIndex == null) {
+            itemIndex = 0;
+        }
+        var startingIndex = itemIndex;
+        var nbrElementInfos = _menuElementInfos.length;
+        do {
+            itemIndex += increment;
+            if (itemIndex < 0) {
+                itemIndex = nbrElementInfos - 1;
+            }
+            else if (itemIndex >= nbrElementInfos) {
+                itemIndex = 0;
+            }
+            if (itemIndex == startingIndex) {
+                return;
+            }
+            if (_menuElementInfos[itemIndex].itemStates.indexOf(itemStateInfo) != -1) {
+                setFocused(_menuElementInfos[itemIndex]);
+                return;
+            }
+        } while (true);
+    }
     function processItemStateInfo(itemStateInfo, filterBar, _menuElementInfos) {
         var filterButton = createFilterButton(itemStateInfo.stateFilterButtonClass, itemStateInfo.buttonTitle, function (e) { onItemStateFilterButtonClicked(e, itemStateInfo); });
         filterButton.disabled = true;
         filterBar.appendChild(filterButton);
+        var previousButton = createFilterButton(itemStateInfo.statePreviousButtonClass, itemStateInfo.buttonTitlePrevious, function (e) { onItemStatePreviousNextButtonClicked(itemStateInfo, -1); });
+        previousButton.disabled = true;
+        filterBar.appendChild(previousButton);
+        var nextButton = createFilterButton(itemStateInfo.stateNextButtonClass, itemStateInfo.buttonTitleNext, function (e) { onItemStatePreviousNextButtonClicked(itemStateInfo, 1); });
+        nextButton.disabled = true;
+        filterBar.appendChild(nextButton);
         _menuElementInfos.forEach(function (menuElementInfo) {
-            itemStateInfo.wireUp(menuElementInfo.domElement, function (active) { return setItemStateActive(active, itemStateInfo, filterButton, menuElementInfo); });
+            itemStateInfo.wireUp(menuElementInfo.domElement, function (active) { return setItemStateActive(active, itemStateInfo, filterButton, nextButton, previousButton, menuElementInfo); });
         });
     }
     // If the element is visible inside the viewport, returns 0.
@@ -734,8 +818,9 @@ var BigFormMenu;
     }
     // Sets the bigformmenu-is-visible of an item.
     // Note that this doesn't reset the bigformmenu-is-visible etc. classes of items that are not visible.
-    function setVisibility(menuElement) {
-        setClassOnMenuItem(menuElement, 'bigformmenu-is-visible');
+    function setVisibility(menuElement, setIt) {
+        if (setIt === void 0) { setIt = true; }
+        setClass(menuElement.menuElement, 'bigformmenu-is-visible', setIt);
     }
     function removeVisibilityForMenu() {
         var count = _menuElementInfos.length;
@@ -1005,29 +1090,26 @@ var BigFormMenu;
             return;
         }
         // Entry is not intersecting anymore. If this is because it is no longer displayed (display none),
-        // then rebuild the menu.
-        if (!elementIsDisplayed(entry.target)) {
+        // then rebuild the menu. Otherwise remove the highlighted class.
+        if (elementIsDisplayed(entry.target)) {
+            var menuElementInfo = menuElementInfoByDomElement(entry.target);
+            setVisibility(menuElementInfo, false);
+        }
+        else {
             rebuildMenuList(true);
         }
     }
     function intersectionHandler(entries, observer) {
         var nbrEntries = entries.length;
         for (var i = 0; i < nbrEntries; i++) {
-            console.log('##########2  ' + i + ' = ' + entries[i].target.innerHTML + ' ' + (entries[i].isIntersecting ? 'showing' : 'hidden'));
-            //            handleSingleIntersection(entries[i]);
+            handleSingleIntersection(entries[i]);
         }
-    }
-    // Rebuild the menu list periodically, so when a dom element becomes visible or invisible somehow,
-    // this gets reflected in the menu.
-    // Ideally, this would use the Intersection Observer API, but this is not supported by IE11.
-    function tick() {
-        rebuildMenuList(true);
     }
     function scrollHandler() {
         var currentYOffset = window.pageYOffset;
         _scrollingDown = (currentYOffset > _lastPageYOffset);
         _lastPageYOffset = (currentYOffset < 0) ? 0 : currentYOffset;
-        //############        setVisibilityForMenu();
+        setVisibilityForMenu();
     }
     BigFormMenu.scrollHandler = scrollHandler;
     function resizeHandler() {
@@ -1064,7 +1146,15 @@ var BigFormMenu;
             _intersectionObserver = new IntersectionObserver(intersectionHandler, { threshold: 1.0 });
             for (var i = 0; i < _menuElementInfos.length; i++) {
                 _intersectionObserver.observe(_menuElementInfos[i].domElement);
-                console.log('##########1  ' + i + ' = ' + _menuElementInfos[i].caption);
+            }
+        }
+        var rebuildOnClickedSelector = getConfigValue("rebuildOnClickedSelector");
+        if (rebuildOnClickedSelector) {
+            var rebuildOnClickedElements = document.querySelectorAll(rebuildOnClickedSelector);
+            for (var i = 0; i < rebuildOnClickedElements.length; i++) {
+                rebuildOnClickedElements[i].addEventListener("click", function () {
+                    rebuildMenuList(true);
+                });
             }
         }
         document.addEventListener('scroll', function () {
@@ -1077,7 +1167,6 @@ var BigFormMenu;
         window.addEventListener("resize", function () {
             BigFormMenu.resizeHandler();
         });
-        //    setInterval(tick, 500);
     }
     BigFormMenu.pageLoadedHandler = pageLoadedHandler;
 })(BigFormMenu || (BigFormMenu = {}));
