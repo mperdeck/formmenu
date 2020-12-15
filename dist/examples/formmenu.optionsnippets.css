@@ -75,3 +75,54 @@
 */
 .bigformmenu .bigformmenu-filter-bar button.bigformmenu-filter-button-depressed {
   box-shadow: 4px 4px 4px #888888; }
+
+/*
+    ======================================================
+    State buttons
+
+    Show prev/next buttons instead of filter buttons
+*/
+.bigformmenu {
+  width: 270px; }
+  .bigformmenu .bigformmenu-invalid-filter-button {
+    display: none; }
+  .bigformmenu .bigformmenu-invalid-next-button {
+    display: inline-block; }
+  .bigformmenu .bigformmenu-invalid-previous-button {
+    display: inline-block; }
+  .bigformmenu .bigformmenu-required-filter-button {
+    display: none; }
+  .bigformmenu .bigformmenu-required-next-button {
+    display: inline-block; }
+  .bigformmenu .bigformmenu-required-previous-button {
+    display: inline-block; }
+
+/*
+    Top button bar
+
+    Removes the menu items and filter and related buttons, and transforms the remainder of the big form menu into
+    a fixed button bar at the bottom of the screen.
+
+    Combine this with the option to show prev/next buttons instead of filter buttons.
+*/
+.bigformmenu {
+  width: auto;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: auto;
+  flex-direction: row;
+  justify-content: center; }
+  .bigformmenu .bigformmenu-filter-bar .bigformmenu-menu-hide, .bigformmenu .bigformmenu-filter-bar .bigformmenu-expand-all-menu-button, .bigformmenu .bigformmenu-filter-bar .bigformmenu-collapse-all-menu-button, .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter {
+    display: none; }
+  .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter-button {
+    margin: 7px 3px 5px 3px;
+    height: 30px; }
+  .bigformmenu ul.bigformmenu-top-menuitems {
+    display: none; }
+  .bigformmenu .bigformmenu-filter-bar, .bigformmenu .bigformmenu-buttonarea {
+    display: inline-block;
+    flex-wrap: nowrap; }
+
+body {
+  padding-bottom: 50px; }
