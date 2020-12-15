@@ -141,5 +141,48 @@
     }
 }
 
+/*
+    Top button bar
+
+    Removes the menu items and filter and related buttons, and transforms the remainder of the big form menu into
+    a fixed button bar at the bottom of the screen.
+
+    Combine this with the option to show prev/next buttons instead of filter buttons.
+*/
+
+.bigformmenu {
+    width: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    flex-direction: row;
+    justify-content: center;
+
+    .bigformmenu-filter-bar {
+        .bigformmenu-menu-hide, .bigformmenu-expand-all-menu-button, .bigformmenu-collapse-all-menu-button, .bigformmenu-filter {
+            display: none;
+        }
+
+        .bigformmenu-filter-button {
+            margin: 7px 3px 5px 3px;
+            height: 30px;
+        }
+    }
+
+    ul.bigformmenu-top-menuitems {
+        display: none;
+    }
+
+    .bigformmenu-filter-bar, .bigformmenu-buttonarea {
+        display: inline-block;
+        flex-wrap: nowrap;
+    }
+}
+
+body {
+    padding-bottom: 50px;
+}
+
 
 
