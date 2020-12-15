@@ -106,3 +106,40 @@
     box-shadow: 4px 4px 4px #888888;
 }
 
+/*
+    ======================================================
+    State buttons
+
+    Show prev/next buttons instead of filter buttons
+*/
+
+.bigformmenu {
+    width: 270px;
+
+    .bigformmenu-invalid-filter-button {
+        display: none;
+    }
+
+    .bigformmenu-invalid-next-button {
+        display: inline-block;
+    }
+
+    .bigformmenu-invalid-previous-button {
+        display: inline-block;
+    }
+
+    .bigformmenu-required-filter-button {
+        display: none;
+    }
+
+    .bigformmenu-required-next-button {
+        display: inline-block;
+    }
+
+    .bigformmenu-required-previous-button {
+        display: inline-block;
+    }
+}
+
+
+
