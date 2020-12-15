@@ -130,6 +130,12 @@ Doco at:
         overflow: hidden;
         text-overflow: clip;
     }
+
+    .bigformmenu-has-caption {
+        .bigformmenu-caption {
+            font-weight: bold;
+        }
+    }
     // Make sure there is a character in bigformmenu-expand even if you do not want to show an open/close,
     // otherwise it won't be given the width.
     // Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0.

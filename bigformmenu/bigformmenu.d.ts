@@ -67,6 +67,11 @@ interface iBigFormMenuConfiguration {
 
     // Similar to itemStateInfos. Used to define buttons that will sit just below the menu.
     menuButtons?: { [key: string]: iMenuButton};
+
+    // Gets the input element associated with a DOM element.
+    // If the DOM element is a label, this will return the associated input element.
+    // Returns null if there is no associated element.
+    getInputElementMethod?: (domElement: HTMLElement) => HTMLInputElement;
 }
 
 declare let bigFormMenuConfiguration: iBigFormMenuConfiguration;

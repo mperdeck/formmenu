@@ -40,7 +40,8 @@ namespace BigFormMenu {
 
         tagNameToLevelMethod: tagNameToLevelDefaultMethod,
         itemStateInfos: {},
-        menuButtons: {}
+        menuButtons: {},
+        getInputElementMethod: getInputElementDefaultMethod
     }
 
     // Create empty bigFormMenuConfiguration here, to make it easier to write
@@ -74,6 +75,9 @@ namespace BigFormMenu {
 
         // If this element has children, then if true the element is expanded
         public isExpanded: boolean = false;
+
+        // True if this element has the focus. Applies if the menu element is somehow associated with an input control.
+        public hasFocus: boolean = false;
 
         // true if the menuElement (the dom menu item) is included in the menu. That is, if any filters are active,
         // it passed those filters. And it is displayed (no display:none).
@@ -152,10 +156,29 @@ namespace BigFormMenu {
           }
     }
 
+    function getInputElementDefaultMethod(domElement: HTMLElement): HTMLInputElement {
+        if (domElement.tagName.toLowerCase() !== 'label') { return null; }
+        let labelElement: HTMLLabelElement = domElement as HTMLLabelElement;
+        let inputElementId = labelElement.htmlFor;
+
+        if (inputElementId) {
+            let inputElement: HTMLInputElement = document.getElementById(inputElementId) as HTMLInputElement;
+            return inputElement;
+        }
+
+        return null;
+    }
+
     function tagNameToLevel(tagName: string): number {
         let tagNameToLevelMethod: (tagName: string) => number = getConfigValue("tagNameToLevelMethod");
         let level:number = tagNameToLevelMethod(tagName);
         return level;
+    }
+
+    function getInputElement(domElement: HTMLElement): HTMLInputElement {
+        let getInputElementMethod: (domElement: HTMLElement) => HTMLInputElement = getConfigValue("getInputElementMethod");
+        let inputElement: HTMLInputElement = getInputElementMethod(domElement);
+        return inputElement;
     }
 
     function getConfigValue(itemName: string): any {
@@ -231,6 +254,26 @@ namespace BigFormMenu {
         domElement.classList.add('bigformmenu-highlighted-dom-item');
     }
 
+    // Call this method when an input element associated with the given menu element gains or loses the focus.
+    function setFocused(menuElementInfo: MenuElementInfo, hasFocus: boolean) {
+        menuElementInfo.hasFocus = hasFocus;
+        setClass(menuElementInfo.menuElement, 'bigformmenu-has-caption', hasFocus);
+    }
+
+    function setOnFocusHandlers(menuElementInfo: MenuElementInfo) {
+        const inputElement: HTMLInputElement = getInputElement(menuElementInfo.domElement);
+
+        if (!inputElement) { return; }
+
+        inputElement.addEventListener("focus", function () {
+            setFocused(menuElementInfo, true);
+        });
+
+        inputElement.addEventListener("blur", function () {
+            setFocused(menuElementInfo, false);
+        });
+    }
+
     function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
         let getItemCaption = getConfigValue("getItemCaption") as (domElement: HTMLElement) => string;
         let caption;
@@ -279,6 +322,8 @@ namespace BigFormMenu {
 
         let defaultOpen: boolean = openByDefault(menuElementInfo, "defaultOpenAtLevel");
         menuElementInfo.isExpanded = defaultOpen;
+
+        setOnFocusHandlers(menuElementInfo);
 
         return menuElementInfo;
     }
