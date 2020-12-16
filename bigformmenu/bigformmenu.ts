@@ -117,9 +117,6 @@ namespace BigFormMenu {
     // If true, we're scrolling towards the end of the document
     let _scrollingDown = true;
 
-    // True if a DOM element is being scrolled into view
-    let _domScrolling = false;
-
     let _intersectionObserver: IntersectionObserver;
 
     function allMenuElementInfos(callback: ()=>void) {
@@ -259,17 +256,11 @@ namespace BigFormMenu {
         domElement.classList.add('bigformmenu-highlighted-dom-item');
     }
 
-    function scrollDomElementIntoView(domElement: HTMLElement) {
-        _domScrolling = true;
-        domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-        _domScrolling = false;
-    }
-
     function showAndFlashElement(domElement: HTMLElement) {
         let isVisibleResult = elementIsVisible(domElement);
         if (isVisibleResult.isShown) {
             if (!isVisibleResult.isVisible) {
-                scrollDomElementIntoView(domElement);
+                domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 
                 // Delay the flash a little bit, to allow for the element to smooth scroll into view.
                 setTimeout(function () { flashElement(domElement); }, 500);
@@ -1103,24 +1094,11 @@ namespace BigFormMenu {
         return isVisible;
     }
 
-    function setMenuScrollTopIfNotDomScrolling(offsetTop: number) {
-        // Do not scroll the menu while a DOM element is being scrolled into view.
-        // When that happens, this method will be called for every DOM element that become visible durin this scroll.
-        // If you try to scroll the menu while the DOM elements are being scrolled, the browser gets very confused
-        // and the DOM scroll doesn't complete.
-        //
-        // At the end of the scroll, the scroll handler will call setVisibilityForMenu anyway, which will fix up the
-        // scroll of the menu.
-
-        if (_domScrolling) { return; }
-        _mainUlElement.scrollTop = offsetTop;
-    }
-
     // If given menu item is not visible inside the menu, scrolls the menu so the item
     // shows at the top.
     function menuItemMakeVisibleAtTop(menuElementInfo: MenuElementInfo): void {
         if (!menuItemIsVisible(menuElementInfo)) {
-            setMenuScrollTopIfNotDomScrolling(menuElementInfo.menuElement.offsetTop);
+            _mainUlElement.scrollTop = menuElementInfo.menuElement.offsetTop;
         }
     }
 
@@ -1133,7 +1111,7 @@ namespace BigFormMenu {
     
             let newOffsetTop = menuElementInfo.menuElement.offsetTop - availableXSpace;
             if (newOffsetTop < 0) { newOffsetTop = 0; }
-            setMenuScrollTopIfNotDomScrolling(newOffsetTop);
+            _mainUlElement.scrollTop = newOffsetTop;
         }
     }
 
@@ -1388,9 +1366,9 @@ namespace BigFormMenu {
                 if (menuElementInfo.isIncludedInMenu) {
 
                     if (_scrollingDown) {
-                       menuItemMakeVisibleAtBottom(menuElementInfo);
+                        menuItemMakeVisibleAtBottom(menuElementInfo);
                     } else {
-                       menuItemMakeVisibleAtTop(menuElementInfo);
+                        menuItemMakeVisibleAtTop(menuElementInfo);
                     }
                     setVisibility(menuElementInfo);
 
