@@ -1094,15 +1094,11 @@ namespace BigFormMenu {
         return isVisible;
     }
 
-    function setMenuScrollTop(scrollTop: number) {
-        _mainUlElement.scrollTop = scrollTop;
-    }
-
     // If given menu item is not visible inside the menu, scrolls the menu so the item
     // shows at the top.
     function menuItemMakeVisibleAtTop(menuElementInfo: MenuElementInfo): void {
         if (!menuItemIsVisible(menuElementInfo)) {
-            setMenuScrollTop(menuElementInfo.menuElement.offsetTop);
+            _mainUlElement.scrollTop = menuElementInfo.menuElement.offsetTop;
         }
     }
 
@@ -1115,7 +1111,7 @@ namespace BigFormMenu {
     
             let newOffsetTop = menuElementInfo.menuElement.offsetTop - availableXSpace;
             if (newOffsetTop < 0) { newOffsetTop = 0; }
-            setMenuScrollTop(newOffsetTop);
+            _mainUlElement.scrollTop = newOffsetTop;
         }
     }
 
