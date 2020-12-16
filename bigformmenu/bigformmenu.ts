@@ -1094,8 +1094,20 @@ namespace BigFormMenu {
         return isVisible;
     }
 
+    let setMenuScrollTopThrottleTimer = {
+        id: 0,
+
+        // True if scroll position will be kept the same. Only for rebuildMenuList.
+        scrollTop: 0
+    };
+
     function setMenuScrollTop(scrollTop: number) {
-        _mainUlElement.scrollTop = scrollTop;
+        setMenuScrollTopThrottleTimer.scrollTop = scrollTop;
+        throttle(setMenuScrollTopThrottleTimer, 100, setMenuScrollTopUnthrottled);
+    }
+
+    function setMenuScrollTopUnthrottled() {
+        _mainUlElement.scrollTop = setMenuScrollTopThrottleTimer.scrollTop;
     }
 
     // If given menu item is not visible inside the menu, scrolls the menu so the item
@@ -1290,9 +1302,23 @@ namespace BigFormMenu {
         return liElement;
     }
 
+    // Throttles calls to a method.
+    // timerId - store this between calls. Will be updated by the method. Initialise to a { id: 0 }
+    // throttleMs - the method will not be called more often than once every throttleMs milliseconds.
+    // callback - method to be called.
+    function throttle(timerId: { id: number }, throttleMs: number, callback: () => void) {
+        // If the timer is already running, do nothing. This way, the timer will go off at most every throttleMs ms.
+        if (timerId.id) { return; }
+
+        timerId.id = setTimeout(function () {
+            timerId.id = 0;
+            callback();
+        }, throttleMs);
+    }
+
     // Debounces calls to a method.
     // timerId - store this between calls. Will be updated by the method. Initialise to a { id: 0 }
-    // bounceMs - the method will not be called more often than once every bounceMs milliseconds.
+    // bounceMs - the method will only be called if more than bounceMs ms have elapsed since the last call.
     // callback - method to be called.
     function debounce(timerId: { id: number }, bounceMs: number, callback: ()=>void) {
         if (timerId.id) { clearTimeout(timerId.id); }
