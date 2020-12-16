@@ -262,7 +262,13 @@ namespace BigFormMenu {
     function scrollDomElementIntoView(domElement: HTMLElement) {
         _domScrolling = true;
         domElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-        _domScrolling = false;
+
+        // The scroll is asynchronous, so when scrollIntoView returns, it is still scrolling.
+        // And time taken to scroll is browser specific.
+        // See https://stackoverflow.com/questions/46795955/how-to-know-scroll-to-element-is-done-in-javascript
+        // Guess that it will take no more than 500 ms.
+
+        setTimeout(function () { _domScrolling = false; }, 500);
     }
 
     function showAndFlashElement(domElement: HTMLElement) {
