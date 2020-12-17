@@ -179,11 +179,34 @@
         display: inline-block;
         flex-wrap: nowrap;
     }
+    // This assumes that the form's buttons are at the bottom of the form.
+    // If that is the case, the button bar will disappear when the form is scrolled to the bottom.
+    // If that didn't happen, you could never see the very bottom of the page, because the last 50px
+    // would have been obscured by the button bar.
+    &.bigformmenu-all-buttons-visible {
+        overflow: hidden;
+        animation-duration: 1.5s;
+        animation-name: bigformmenu-all-buttons-visible-animation;
+        animation-iteration-count: 1;
+    }
 }
 
-body {
-    padding-bottom: 50px;
+@keyframes bigformmenu-all-buttons-visible-animation {
+    from {
+        height: auto;
+    }
+
+    to {
+        height: 0;
+    }
 }
 
+/* If you do not automatically remove the button bar when the form buttons become visible, add padding to the body of the page,
+    so the bottom 50px is not obscured by the button bar.
+
+    body {
+        padding-bottom: 50px;
+    }
+*/
 
 
