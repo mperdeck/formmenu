@@ -143,7 +143,7 @@ interface iMenuButton {
     // * caption will be innerHTML of the element, can be overridden by caption.
     // * onClick will be a method that clicks the element, can be overridden by onClick.
     // * cssClass will be the CSS class(es) of the element, can be overriden by cssClass.
-    // * wireUp will be called for each generated button.
+    // * wireUp will be called for each generated button if defined.
     cssSelector?: string;
 
     caption?: string;
@@ -157,6 +157,12 @@ interface iMenuButton {
     // If defined, this method will be called after the button tag has been created.
     // If it returns falsy, the button will not be added to the menu.
     // buttonElement - the button element
-    wireUp?: (buttonElement: HTMLButtonElement)=>boolean;
+    wireUp?: (buttonElement: HTMLButtonElement) => boolean;
+
+    // The button in the form itself that is associated with this menu button.
+    // Used to determine whether to set the bigformmenu-all-buttons-visible class on the main div of the menu.
+    // That class is only set if all buttons associated with all iMenuButton elements are visible.
+    // If domButton is not set, it will simply not used whether to set that class.
+    domButton?: HTMLButtonElement;
 }
 

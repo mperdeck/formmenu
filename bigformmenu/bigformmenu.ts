@@ -91,6 +91,15 @@ namespace BigFormMenu {
         public itemStates: iItemStateInfo[] = [];
     }
 
+    // Represents a button in the DOM pointed at by a button at the bottom of the menu
+    class ButtonElementInfo {
+        constructor(
+            public domButton: HTMLButtonElement
+        ) { }
+
+        public isVisible: boolean;
+    }
+
     let _menuElementInfos: MenuElementInfo[];
 
     // Acts as the parent of menu elements with the lowest level (typically the h1)
@@ -122,17 +131,34 @@ namespace BigFormMenu {
 
     let _intersectionObserver: IntersectionObserver;
 
+    let _buttonElementInfos: ButtonElementInfo[] = [];
+
+    let _buttonsIntersectionObserver: IntersectionObserver;
+
     function allMenuElementInfos(callback: ()=>void) {
 
     }
 
     // Finds a MenuElementInfo given the DOM element it points at.
-    // If not such MenuElementInfo is found, returns null.
+    // If no such MenuElementInfo is found, returns null.
     function menuElementInfoByDomElement(domElement: HTMLElement): MenuElementInfo {
         for (let i = 0; i < _menuElementInfos.length; i++) {
             let menuElementInfo = _menuElementInfos[i];
             if (menuElementInfo.domElement === domElement) {
                 return menuElementInfo;
+            }
+        }
+
+        return null;
+    }
+
+    // Finds a ButtonElementInfo given the DOM element it points at.
+    // If no such ButtonElementInfo is found, returns null.
+    function buttonElementInfoByDomButton(domButton: HTMLButtonElement): ButtonElementInfo {
+        for (let i = 0; i < _buttonElementInfos.length; i++) {
+            let buttonElementInfo = _buttonElementInfos[i];
+            if (buttonElementInfo.domButton === domButton) {
+                return buttonElementInfo;
             }
         }
 
@@ -777,12 +803,12 @@ namespace BigFormMenu {
                 let allButtonElements = document.querySelectorAll(menuButtonInfo.cssSelector);
 
                 for (let i = 0; i < allButtonElements.length; i++) {
-                    let currentElement = allButtonElements[i] as HTMLElement;
-                    let caption = currentElement.innerHTML;
-                    let onClick = () => { currentElement.click(); };
-                    let cssClass = currentElement.className;
+                    let currentButtonElement = allButtonElements[i] as HTMLButtonElement;
+                    let caption = currentButtonElement.innerHTML;
+                    let onClick = () => { currentButtonElement.click(); };
+                    let cssClass = currentButtonElement.className;
 
-                    createButton(buttonArea, menuButtonInfo, caption, onClick, cssClass);
+                    createButton(buttonArea, menuButtonInfo, caption, onClick, cssClass, currentButtonElement);
                 }
             } else {
                 createButton(buttonArea, menuButtonInfo);
@@ -792,8 +818,27 @@ namespace BigFormMenu {
         return buttonArea;
     }
 
+    function buttonIntersectionHandler(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
+        const nbrEntries = entries.length;
+
+        for (let i = 0; i < nbrEntries; i++) {
+            const buttonElementInfo: ButtonElementInfo = buttonElementInfoByDomButton(entries[i].target as HTMLButtonElement);
+            buttonElementInfo.isVisible = entries[i].isIntersecting;
+        }
+
+        let allButtonsVisible = true;
+        for (let i = 0; i < _buttonElementInfos.length; i++) {
+            if (!_buttonElementInfos[i].isVisible) {
+                allButtonsVisible = false;
+                break;
+            }
+        }
+
+        setClass(_mainMenuElement, "bigformmenu-all-buttons-visible", allButtonsVisible);
+    }
+
     function createButton(buttonArea: HTMLDivElement, menuButtonInfo: iMenuButton,
-        caption?: string, onClick?: () => void, cssClass?: string) {
+        caption?: string, onClick?: () => void, cssClass?: string, domButton?: HTMLButtonElement) {
 
         let button: HTMLButtonElement = document.createElement("button");
 
@@ -802,13 +847,21 @@ namespace BigFormMenu {
         button.onclick = menuButtonInfo.onClick || onClick;
         setClass(button, menuButtonInfo.cssClass || cssClass);
 
+        const currentDomButton = menuButtonInfo.domButton || domButton;
+
         let generateButton = true;
 
         if (menuButtonInfo.wireUp) {
             generateButton = menuButtonInfo.wireUp(button);
         }
 
-        if (generateButton) { buttonArea.appendChild(button); }
+        if (generateButton) {
+            buttonArea.appendChild(button);
+
+            if (currentDomButton) {
+                _buttonElementInfos.push(new ButtonElementInfo(currentDomButton));
+            }
+        }
     }
 
     // cssClass - class of the resizer grabber
@@ -1483,6 +1536,13 @@ namespace BigFormMenu {
 
             for (let i = 0; i < _menuElementInfos.length; i++) {
                 _intersectionObserver.observe(_menuElementInfos[i].domElement);
+            }
+
+            // Threshold 0 means invoke the handler if even one pixel becomes visible
+            _buttonsIntersectionObserver = new IntersectionObserver(buttonIntersectionHandler, { threshold: 0 });
+
+            for (let i = 0; i < _buttonElementInfos.length; i++) {
+                _buttonsIntersectionObserver.observe(_buttonElementInfos[i].domButton);
             }
         }
 
