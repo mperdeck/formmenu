@@ -184,20 +184,35 @@
     // If that didn't happen, you could never see the very bottom of the page, because the last 50px
     // would have been obscured by the button bar.
     &.bigformmenu-all-buttons-visible {
-        overflow: hidden;
         animation-duration: 1.5s;
         animation-name: bigformmenu-all-buttons-visible-animation;
-        animation-iteration-count: 1;
+        opacity: 0;
+    }
+
+    &:not(.bigformmenu-all-buttons-visible) {
+        animation-duration: 1.5s;
+        animation-name: bigformmenu-all-buttons-visible-animation-not;
+        opacity: 1;
     }
 }
 
 @keyframes bigformmenu-all-buttons-visible-animation {
     from {
-        height: auto;
+        opacity: 1;
     }
 
     to {
-        height: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes bigformmenu-all-buttons-visible-animation-not {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
     }
 }
 
