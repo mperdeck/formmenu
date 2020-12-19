@@ -183,13 +183,13 @@
     // If that is the case, the button bar will disappear when the form is scrolled to the bottom.
     // If that didn't happen, you could never see the very bottom of the page, because the last 50px
     // would have been obscured by the button bar.
-    &.bigformmenu-all-buttons-visible {
+    &.bigformmenu-all-buttons-visible, &.bigformmenu-scrolled-to-menu-height {
         animation-duration: 1.5s;
         animation-name: bigformmenu-all-buttons-visible-animation;
         opacity: 0;
     }
 
-    &:not(.bigformmenu-all-buttons-visible) {
+    &:not(.bigformmenu-all-buttons-visible):not(.bigformmenu-scrolled-to-menu-height) {
         animation-duration: 1.5s;
         animation-name: bigformmenu-all-buttons-visible-animation-not;
         opacity: 1;
