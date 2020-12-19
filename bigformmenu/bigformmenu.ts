@@ -1562,6 +1562,8 @@ namespace BigFormMenu {
 
         storeMenuBottom();
 
+        _mainMenuElementHeight = getMainMenuElementHeight();
+
         // IE11 does not support IntersectionObserver
         if (!!window.IntersectionObserver) {
             _intersectionObserver = new IntersectionObserver(intersectionHandler, { threshold: 1.0 });
