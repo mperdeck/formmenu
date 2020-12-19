@@ -407,6 +407,12 @@ namespace BigFormMenu {
 
     // Gives the focus to the input element associated with the given menu item.
     function setFocused(menuElementInfo: MenuElementInfo) {
+
+        // Set lastHadFocus explicitly instead of relying on the focus event to fire on the control
+        // when it it given the focus further down. This to deal with controls that somehow do not
+        // fire the focus event.
+        menuElementInfo.lastHadFocus = true;
+
         const inputElement: HTMLInputElement = getInputElement(menuElementInfo.domElement);
         if (!inputElement) { return; }
 
