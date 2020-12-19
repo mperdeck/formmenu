@@ -623,13 +623,7 @@ namespace BigFormMenu {
     function createFilterInput(): HTMLInputElement {
         let menuElement: HTMLInputElement = document.createElement("input");
 
-        // On IE11, type=search will give you an x in the input box which does wipe the text,
-        // but this doesn't fire the onsearch handler.
-        // So in that case use type=text to prevent the confusing x.
-        //
-        // Firefox doesn't support onsearch either, but that browser doesn't generate the x either,
-        // so no confusion there.
-        menuElement.type = runningIE() ? "text" : "search";
+        menuElement.type = "search";
         menuElement.className = 'bigformmenu-filter';
 
         let filterPlaceholder = getConfigValue("filterPlaceholder");
@@ -641,8 +635,9 @@ namespace BigFormMenu {
         // onKeypress fires before the value has been updated, so you get the old value, not the latest value
         menuElement.onkeyup = onChangeFilter;
 
-        // onfilter fires when the little clear icon is clicked.
-        (<any>menuElement).onsearch = onChangeFilter;
+        // oninput fires when the little clear icon is clicked.
+        // Note that onsearch does the same thing on webkit, but not on IE.
+        menuElement.oninput = onChangeFilter;
 
         return menuElement;
     }
