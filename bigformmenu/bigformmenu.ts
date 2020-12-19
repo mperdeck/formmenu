@@ -144,6 +144,31 @@ namespace BigFormMenu {
 
     }
 
+    function localGetItem(key: string) {
+        if (!localStorage) {
+            console.log('localStorage not supported. Are you loading this file from the file system, using IE?');
+            return;
+        }
+
+        return localStorage.getItem(key);
+    }
+
+    function localSetItem(key: string, value: string) {
+        if (!localStorage) {
+            return;
+        }
+
+        localStorage.setItem(key, value);
+    }
+
+    function localRemoveItem(key: string) {
+        if (!localStorage) {
+            return;
+        }
+
+        localStorage.removeItem(key);
+    }
+
     // Returns the distance in pixels from the bottom of the screen to the bottom of the document
     function scrollDistanceToBottom(): number {
         // See https://learnersbucket.com/examples/javascript/detect-if-window-is-scrolled-to-the-bottom/
@@ -486,10 +511,10 @@ namespace BigFormMenu {
     // If there is a local storage item with the given key, removes it.
     // Otherwise adds it with a non-falsy value.
     function toggleLocalStorage(key: string) {
-        if (localStorage.getItem(key)) {
-            localStorage.removeItem(key);
+        if (localGetItem(key)) {
+            localRemoveItem(key);
         } else {
-            localStorage.setItem(key, "1");
+            localSetItem(key, "1");
         }
     }
 
@@ -617,22 +642,22 @@ namespace BigFormMenu {
     }
 
     function storeDimensions(width: number, height: number): void {
-        localStorage.setItem('bigformmenu-width', width.toString());
-        localStorage.setItem('bigformmenu-height', height.toString());
+        localSetItem('bigformmenu-width', width.toString());
+        localSetItem('bigformmenu-height', height.toString());
     }
 
     function storeWidth(width: number): void {
-        localStorage.setItem('bigformmenu-width', width.toString());
+        localSetItem('bigformmenu-width', width.toString());
     }
 
     function storeHeight(height: number): void {
-        localStorage.setItem('bigformmenu-height', height.toString());
+        localSetItem('bigformmenu-height', height.toString());
     }
 
     function getDimensions(): { width: number, height: number } {
         const result = { 
-            width: parseInt(localStorage.getItem('bigformmenu-width')), 
-            height: parseInt(localStorage.getItem('bigformmenu-height')) 
+            width: parseInt(localGetItem('bigformmenu-width')), 
+            height: parseInt(localGetItem('bigformmenu-height')) 
         };
 
         return result;
@@ -654,13 +679,13 @@ namespace BigFormMenu {
     // menu and the bottom of the screen and stores that under bigformmenu-bottom.
     function storeMenuBottom(): void {
 
-        if (localStorage.getItem("bigformmenu-bottom") !== null) { return; }
+        if (localGetItem("bigformmenu-bottom") !== null) { return; }
 
         const boundingRectangle = _mainMenuElement.getBoundingClientRect();
         const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
         const formBottom = windowHeight - boundingRectangle.bottom;
 
-        localStorage.setItem('bigformmenu-bottom', formBottom.toString());
+        localSetItem('bigformmenu-bottom', formBottom.toString());
     }
 
     // If the user resizes the window, reducing it height, at some point the menu
@@ -673,11 +698,11 @@ namespace BigFormMenu {
     function ensureMenuBottomVisible(): void {
 
         // If menu has never been resized, nothing that can be done here
-        const storedHeightString = localStorage.getItem('bigformmenu-height');
+        const storedHeightString = localGetItem('bigformmenu-height');
         if (storedHeightString === null) { return; }
 
         // formBottom should always be there, seeing it is set when the component is loaded.
-        const formBottom = parseInt(localStorage.getItem('bigformmenu-bottom'));
+        const formBottom = parseInt(localGetItem('bigformmenu-bottom'));
 
         const boundingRectangle = _mainMenuElement.getBoundingClientRect();
         const menuHeightWanted = boundingRectangle.top + parseInt(storedHeightString) + formBottom;
@@ -700,12 +725,12 @@ namespace BigFormMenu {
 
     function hideMenu(): void {
         _mainMenuElement.classList.add('bigformmenu-hidden');
-        localStorage.setItem('bigformmenu-hidden', "1");
+        localSetItem('bigformmenu-hidden', "1");
     }
 
     function showMenu(): void {
         _mainMenuElement.classList.remove('bigformmenu-hidden');
-        localStorage.removeItem('bigformmenu-hidden');
+        localRemoveItem('bigformmenu-hidden');
     }
 
     function onMenuHideButtonClicked(e: MouseEvent): void {
@@ -1598,7 +1623,7 @@ namespace BigFormMenu {
         // setActive may be called while the menu is being created.
         _mainMenuElement = createMainMenuElement();
 
-        if (localStorage.getItem('bigformmenu-hidden')) {
+        if (localGetItem('bigformmenu-hidden')) {
             _mainMenuElement.classList.add('bigformmenu-hidden');
         }
 
