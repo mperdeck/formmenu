@@ -148,7 +148,7 @@
     a fixed button bar at the bottom of the screen.
 
     Combine this with the option to show prev/next buttons instead of filter buttons.
-        */
+*/
 
 .bigformmenu {
     width: auto;
@@ -179,7 +179,7 @@
         display: inline-block;
         flex-wrap: nowrap;
     }
-/*    // This assumes that the form's buttons are at the bottom of the form.
+    // This assumes that the form's buttons are at the bottom of the form.
     // If that is the case, the button bar will disappear when the form is scrolled to the bottom.
     // If that didn't happen, you could never see the very bottom of the page, because the last 50px
     // would have been obscured by the button bar.
@@ -194,7 +194,7 @@
         animation-name: bigformmenu-all-buttons-visible-animation-not;
         opacity: 1;
     }
-*/}
+}
 
 @keyframes bigformmenu-all-buttons-visible-animation {
     from {
@@ -225,6 +225,3 @@
 */
 
 
-.bigformmenu-scrolled-to-menu-height {
-    border: 2px solid red;
-}
