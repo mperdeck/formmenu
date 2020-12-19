@@ -111,6 +111,10 @@ namespace BigFormMenu {
     // The div that contains the entire menu
     let _mainMenuElement:HTMLElement;
 
+    // Height of the entire menu. Set when the menu is loaded initially. Should only be used
+    // when the menu height is fixed, so if it is used as a button bar instead of the full menu.
+    let _mainMenuElementHeight: number;
+
     // The div that contains the entire menu
     let _mainUlElement:HTMLUListElement;
 
@@ -126,7 +130,7 @@ namespace BigFormMenu {
     // If true, we're scrolling towards the end of the document
     let _scrollingDown = true;
 
-    // True if a DOM element is being scrolled into view
+    // True if a DOM element is being scrolled into view using scrollIntoView
     let _domScrolling = false;
 
     let _intersectionObserver: IntersectionObserver;
@@ -137,6 +141,32 @@ namespace BigFormMenu {
 
     function allMenuElementInfos(callback: ()=>void) {
 
+    }
+
+    // Returns the distance in pixels from the bottom of the screen to the bottom of the document
+    function scrollDistanceToBottom(): number {
+        // See https://learnersbucket.com/examples/javascript/detect-if-window-is-scrolled-to-the-bottom/
+
+        const distance: number = document.body.offsetHeight - (window.innerHeight + window.pageYOffset);
+        return distance;
+    }
+
+    function getMainMenuElementHeight(): number {
+        const boundingRectangle = _mainMenuElement.getBoundingClientRect();
+        return boundingRectangle.height;
+    }
+
+    // Sets the bigformmenu-scrolled-to-menu-height class on the main menu div
+    // if the distance from bottom of the window to the bottom of the document is less than
+    // the height of the menu.
+    // 
+    // Use this when using the menu as a button bar fixed at the bottom of the page.
+    // The class will be added when the user scrolls so far down the document that the button bar starts to obscure
+    // the very bottom of the document. If you don't remove the button bar then, the user will not be able to see 
+    // the very bottom of the document.
+    function setScrolledToMenuHeightClass(): void {
+        const scrollBottomWithinMenuHeight = scrollDistanceToBottom() <= _mainMenuElementHeight;
+        setClass(_mainMenuElement, 'bigformmenu-scrolled-to-menu-height', scrollBottomWithinMenuHeight);
     }
 
     // Finds a MenuElementInfo given the DOM element it points at.
@@ -1427,12 +1457,14 @@ namespace BigFormMenu {
                 ensureMenuBottomVisible();
 
                 setVisibilityForMenuDirect();
+                setScrolledToMenuHeightClass();
 
                 if (keepScroll) {
                     _mainUlElement.scrollTop = scrollBuffer;
                 }
             } else {
                 setVisibilityForMenuDirect();
+                setScrolledToMenuHeightClass();
             }
         });
     }
