@@ -48,6 +48,13 @@ Doco at:
         }
     }
 
+    &.bigformmenu-ie > ul {
+        // IE11 will not produce vertical scrollbars in the ul showing the actual menu items
+        // unless that ul has a specific height.
+        //TODO: in the JavaScript, dynamically adjust this when the window resizes.
+        max-height: 500px;
+    }
+
     button {
         cursor: pointer;
     }
@@ -86,7 +93,6 @@ Doco at:
         position: absolute;
         z-index: 1000;
     }
-
     // Applies to both the filter buttons and the "show menu" button
     .bigformmenu-filter-button {
         margin: 2px;
