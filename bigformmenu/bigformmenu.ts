@@ -1677,7 +1677,11 @@ namespace BigFormMenu {
             }
         }
 
-        document.addEventListener('scroll', function () {
+        document.addEventListener('scroll', function (e: Event) {
+            // IE will fire the scroll event if anything inside the document (such as the menu) is scrolled,
+            // not only when the document itself is scrolled. So only take action if the target of the event is the document.
+
+            if (e.target !== document) { return; }
             BigFormMenu.scrollHandler();
         }, {
             passive: true
