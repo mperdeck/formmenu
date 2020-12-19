@@ -98,13 +98,13 @@
     display: inline-block; }
 
 /*
-    Top button bar
+    Button bar
 
     Removes the menu items and filter and related buttons, and transforms the remainder of the big form menu into
     a fixed button bar at the bottom of the screen.
 
     Combine this with the option to show prev/next buttons instead of filter buttons.
-*/
+    */
 .bigformmenu {
   width: auto;
   bottom: 0;
@@ -112,17 +112,54 @@
   right: 0;
   top: auto;
   flex-direction: row;
-  justify-content: center; }
-  .bigformmenu .bigformmenu-filter-bar .bigformmenu-menu-hide, .bigformmenu .bigformmenu-filter-bar .bigformmenu-expand-all-menu-button, .bigformmenu .bigformmenu-filter-bar .bigformmenu-collapse-all-menu-button, .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter {
-    display: none; }
-  .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter-button {
+  justify-content: center;
+  z-index: 500; }
+  .bigformmenu .bigformmenu-filter-button {
     margin: 7px 3px 5px 3px;
     height: 30px; }
+  .bigformmenu .bigformmenu-filter-bar .bigformmenu-expand-all-menu-button, .bigformmenu .bigformmenu-filter-bar .bigformmenu-collapse-all-menu-button {
+    display: none; }
+  .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter {
+    height: 30px;
+    width: 70px; }
+  .bigformmenu .bigformmenu-filter-bar .bigformmenu-menu-hide::after {
+    content: "\25BC"; }
+  .bigformmenu .bigformmenu-open-button-bar .bigformmenu-menu-show {
+    position: fixed;
+    right: 0;
+    bottom: 0; }
+    .bigformmenu .bigformmenu-open-button-bar .bigformmenu-menu-show::after {
+      content: "\25B2"; }
   .bigformmenu ul.bigformmenu-top-menuitems {
     display: none; }
   .bigformmenu .bigformmenu-filter-bar, .bigformmenu .bigformmenu-buttonarea {
     display: inline-block;
     flex-wrap: nowrap; }
+  .bigformmenu.bigformmenu-all-buttons-visible, .bigformmenu.bigformmenu-scrolled-to-menu-height {
+    animation-duration: 1.5s;
+    animation-name: bigformmenu-all-buttons-visible-animation;
+    opacity: 0; }
+  .bigformmenu:not(.bigformmenu-all-buttons-visible):not(.bigformmenu-scrolled-to-menu-height) {
+    animation-duration: 1.5s;
+    animation-name: bigformmenu-all-buttons-visible-animation-not;
+    opacity: 1; }
 
-body {
-  padding-bottom: 50px; }
+@keyframes bigformmenu-all-buttons-visible-animation {
+  from {
+    opacity: 1; }
+  to {
+    opacity: 0; } }
+
+@keyframes bigformmenu-all-buttons-visible-animation-not {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+
+/* If you do not automatically remove the button bar when the form buttons become visible, add padding to the body of the page,
+    so the bottom 50px is not obscured by the button bar.
+
+    body {
+        padding-bottom: 50px;
+    }
+*/

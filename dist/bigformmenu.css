@@ -31,6 +31,8 @@ Doco at:
       background-color: gainsboro; }
     .bigformmenu > ul::-webkit-scrollbar-thumb {
       background-color: darkgrey; }
+  .bigformmenu.bigformmenu-ie > ul {
+    max-height: 500px; }
   .bigformmenu button {
     cursor: pointer; }
   .bigformmenu button[disabled] {
@@ -56,13 +58,13 @@ Doco at:
   .bigformmenu .bigformmenu-right-horizontal-resizer, .bigformmenu .bigformmenu-left-horizontal-resizer, .bigformmenu .bigformmenu-vertical-resizer {
     position: absolute;
     z-index: 1000; }
+  .bigformmenu .bigformmenu-filter-button {
+    margin: 2px; }
   .bigformmenu .bigformmenu-filter-bar {
     display: flex;
     flex-wrap: wrap; }
-    .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter-button {
-      margin: 2px; }
     .bigformmenu .bigformmenu-filter-bar .bigformmenu-filter {
-      display: inline;
+      display: inline-block;
       width: 40px;
       flex-grow: 1;
       overflow: hidden; }
@@ -138,6 +140,10 @@ Doco at:
 /* Generates expanding circle around an item in the form itself when user clicks corresponding menu item. */
 .bigformmenu-highlighted-dom-item {
   position: relative; }
+
+.bigformmenu-matching-filter-dom-element {
+  background-color: #c6ffb3;
+  /* light green */ }
 
 .bigformmenu-highlighted-dom-item:before {
   animation-duration: 1.5s;
