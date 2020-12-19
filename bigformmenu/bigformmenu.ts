@@ -1635,6 +1635,10 @@ namespace BigFormMenu {
             _mainMenuElement.classList.add('bigformmenu-hidden');
         }
 
+        if (runningIE()) {
+            _mainMenuElement.classList.add('bigformmenu-ie');
+        }
+
         addMenuBody(_mainMenuElement, _menuElementInfos);
 
         setDimensionsFromLocalStorage();
