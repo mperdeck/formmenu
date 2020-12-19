@@ -27,6 +27,11 @@ interface iBigFormMenuConfiguration {
     filterPlaceholder?: string;
     filterMinimumCharacters?: number;
 
+    // If true, when the filter is used, 1) the first DOM element that matches the filter is scrolled into view
+    // and 2) all DOM elements matching the filter are given class bigformmenu-filtered-dom-item
+    // Especially useful when using the menu as a button bar.
+    highlightFilteredDomElements?: boolean;
+
     classMenuShowButton?: string;
     classMenuHideButton?: string;
     classExpandAllMenuButton?: string;
@@ -46,8 +51,7 @@ interface iBigFormMenuConfiguration {
     // This because intersection observers do not get triggered when visibility is changed, maybe because those elements still take visible space on the page.
     rebuildOnClickedSelector?: string;
 
-    // cssMenuItemSelector is used to find all dom elements that may get represented in the menu.
-    // If provided, this method is then used to get the menu item caption from the corresponding dom item.
+    // If provided, the getItemCaption method is used to get the menu item caption from the corresponding dom item.
     // If this returns falsy, the menu item is not generated.
     // If this method is not given, the default behaviour is to simply get the innerText from the dom element. 
     getItemCaption?: (domElement: HTMLElement) => string;
@@ -55,6 +59,8 @@ interface iBigFormMenuConfiguration {
     // Method that takes a tag name and works out the level of that tag.
     // Level determines position in the menu (whether it is a child or a sibling).
     // Items with lower levels are parents of items with higher levels.
+    // If this method is not given, the default behaviour is to give headers a level equal to their header level.
+    // So h1 has level 1, h2 has level 2, etc. non-headers get a very high level.
     tagNameToLevelMethod?: (tagName: string) => number;
 
     // Used to do additional processing for each menu item. See iItemStateInfo.

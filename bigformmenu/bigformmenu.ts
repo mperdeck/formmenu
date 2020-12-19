@@ -24,6 +24,7 @@ namespace BigFormMenu {
 
         filterPlaceholder: 'filter',
         filterMinimumCharacters: 2,
+        highlightFilteredDomElements: true,
 
         classMenuShowButton: 'bigformmenu-menu-show',
         classMenuHideButton: 'bigformmenu-menu-hide',
@@ -535,6 +536,28 @@ namespace BigFormMenu {
         return captionSpanElement;
     }
 
+    // Sets the bigformmenu-matching-filter-dom-element class on all DOM elements that match the current filter.
+    // Scrolls the first matching DOM element into view if the filter is active.
+    //
+    // Resets it on those that do not match the filter.
+    // Resets it on all elements if the filter is not active.
+    function doHighlightFilteredDomElements(): void {
+        let firstFound = false;
+        const filterIsActive = searchFilterIsActive();
+
+        for (let i = 0; i < _menuElementInfos.length; i++) {
+            let highlightDomElement = filterIsActive && (matchesSearchFilter(_menuElementInfos[i]) !== -1);
+            let domElement = _menuElementInfos[i].domElement;
+
+            setClass(domElement, 'bigformmenu-matching-filter-dom-element', highlightDomElement);
+
+            if (highlightDomElement && !firstFound) {
+                firstFound = true;
+                scrollDomElementIntoView(domElement);
+            }
+        }
+    }
+
     // Inserts span tags into a string. The start tag will be at startIndex and the end tag
     // spanLength characters later.
     // For example:
@@ -554,6 +577,11 @@ namespace BigFormMenu {
         _searchTerm = (<HTMLInputElement>(e.currentTarget)).value;
         
         setClass(_mainMenuElement, 'bigformmenu-textmatch-filter-is-active', searchFilterIsActive());
+
+        let highlightFilteredDomElements = getConfigValue("highlightFilteredDomElements") as boolean;
+        if (highlightFilteredDomElements) {
+            doHighlightFilteredDomElements();
+        }
 
         rebuildMenuList(false);
     }
@@ -1312,6 +1340,15 @@ namespace BigFormMenu {
         return;
     }
 
+    // Returns index of the current filter in the caption of the given menu item.
+    // Assumes the search filter is active.
+    // If there is no match, returns -1.
+    function matchesSearchFilter(menuElementInfo: MenuElementInfo): number {
+        const filterValueLc = _searchTerm.toLowerCase();
+        const foundIndex = menuElementInfo.caption.toLowerCase().indexOf(filterValueLc);
+        return foundIndex;
+    }
+
     // Finds out if the menu element in the menuElementInfo passes the search filter.
     // If so, updates the caption to highlight the matched bit and returns true.
     // Otherwise returns false.
@@ -1326,16 +1363,13 @@ namespace BigFormMenu {
             return true;
         }
 
-        const filterValueLc = _searchTerm.toLowerCase();
-        const foundIndex = menuElementInfo.caption.toLowerCase().indexOf(filterValueLc);
-
-        // If there is no match, return
+        const foundIndex = matchesSearchFilter(menuElementInfo);
         if (foundIndex === -1) {
             return false;
         }
 
         const captionWithFilterTextSpan = insertMatchingFilterTextSpan(
-            menuElementInfo.caption, foundIndex, filterValueLc.length);
+            menuElementInfo.caption, foundIndex, _searchTerm.length);
         captionElement.innerHTML = captionWithFilterTextSpan;
 
         menuElementInfo.menuElement.classList.add('bigformmenu-is-textmatch');

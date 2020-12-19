@@ -97,7 +97,7 @@ Doco at:
         flex-wrap: wrap;
 
         .bigformmenu-filter {
-            display: inline;
+            display: inline-block;
             width: 40px;
             flex-grow: 1;
             // If you do not add this, the search box will start to poke out the right side of the menu
@@ -251,6 +251,10 @@ Doco at:
 /* Generates expanding circle around an item in the form itself when user clicks corresponding menu item. */
 .bigformmenu-highlighted-dom-item {
     position: relative;
+}
+
+.bigformmenu-matching-filter-dom-element {
+    background-color: #c6ffb3; /* light green */
 }
 
 .bigformmenu-highlighted-dom-item:before {

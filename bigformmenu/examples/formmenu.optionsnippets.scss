@@ -166,8 +166,13 @@
     }
 
     .bigformmenu-filter-bar {
-        .bigformmenu-expand-all-menu-button, .bigformmenu-collapse-all-menu-button, .bigformmenu-filter {
+        .bigformmenu-expand-all-menu-button, .bigformmenu-collapse-all-menu-button {
             display: none;
+        }
+
+        .bigformmenu-filter {
+            height: 30px;
+            width: 70px;
         }
 
         .bigformmenu-menu-hide::after {
