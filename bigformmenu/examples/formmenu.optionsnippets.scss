@@ -142,7 +142,7 @@
 }
 
 /*
-    Top button bar
+    Button bar
 
     Removes the menu items and filter and related buttons, and transforms the remainder of the big form menu into
     a fixed button bar at the bottom of the screen.
@@ -159,7 +159,6 @@
     flex-direction: row;
     justify-content: center;
     z-index: 500;
-
     // Applies to both the filter buttons and the "show menu" button
     .bigformmenu-filter-button {
         margin: 7px 3px 5px 3px;
@@ -170,6 +169,10 @@
         .bigformmenu-expand-all-menu-button, .bigformmenu-collapse-all-menu-button, .bigformmenu-filter {
             display: none;
         }
+
+        .bigformmenu-menu-hide::after {
+            content: "\25BC";
+        }
     }
 
     .bigformmenu-open-button-bar {
@@ -177,6 +180,10 @@
             position: fixed;
             right: 0;
             bottom: 0;
+
+            &::after {
+                content: "\25B2";
+            }
         }
     }
 
