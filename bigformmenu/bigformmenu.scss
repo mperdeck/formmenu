@@ -87,13 +87,14 @@ Doco at:
         z-index: 1000;
     }
 
+    // Applies to both the filter buttons and the "show menu" button
+    .bigformmenu-filter-button {
+        margin: 2px;
+    }
+
     .bigformmenu-filter-bar {
         display: flex;
         flex-wrap: wrap;
-
-        .bigformmenu-filter-button {
-            margin: 2px;
-        }
 
         .bigformmenu-filter {
             display: inline;

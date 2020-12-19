@@ -148,7 +148,7 @@
     a fixed button bar at the bottom of the screen.
 
     Combine this with the option to show prev/next buttons instead of filter buttons.
-*/
+    */
 
 .bigformmenu {
     width: auto;
@@ -160,14 +160,23 @@
     justify-content: center;
     z-index: 500;
 
+    // Applies to both the filter buttons and the "show menu" button
+    .bigformmenu-filter-button {
+        margin: 7px 3px 5px 3px;
+        height: 30px;
+    }
+
     .bigformmenu-filter-bar {
-        .bigformmenu-menu-hide, .bigformmenu-expand-all-menu-button, .bigformmenu-collapse-all-menu-button, .bigformmenu-filter {
+        .bigformmenu-expand-all-menu-button, .bigformmenu-collapse-all-menu-button, .bigformmenu-filter {
             display: none;
         }
+    }
 
-        .bigformmenu-filter-button {
-            margin: 7px 3px 5px 3px;
-            height: 30px;
+    .bigformmenu-open-button-bar {
+        .bigformmenu-menu-show {
+            position: fixed;
+            right: 0;
+            bottom: 0;
         }
     }
 
