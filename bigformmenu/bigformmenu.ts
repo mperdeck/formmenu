@@ -294,7 +294,10 @@ namespace BigFormMenu {
 
         let includeElement: boolean = !getConfigValue("skipFirstHeading");
 
-        domElements.forEach((value: Element)=>{
+        let count = domElements.length;
+        for (let i = 0; i < count; i++) {
+            let value = domElements[i];
+
             if (includeElement) {
                 let menuElement = domElementToMenuElement(value as HTMLElement);
                 if (menuElement) {
@@ -303,7 +306,7 @@ namespace BigFormMenu {
             }
 
             includeElement = true;
-        });
+        }
 
         return _menuElementInfos;
     }
@@ -714,15 +717,19 @@ namespace BigFormMenu {
     }
 
     function onExpandAllMenuClicked(e: MouseEvent): void {
-        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+        let count = _menuElementInfos.length;
+        for (let i = 0; i < count; i++) {
+            let menuElementInfo = _menuElementInfos[i];
             menuElementInfo.isExpanded = true;
-        });
+        }
 
         rebuildMenuList(false);
     }
 
     function onCollapseAllMenuClicked(e: MouseEvent): void {
-        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+        let count = _menuElementInfos.length;
+        for (let i = 0; i < count; i++) {
+            let menuElementInfo = _menuElementInfos[i];
             let defaultOpen: boolean = openByDefault(menuElementInfo, "collapseOpenAtLevel");
 
             // Close the items above the "collapseOpenAtLevel" level
@@ -733,7 +740,7 @@ namespace BigFormMenu {
             if (!defaultOpen) {
                 menuElementInfo.isExpanded = false;
             }
-        });
+        }
 
         rebuildMenuList(false);
     }
@@ -784,7 +791,7 @@ namespace BigFormMenu {
         return menuElement;
     }
 
-    function addMenuBody(_mainMenuElement: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
+    function addMenuBody(_mainMenuElement: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
 
         _mainMenuElement.appendChild(verticalResizeDiv());
         _mainMenuElement.appendChild(horizontalResizeDiv('bigformmenu-left-horizontal-resizer', 1));
@@ -815,7 +822,7 @@ namespace BigFormMenu {
         // has a dependency on the buttons.
         const buttonsArea:HTMLDivElement = createButtonsArea();
 
-        processAllItemStateInfos(filterBar, _menuElementInfos);
+        processAllItemStateInfos(filterBar, menuElementInfos);
 
         let filterInput = createFilterInput();
         filterBar.appendChild(filterInput);
@@ -841,10 +848,13 @@ namespace BigFormMenu {
 
     function visitKeyedConfigItems<T>(configValueName: string, callback: (configItem: T)=>void): void {
         let configItems: { [key: string]: T} = getConfigValue(configValueName);
+        let keys = Object.keys(configItems);
 
-        Object.keys(configItems).forEach(key => {
+        let count = keys.length;
+        for (let i = 0; i < count; i++) {
+            let key = keys[i];
             callback(configItems[key]);
-        });
+        }
     }
 
     // Creates a button area div. Visits all menu button infos
@@ -1004,9 +1014,9 @@ namespace BigFormMenu {
 
     // Visits all item state infos, processes the menu element infos for each
     // and adds a filter button for each to the passed in filter bar. 
-    function processAllItemStateInfos(filterBar: HTMLElement, _menuElementInfos: MenuElementInfo[]): void {
+    function processAllItemStateInfos(filterBar: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
         visitAllItemStateInfos((itemStateInfo: iItemStateInfo)=>{
-            processItemStateInfo(itemStateInfo, filterBar, _menuElementInfos);
+            processItemStateInfo(itemStateInfo, filterBar, menuElementInfos);
         });
     }
 
@@ -1068,11 +1078,14 @@ namespace BigFormMenu {
 
         let existsActiveItem = active;
         if (!existsActiveItem) {
-            _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+
+            let count = _menuElementInfos.length;
+            for (let i = 0; i < count; i++) {
+                let menuElementInfo = _menuElementInfos[i];
                 if (menuElementInfo.itemStates.indexOf(itemStateInfo) != -1) {
                     existsActiveItem = true;
                 }
-            });
+            }
         }
 
         if (itemStateInfo.onChangeMenuItemsWithItemStateExist) {
@@ -1115,7 +1128,7 @@ namespace BigFormMenu {
     } 
 
     function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
-        _menuElementInfos: MenuElementInfo[]): void {
+        menuElementInfos: MenuElementInfo[]): void {
 
         let filterButton: HTMLButtonElement = createFilterButton(
             itemStateInfo.stateFilterButtonClass, itemStateInfo.buttonTitle, (e: MouseEvent) => { onItemStateFilterButtonClicked(e, itemStateInfo); });
@@ -1132,10 +1145,12 @@ namespace BigFormMenu {
         nextButton.disabled = true;
         filterBar.appendChild(nextButton);
 
-        _menuElementInfos.forEach((menuElementInfo:MenuElementInfo) => {
+        let count = menuElementInfos.length;
+        for (let i = 0; i < count; i++) {
+            let menuElementInfo = _menuElementInfos[i];
             itemStateInfo.wireUp(menuElementInfo.domElement,
                 (active: boolean) => setItemStateActive(active, itemStateInfo, filterButton, nextButton, previousButton, menuElementInfo));
-        });
+        }
     }
 
     // If the element is visible inside the viewport, returns 0.
