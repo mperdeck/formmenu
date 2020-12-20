@@ -376,16 +376,19 @@ namespace BigFormMenu {
         }
     }
 
+    function setHasFocus(menuElementInfo: MenuElementInfo) {
+        // Reset the flag of the last item that received the focus
+        for (let i = 0; i < _menuElementInfos.length; i++) {
+            _menuElementInfos[i].lastHadFocus = false;
+        }
+
+        menuElementInfo.lastHadFocus = true;
+    }
+
     // Call this method when an input element associated with the given menu element gains or loses the focus.
     function onFocused(menuElementInfo: MenuElementInfo, hasFocus: boolean) {
         if (hasFocus) {
-
-            // Reset the flag of the last item that received the focus
-            for (let i = 0; i < _menuElementInfos.length; i++) {
-                _menuElementInfos[i].lastHadFocus = false;
-            }
-
-            menuElementInfo.lastHadFocus = true;
+            setHasFocus(menuElementInfo);
         }
 
         setClass(menuElementInfo.menuElement, 'bigformmenu-has-caption', hasFocus);
@@ -411,7 +414,7 @@ namespace BigFormMenu {
         // Set lastHadFocus explicitly instead of relying on the focus event to fire on the control
         // when it it given the focus further down. This to deal with controls that somehow do not
         // fire the focus event.
-        menuElementInfo.lastHadFocus = true;
+        setHasFocus(menuElementInfo);
 
         const inputElement: HTMLInputElement = getInputElement(menuElementInfo.domElement);
         if (!inputElement) { return; }
@@ -1144,7 +1147,7 @@ namespace BigFormMenu {
 
     function onItemStatePreviousNextButtonClicked(itemStateInfo: iItemStateInfo, increment: number): void {
         let itemIndex = lastFocusedItemIndex();
-        if (itemIndex == null) { itemIndex = 0; }
+        if (itemIndex == null) { itemIndex = -1; }
 
         const startingIndex = itemIndex;
         const nbrElementInfos = _menuElementInfos.length;
