@@ -1,7 +1,8 @@
 {
     "name": "bigformmenu",
     "version": "1.3.0",
-    "files": [
-        "dist/*.{css,js,map}"
-    ]
+  "files": [
+    "dist/*.{css,js,map}",
+    "bigformmenu/*.{ts,scss}"
+  ]
 }
