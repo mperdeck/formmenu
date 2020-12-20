@@ -888,7 +888,7 @@ var BigFormMenu;
     function onItemStatePreviousNextButtonClicked(itemStateInfo, increment) {
         var itemIndex = lastFocusedItemIndex();
         if (itemIndex == null) {
-            itemIndex = 0;
+            itemIndex = -1;
         }
         var startingIndex = itemIndex;
         var nbrElementInfos = _menuElementInfos.length;
