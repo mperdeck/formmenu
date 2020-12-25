@@ -1209,7 +1209,6 @@ namespace BigFormMenu {
     function findPreviousNextItem(itemIndex: number, increment: number, itemFoundMethod: (itemIndex: number) => boolean): number {
         if (itemIndex == null) { itemIndex = -1; }
 
-        const startingIndex = itemIndex;
         const nbrElementInfos = _menuElementInfos.length;
         let nbrItemsVisited = 0;
 
@@ -1222,6 +1221,9 @@ namespace BigFormMenu {
             }
 
             if (nbrItemsVisited >= nbrElementInfos) { return null; }
+
+            // Skip items that are not displayed (display: none)
+            if (!elementIsDisplayed(_menuElementInfos[itemIndex].domElement)) { continue; }
 
             if (itemFoundMethod(itemIndex)) {
                 return itemIndex;
@@ -1354,7 +1356,8 @@ namespace BigFormMenu {
     }
 
     function elementIsInputByIndex(itemIndex: number): boolean {
-        return (!elementIsHeader(_menuElementInfos[itemIndex]));
+        let inputElement = getInputElement(_menuElementInfos[itemIndex].domElement);
+        return (inputElement != null);
     }
 
     // Returns true if the given menu item is visible inside the menu box.
