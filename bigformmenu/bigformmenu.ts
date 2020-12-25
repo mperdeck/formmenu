@@ -327,20 +327,14 @@ namespace BigFormMenu {
     function domElementsToMenuElements(domElements: NodeListOf<Element>): MenuElementInfo[] {
         let _menuElementInfos: MenuElementInfo[] = [];
 
-        let includeElement: boolean = !getConfigValue("skipFirstHeading");
-
         let count = domElements.length;
         for (let i = 0; i < count; i++) {
             let value = domElements[i];
 
-            if (includeElement) {
-                let menuElement = domElementToMenuElement(value as HTMLElement);
-                if (menuElement) {
-                    _menuElementInfos.push(menuElement);
-                }
+            let menuElement = domElementToMenuElement(value as HTMLElement);
+            if (menuElement) {
+                _menuElementInfos.push(menuElement);
             }
-
-            includeElement = true;
         }
 
         return _menuElementInfos;
@@ -1729,7 +1723,10 @@ namespace BigFormMenu {
         }
 
         _menuElementInfos = domElementsToMenuElements(allDomElements);
-        setParents(_menuElementInfosRoot, { value:0}, _menuElementInfos);
+
+        let skipFirstHeading: boolean = getConfigValue("skipFirstHeading");
+        let firstIndex = skipFirstHeading ? 1 : 0;
+        setParents(_menuElementInfosRoot, { value: firstIndex }, _menuElementInfos);
 
         // Set _mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
         // setActive may be called while the menu is being created.
