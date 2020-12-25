@@ -235,6 +235,21 @@ Doco at:
         content: "\2212";
     }
 
+    .bigformmenu-previous-heading-box {
+//        display: none;
+
+        &::after {
+            content: "\25C0";
+        }
+    }
+
+    .bigformmenu-next-heading-box {
+        // display: none;
+        &::after {
+            content: "\25B6";
+        }
+    }
+
     .bigformmenu-buttonarea {
         display: flex;
         flex-wrap: wrap;

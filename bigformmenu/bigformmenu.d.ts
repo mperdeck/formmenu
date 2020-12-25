@@ -36,11 +36,15 @@ interface iBigFormMenuConfiguration {
     classMenuHideButton?: string;
     classExpandAllMenuButton?: string;
     classCollapseAllMenuButton?: string;
+    classPreviousHeadingBox?: string;
+    classNextHeadingBox?: string;
 
     titleMenuShowButton?: string;
     titleMenuHideButton?: string;
     titleExpandAllMenuButton?: string;
     titleCollapseAllMenuButton?: string;
+    titlePreviousHeadingBox?: string;
+    titleNextHeadingBox?: string;
 
     // CSS selector used to select the DOM elements that will be represented in the menu
     cssMenuItemSelector?: string;

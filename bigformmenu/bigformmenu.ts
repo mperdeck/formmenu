@@ -30,11 +30,15 @@ namespace BigFormMenu {
         classMenuHideButton: 'bigformmenu-menu-hide',
         classExpandAllMenuButton: 'bigformmenu-expand-all-menu-button',
         classCollapseAllMenuButton: 'bigformmenu-collapse-all-menu-button',
+        classPreviousHeadingBox: 'bigformmenu-previous-heading-box',
+        classNextHeadingBox: 'bigformmenu-next-heading-box',
 
         titleMenuShowButton: 'Show menu',
         titleMenuHideButton: 'Hide menu',
         titleExpandAllMenuButton: 'Expand all',
         titleCollapseAllMenuButton: 'Collapse all',
+        titlePreviousHeadingBox: 'Previous section',
+        titleNextHeadingBox: 'Next section',
         
         // Note that HTML only has these heading tags. There is no h7, etc.
         cssMenuItemSelector: "h1,h2,h3,h4,h5,h6",
@@ -787,6 +791,52 @@ namespace BigFormMenu {
         rebuildMenuList(false);
     }
 
+    function onPreviousSection(e: MouseEvent): void {
+        // If the currently focused element is not already a header,
+        // first find the header above the currently focused element. This is the "current" header.
+
+        let itemIndex = lastFocusedItemIndex();
+        if (itemIndex == null) { return; }
+
+        let indexCurrentHeader = itemIndex;
+        if (!elementIsHeaderByIndex(itemIndex)) {
+            indexCurrentHeader = findPreviousNextItem(itemIndex, -1, elementIsHeaderByIndex);
+        }
+
+        if (indexCurrentHeader == null) { return; }
+
+        // Some sections may not have input elements at all, so first find an input element above the current header, then
+        // find its header, then find the first input element below that header.
+
+        // Find the first input element above the current header.
+        let indexInputBeforeCurrentHeader = findPreviousNextItem(indexCurrentHeader, -1, elementIsInputByIndex);
+        if (indexInputBeforeCurrentHeader == null) { return; }
+
+        // Find the header before the first found input element
+        let indexPreviousHeader = findPreviousNextItem(indexInputBeforeCurrentHeader, -1, elementIsHeaderByIndex);
+        if (indexPreviousHeader == null) { return; }
+
+        // Find the first input box after the previous header and give that the focus
+        focusPreviousNextItemFromIndex(indexPreviousHeader, 1, elementIsInputByIndex);
+    }
+
+    function onNextSection(e: MouseEvent): void {
+
+        let itemIndex = lastFocusedItemIndex();
+        if (itemIndex == null) { return; }
+
+        // Find header after the dom element with the focus
+
+        let indexNextHeader = itemIndex;
+        if (!elementIsHeaderByIndex(itemIndex)) {
+            indexNextHeader = findPreviousNextItem(itemIndex, 1, elementIsHeaderByIndex);
+        }
+
+        // Find the first input box after the next header and give that the focus
+
+        focusPreviousNextItemFromIndex(indexNextHeader, 1, elementIsInputByIndex);
+    }
+
     // Add a filter button to the filter bar (the bit of space left of the filter).
     // cssClassConfigName - name of config item holding css class of the button.
     // onClickHandler - runs when button is clicked.
@@ -858,6 +908,12 @@ namespace BigFormMenu {
 
         addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked,
             'titleCollapseAllMenuButton', filterBar);
+
+        addFilterButton('classPreviousHeadingBox', onPreviousSection,
+            'titlePreviousHeadingBox', filterBar);
+
+        addFilterButton('classNextHeadingBox', onNextSection,
+            'titleNextHeadingBox', filterBar);
 
         // Create the buttons area very early on, in case processing of the item state infos
         // or the rebuilding of the menu itself
@@ -1145,12 +1201,17 @@ namespace BigFormMenu {
         rebuildMenuList(true);
     }
 
-    function onItemStatePreviousNextButtonClicked(itemStateInfo: iItemStateInfo, increment: number): void {
-        let itemIndex = lastFocusedItemIndex();
+    // Starting at the item that has the focus, searches for the previous or next item of interest
+    // and returns the index of that item. If not item of interest is found, returns null
+    //
+    // increment - 1 to go forward, -1 to go backward. Will wrap.
+    // itemFoundMethod - takes an index into the _menuElementInfos. Returns true if that item is the item of interest.
+    function findPreviousNextItem(itemIndex: number, increment: number, itemFoundMethod: (itemIndex: number) => boolean): number {
         if (itemIndex == null) { itemIndex = -1; }
 
         const startingIndex = itemIndex;
         const nbrElementInfos = _menuElementInfos.length;
+        let nbrItemsVisited = 0;
 
         do {
             itemIndex += increment;
@@ -1160,13 +1221,36 @@ namespace BigFormMenu {
                 itemIndex = 0;
             }
 
-            if (itemIndex == startingIndex) { return; }
+            if (nbrItemsVisited >= nbrElementInfos) { return null; }
 
-            if (_menuElementInfos[itemIndex].itemStates.indexOf(itemStateInfo) != -1) {
-                setFocused(_menuElementInfos[itemIndex]);
-                return;
+            if (itemFoundMethod(itemIndex)) {
+                return itemIndex;
             }
+
+            nbrItemsVisited++;
         } while (true);
+    }
+
+    // Starting at the item that has the focus, searches for the previous or next item of interest
+    // and sets the focus on that item. If not item of interest is found, does nothing.
+    //
+    // increment - 1 to go forward, -1 to go backward. Will wrap.
+    // itemFoundMethod - takes an index into the _menuElementInfos. Returns true if that item is the item of interest.
+    function focusPreviousNextItem(increment: number, itemFoundMethod: (itemIndex: number)=>boolean): void {
+        let itemIndex = lastFocusedItemIndex();
+        focusPreviousNextItemFromIndex(itemIndex, increment, itemFoundMethod);
+    }
+
+    function focusPreviousNextItemFromIndex(itemIndex: number, increment: number, itemFoundMethod: (itemIndex: number) => boolean): void {
+        let foundIndex = findPreviousNextItem(itemIndex, increment, itemFoundMethod);
+
+        if (foundIndex != null) {
+            setFocused(_menuElementInfos[foundIndex]);
+        }
+    }
+
+    function onItemStatePreviousNextButtonClicked(itemStateInfo: iItemStateInfo, increment: number): void {
+        focusPreviousNextItem(increment, function (itemIndex: number) { return (_menuElementInfos[itemIndex].itemStates.indexOf(itemStateInfo) != -1); })
     } 
 
     function processItemStateInfo(itemStateInfo: iItemStateInfo, filterBar: HTMLElement, 
@@ -1263,6 +1347,14 @@ namespace BigFormMenu {
 
     function elementIsHeader(menuElementInfo: MenuElementInfo): boolean {
         return (menuElementInfo.level < _levelNonHeadingMenuItem);
+    }
+
+    function elementIsHeaderByIndex(itemIndex: number): boolean {
+        return (elementIsHeader(_menuElementInfos[itemIndex]));
+    }
+
+    function elementIsInputByIndex(itemIndex: number): boolean {
+        return (!elementIsHeader(_menuElementInfos[itemIndex]));
     }
 
     // Returns true if the given menu item is visible inside the menu box.
