@@ -790,7 +790,7 @@ namespace BigFormMenu {
         // first find the header above the currently focused element. This is the "current" header.
 
         let itemIndex = lastFocusedItemIndex();
-        if (itemIndex == null) { return; }
+        if (itemIndex == null) { itemIndex = 0; }
 
         let indexCurrentHeader = itemIndex;
         if (!elementIsHeaderByIndex(itemIndex)) {
@@ -817,7 +817,7 @@ namespace BigFormMenu {
     function onNextSection(e: MouseEvent): void {
 
         let itemIndex = lastFocusedItemIndex();
-        if (itemIndex == null) { return; }
+        if (itemIndex == null) { itemIndex = 0; }
 
         // Find header after the dom element with the focus
 
