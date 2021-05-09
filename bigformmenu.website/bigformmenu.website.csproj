@@ -6,7 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Examples\" />
+    <None Remove="Examples\index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Examples\index.cshtml" />
   </ItemGroup>
 
 </Project>
