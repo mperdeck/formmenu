@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "../_ExampleLayout.cshtml";
+}
+
+@RenderBody()
+
+@section css {
+    @RenderSection("css", required: false)
+}
+
+@section js {
+    @RenderSection("js", required: false)
+}
