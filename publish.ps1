@@ -71,23 +71,13 @@ function Generate-NpmPackage($publishing, $version)
 	Copy-Item "$PSScriptRoot\bigformmenu\bigformmenu.scss" "$tempDir\bigformmenu.scss.template"
 	Copy-Item "$PSScriptRoot\bigformmenu\bigformmenu.ts" "$tempDir\bigformmenu.ts.template"
 	ProcessTemplates $tempDir $version
+	Copy-Item "$PSScriptRoot\bigformmenu\bigformmenu.d.ts" "$tempDir\bigformmenu.d.ts"
 	Copy-Item "$PSScriptRoot\bigformmenu\tsconfig.json" "$tempDir\tsconfig.json"
-
-	cd $tempDir
-	InvokeCommand "build bigformmenu.ts" "tsc"
 
 	RemoveDirectory "$PSScriptRoot\dist"
 	EnsureDirectory "$PSScriptRoot\dist"
-	Copy-Item .\bigformmenu.js $PSScriptRoot\dist\bigformmenu.js
-	Copy-Item .\bigformmenu.js.map $PSScriptRoot\dist\bigformmenu.js.map
-	InvokeCommand "compile .scss files" "node-sass $tempDir\bigformmenu.scss -out-file $PSScriptRoot\dist\bigformmenu.css --source-map $PSScriptRoot\dist\bigformmenu.css.map --output-style compressed"
-
-
-
-		InvokeCommand "build bigformmenu.ts" "tsc $tempDir\bigformmenu.ts --project $tempDir\tsconfig.json --outDir $PSScriptRoot\dist"
-
-
-
+	InvokeCommand "build bigformmenu.ts" "tsc --project $tempDir\tsconfig.json --outDir $PSScriptRoot\dist"
+	InvokeCommand "compile bigformmenu.scss" "node-sass $tempDir\bigformmenu.scss -out-file $PSScriptRoot\dist\bigformmenu.min.css --source-map $PSScriptRoot\dist\bigformmenu.css.map --output-style compressed"
 
 	RemoveDirectory $tempDir
 
@@ -97,7 +87,7 @@ function Generate-NpmPackage($publishing, $version)
 	# https://github.com/google/closure-compiler
 	# documentation at
 	# https://developers.google.com/closure/compiler/docs/gettingstarted_app
-	InvokeCommand "minimize bigformmenu.js" "java.exe -jar `"C:\Utils\closure-compiler-v20170423.jar`" --js bigformmenu.js --js_output_file=bigformmenu.min.js.template --create_source_map bigformmenu.js.map"
+	InvokeCommand "minimize bigformmenu.js" "java.exe -jar `"C:\Utils\closure-compiler-v20170423.jar`" --js bigformmenu.js --js_output_file=bigformmenu.min.js --create_source_map bigformmenu.js.map"
 
 	cd "$PSScriptRoot"
 }
