@@ -3,6 +3,7 @@
 /*!
  * Copyright (c) 2016-__YEAR__ Mattijs Perdeck | License: MIT
  * Version: __Version__
+ * NPM: https://www.npmjs.com/package/bigformmenu
  * Source Code: https://github.com/mperdeck/bigformmenu
  * Documentation: https://bigformmenu.com
 */
