@@ -49,7 +49,7 @@ Function GetAndUpdatePackageVersion([string] $packageJsonPath, [bool] $bumpPatch
 	return $version
 }
 
-$packageJsonPath = "$PSScriptRoot\..\package.json"
+$packageJsonPath = "$PSScriptRoot\package.json"
 $bumpPatch = (-not $BumpMinor) -and $Publish
 $bumpMinor = $BumpMinor -and $Publish
 
