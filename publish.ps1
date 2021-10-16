@@ -73,10 +73,21 @@ function Generate-NpmPackage($publishing, $version)
 	ProcessTemplates $tempDir $version
 	Copy-Item "$PSScriptRoot\bigformmenu\tsconfig.json" "$tempDir\tsconfig.json"
 
+	cd $tempDir
+	InvokeCommand "build bigformmenu.ts" "tsc"
+
 	RemoveDirectory "$PSScriptRoot\dist"
 	EnsureDirectory "$PSScriptRoot\dist"
-	InvokeCommand "build bigformmenu.ts" "tsc $tempDir\bigformmenu.ts --project $tempDir\tsconfig.json --outDir $PSScriptRoot\dist"
-	InvokeCommand "compile .scss files" "node-sass $tempDir\bigformmenu.scss -out-file $PSScriptRoot\dist\bigformmenu.css --source-map $PSScriptRoot\dist\bigformmenu.map --output-style compressed"
+	Copy-Item .\bigformmenu.js $PSScriptRoot\dist\bigformmenu.js
+	Copy-Item .\bigformmenu.js.map $PSScriptRoot\dist\bigformmenu.js.map
+	InvokeCommand "compile .scss files" "node-sass $tempDir\bigformmenu.scss -out-file $PSScriptRoot\dist\bigformmenu.css --source-map $PSScriptRoot\dist\bigformmenu.css.map --output-style compressed"
+
+
+
+		InvokeCommand "build bigformmenu.ts" "tsc $tempDir\bigformmenu.ts --project $tempDir\tsconfig.json --outDir $PSScriptRoot\dist"
+
+
+
 
 	RemoveDirectory $tempDir
 
