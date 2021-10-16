@@ -1,7 +1,16 @@
 ﻿[CmdletBinding()]
 Param(
-  [Parameter(Mandatory=$False, HelpMessage="If used, increases the minor version instead of the patch version")]
+  [Parameter(Mandatory=$False, HelpMessage="Only applies when bigformmenu npm package is published. If used, increases the minor version instead of the patch version")]
   [switch]$BumpMinor,
+
+  [Parameter(Mandatory=$False, HelpMessage="Generates everything, including JSNLog and website.")]
+  [switch]$GenerateEverything,
+
+  [Parameter(Mandatory=$False, HelpMessage="Generates the npm package.")]
+  [switch]$GenerateNpmPackage,
+
+  [Parameter(Mandatory=$False, HelpMessage="Only goes through templated files to update __Version__.")]
+  [switch]$UpdateVersions,
 
   [Parameter(Mandatory=$False, HelpMessage="Publishes those components that will be generated")]
   [switch]$Publish
@@ -49,17 +58,25 @@ Function GetAndUpdatePackageVersion([string] $packageJsonPath, [bool] $bumpPatch
 	return $version
 }
 
+function Generate-NpmPackage($publishing, $version)
+{
+}
+
 $packageJsonPath = "$PSScriptRoot\package.json"
-$bumpPatch = (-not $BumpMinor) -and $Publish
-$bumpMinor = $BumpMinor -and $Publish
+$bumpPackageVersion = $Publish -and ($GenerateNpmPackage -or $GenerateEverything)
+
+$bumpPatch = (-not $BumpMinor) -and $bumpPackageVersion
+$bumpMinor = $BumpMinor -and $bumpPackageVersion
 
 $version = GetAndUpdatePackageVersion $packageJsonPath $bumpPatch $bumpMinor
 
-Log '--------------------------------------------------------------'
-if ($Publish) 
-{
-	Log "Publishing"
-}
-Log "Version: $version"
-Log '--------------------------------------------------------------'
 
+if ($GenerateNpmPackage -or $GenerateEverything -or $UpdateVersions)
+{
+	ProcessTemplates $version
+}
+
+if ($GenerateNpmPackage -or $GenerateEverything) 
+{
+	Generate-NpmPackage $Publish $version
+}
