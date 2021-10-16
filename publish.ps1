@@ -16,17 +16,8 @@ Param(
   [switch]$Publish
 )
 
-."..\..\keys.ps1"
+."..\JSNLog\jsnlog.SimpleWorkingDemoGenerator\Generator\Common\Helpers.ps1"
 
-Function Log([string] $message)
-{
-	Write-Host $message
-}
-
-Function LogHeading([string] $message)
-{
-	Write-Host -ForegroundColor Yellow $message
-}
 
 Function GetAndUpdatePackageVersion([string] $packageJsonPath, [bool] $bumpPatch, [bool] $bumpMinor)
 {
@@ -58,10 +49,6 @@ Function GetAndUpdatePackageVersion([string] $packageJsonPath, [bool] $bumpPatch
 	return $version
 }
 
-function Generate-NpmPackage($publishing, $version)
-{
-}
-
 $packageJsonPath = "$PSScriptRoot\package.json"
 $bumpPackageVersion = $Publish -and ($GenerateNpmPackage -or $GenerateEverything)
 
@@ -71,12 +58,38 @@ $bumpMinor = $BumpMinor -and $bumpPackageVersion
 $version = GetAndUpdatePackageVersion $packageJsonPath $bumpPatch $bumpMinor
 
 
-if ($GenerateNpmPackage -or $GenerateEverything -or $UpdateVersions)
+function Generate-NpmPackage($publishing, $version)
 {
-	ProcessTemplates $version
+	Write-ActionHeading "Generate NPM Package" $publishing $version
+
+	RemoveDirectory "$PSScriptRoot\dist"
+
+	InvokeCommand "build bigformmenu.ts" "tsc --project bigformmenu\tsconfig.json"
+	InvokeCommand "compile .scss files" "node-sass bigformmenu -o dist --source-map true --output-style compressed"
+
+	cd "$PSScriptRoot\dist"
+
+	# You can find the google closure compiler at
+	# https://github.com/google/closure-compiler
+	# documentation at
+	# https://developers.google.com/closure/compiler/docs/gettingstarted_app
+	InvokeCommand "minimize bigformmenu.js" "java.exe -jar `"C:\Utils\closure-compiler-v20170423.jar`" --js bigformmenu.js --js_output_file=bigformmenu.min.js.template --create_source_map bigformmenu.js.map"
+
+	cd "$PSScriptRoot"
 }
 
 if ($GenerateNpmPackage -or $GenerateEverything) 
 {
 	Generate-NpmPackage $Publish $version
 }
+
+# Process templates after bigformmenu.ts and scss have been processed,
+# because they will have generated .template files with __Version__ etc.
+if ($GenerateNpmPackage -or $GenerateEverything -or $UpdateVersions)
+{
+	ProcessTemplates $version
+}
+
+
+
+
