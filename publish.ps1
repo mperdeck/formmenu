@@ -98,6 +98,8 @@ function Generate-NpmPackage($publishing, $version)
 
 		$repoUrl = 'git@github.com:mperdeck/bigformmenu.git'
 
+		InvokeCommand "git add README.md" "git add README.md"
+		InvokeCommand "git add LICENSE.md" "git add LICENSE.md"
 		InvokeCommand "git add package.json" "git add package.json"
 		InvokeCommand "git commit -m `"$version`"" "git commit -m `"$version`""
 		InvokeCommand "git push" "git push $repoUrl"
