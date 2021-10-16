@@ -94,15 +94,15 @@ function Generate-NpmPackage($publishing, $version)
 	
 	if ($publishing) 
 	{ 
-		InvokeCommand "npm publish" "npm publish"
+	#	InvokeCommand "npm publish" "npm publish"
 
 		$repoUrl = 'git@github.com:mperdeck/bigformmenu.git'
 
 		InvokeCommand "git add package.json" "git add package.json"
 		InvokeCommand "git commit -m `"$version`"" "git commit -m `"$version`""
-		InvokeCommand "git push" "git push $repoUrl"
+	#	InvokeCommand "git push" "git push $repoUrl"
 
-		TagPush "$version" $repoUrl
+	#	TagPush "$version" $repoUrl
 	}
 }
 
