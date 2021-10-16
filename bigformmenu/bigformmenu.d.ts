@@ -1,4 +1,8 @@
 interface iBigFormMenuConfiguration {
+
+    // If false, the menu will be loaded after the page has loaded (the "load" event has fired). If true, the menu will not be loaded.
+    suppressLoadOnPageLoad?: boolean;
+
     skipFirstHeading?: boolean;
 
     // Items with level equal or lower than this will be open initially. -1 to open everything. 0 to open nothing.
