@@ -31,12 +31,13 @@ Function GetAndUpdatePackageVersion([string] $packageJsonPath, [bool] $bumpPatch
 
 		if ($bumpPatch)
 		{
-			 $versionComponents[2] = [int]::Parse($versionComponents[2]) + 1
+			$versionComponents[2] = [int]::Parse($versionComponents[2]) + 1
 		}
 
 		if ($bumpMinor)
 		{
-			 $versionComponents[1] = [int]::Parse($versionComponents[1]) + 1
+			$versionComponents[1] = [int]::Parse($versionComponents[1]) + 1
+			$versionComponents[2] = '0'
 		}
 
 		$version = $versionComponents[0] + '.' + $versionComponents[1] + '.' + $versionComponents[2]
