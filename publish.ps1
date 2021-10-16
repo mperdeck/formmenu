@@ -90,6 +90,19 @@ function Generate-NpmPackage($publishing, $version)
 	InvokeCommand "minimize bigformmenu.js" "java.exe -jar `"C:\Utils\closure-compiler-v20170423.jar`" --js bigformmenu.js --js_output_file=bigformmenu.min.js --create_source_map bigformmenu.js.map"
 
 	cd "$PSScriptRoot"
+	
+	if ($publishing) 
+	{ 
+		InvokeCommand "npm publish" "npm publish"
+
+		$repoUrl = 'git@github.com:mperdeck/bigformmenu.git'
+
+		InvokeCommand "git add package.json" "git add package.json"
+		InvokeCommand "git commit -m `"$version`"" "git commit -m `"$version`""
+		InvokeCommand "git push" "git push $repoUrl"
+
+		TagPush "$version" $repoUrl
+	}
 }
 
 if ($GenerateNpmPackage -or $GenerateEverything -or $UpdateVersions)
