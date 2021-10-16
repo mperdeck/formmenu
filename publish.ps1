@@ -62,10 +62,23 @@ function Generate-NpmPackage($publishing, $version)
 {
 	Write-ActionHeading "Generate NPM Package" $publishing $version
 
-	RemoveDirectory "$PSScriptRoot\dist"
+	$tempDir = NewTempDir
 
-	InvokeCommand "build bigformmenu.ts" "tsc --project bigformmenu\tsconfig.json"
-	InvokeCommand "compile .scss files" "node-sass bigformmenu -o dist --source-map true --output-style compressed"
+	# The bigformmenu.scss and .ts files contain copyright headers with place holders. 
+	# Copy them to a temp dir and have those place holders replaced there.
+	# Then compile the resulting files.
+
+	Copy-Item "$PSScriptRoot\bigformmenu\bigformmenu.scss" "$tempDir\bigformmenu.scss.template"
+	Copy-Item "$PSScriptRoot\bigformmenu\bigformmenu.ts" "$tempDir\bigformmenu.ts.template"
+	ProcessTemplates $tempDir $version
+	Copy-Item "$PSScriptRoot\bigformmenu\tsconfig.json" "$tempDir\tsconfig.json"
+
+	RemoveDirectory "$PSScriptRoot\dist"
+	EnsureDirectory "$PSScriptRoot\dist"
+	InvokeCommand "build bigformmenu.ts" "tsc $tempDir\bigformmenu.ts --project $tempDir\tsconfig.json --outDir $PSScriptRoot\dist"
+	InvokeCommand "compile .scss files" "node-sass $tempDir\bigformmenu.scss -out-file $PSScriptRoot\dist\bigformmenu.css --source-map $PSScriptRoot\dist\bigformmenu.map --output-style compressed"
+
+	RemoveDirectory $tempDir
 
 	cd "$PSScriptRoot\dist"
 
@@ -78,16 +91,14 @@ function Generate-NpmPackage($publishing, $version)
 	cd "$PSScriptRoot"
 }
 
+if ($GenerateNpmPackage -or $GenerateEverything -or $UpdateVersions)
+{
+	ProcessTemplates "." $version
+}
+
 if ($GenerateNpmPackage -or $GenerateEverything) 
 {
 	Generate-NpmPackage $Publish $version
-}
-
-# Process templates after bigformmenu.ts and scss have been processed,
-# because they will have generated .template files with __Version__ etc.
-if ($GenerateNpmPackage -or $GenerateEverything -or $UpdateVersions)
-{
-	ProcessTemplates $version
 }
 
 
