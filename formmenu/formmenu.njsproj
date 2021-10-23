@@ -33,13 +33,13 @@
     <Content Include="compilerconfig.json" />
     <Content Include="compilerconfig.json.defaults" />
     <Content Include="examples\formmenu.optionsnippets.scss" />
-    <Content Include="examples\html5form.bigformmenu.scss" />
+    <Content Include="examples\html5form.formmenu.scss" />
     <Content Include="formmenu.scss" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="examples\buttonstest.bigformmenu.config.ts" />
-    <TypeScriptCompile Include="examples\html5form.bigformmenu.config.ts" />
+    <TypeScriptCompile Include="examples\buttonstest.formmenu.config.ts" />
+    <TypeScriptCompile Include="examples\html5form.formmenu.config.ts" />
     <TypeScriptCompile Include="formmenu.d.ts" />
     <TypeScriptCompile Include="formmenu.ts" />
   </ItemGroup>
