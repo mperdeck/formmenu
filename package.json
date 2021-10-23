@@ -3,6 +3,6 @@
   "version": "1.4.1",
   "files": [
     "dist/*.{css,js,map}",
-    "bigformmenu/*.{ts,scss}"
+    "formmenu/*.{ts,scss}"
   ]
 }

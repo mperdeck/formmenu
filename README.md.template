@@ -1,11 +1,11 @@
-# bigformmenu
+# formmenu
 
 * Copyright (c) 2016-__YEAR__ Mattijs Perdeck | License: MIT
 * Version: __Version__
-* NPM: https://www.npmjs.com/package/bigformmenu
-* Source Code: https://github.com/mperdeck/bigformmenu
-* Documentation: https://bigformmenu.com
+* NPM: https://www.npmjs.com/package/formmenu
+* Source Code: https://github.com/mperdeck/formmenu
+* Documentation: https://formmenu.com
 
-https://cdn.jsdelivr.net/npm/bigformmenu@__Version__/dist/bigformmenu.min.js
-https://cdn.jsdelivr.net/npm/bigformmenu@__Version__/dist/bigformmenu.min.css
+https://cdn.jsdelivr.net/npm/formmenu@__Version__/dist/formmenu.min.js
+https://cdn.jsdelivr.net/npm/formmenu@__Version__/dist/formmenu.min.css
 

@@ -6,12 +6,12 @@
 // The below example sets this to 1200px.
 */
 
-.bigformmenu {
+.formmenu {
     display: none;
 }
 
 @media screen and (min-width: 1200px) {
-    .bigformmenu {
+    .formmenu {
         display: flex;
     }
 }
@@ -33,11 +33,11 @@
 // between bottom of menu and bottom of window).
 */
 
-.bigformmenu {
+.formmenu {
     bottom: 10px;
     max-height: 100%;
 
-    .bigformmenu-vertical-resizer {
+    .formmenu-vertical-resizer {
         display: block;
     }
 }
@@ -48,8 +48,8 @@
 // The user will no longer be able to change the width of the menu.
 */
 
-.bigformmenu {
-    .bigformmenu-left-horizontal-resizer { 
+.formmenu {
+    .formmenu-left-horizontal-resizer { 
         display: none; 
     }
 }
@@ -64,25 +64,25 @@
 // 4) sticks the menu to the left of the screen instead of the right.
 */
 
-.bigformmenu {
-    .bigformmenu-left-horizontal-resizer {
+.formmenu {
+    .formmenu-left-horizontal-resizer {
         display: none;
     }
 
-    .bigformmenu-right-horizontal-resizer {
+    .formmenu-right-horizontal-resizer {
         display: block;
     }
 
-    .bigformmenu-menu-show::after {
+    .formmenu-menu-show::after {
         content: "\25B6";
     }
 
-    .bigformmenu-menu-hide::after {
+    .formmenu-menu-hide::after {
         content: "\25C0";
     }
 
-    &.bigformmenu-hidden {
-        .bigformmenu-open-button-bar {
+    &.formmenu-hidden {
+        .formmenu-open-button-bar {
             button {
                 float: left;
             }
@@ -102,7 +102,7 @@
 // If you did not add filter buttons, no need to do anything.
 */
 
-.bigformmenu .bigformmenu-filter-bar button.bigformmenu-filter-button-depressed {
+.formmenu .formmenu-filter-bar button.formmenu-filter-button-depressed {
     box-shadow: 4px 4px 4px #888888;
 }
 
@@ -113,30 +113,30 @@
     Show prev/next buttons instead of filter buttons
 */
 
-.bigformmenu {
+.formmenu {
     width: 270px;
 
-    .bigformmenu-invalid-filter-button {
+    .formmenu-invalid-filter-button {
         display: none;
     }
 
-    .bigformmenu-invalid-next-button {
+    .formmenu-invalid-next-button {
         display: inline-block;
     }
 
-    .bigformmenu-invalid-previous-button {
+    .formmenu-invalid-previous-button {
         display: inline-block;
     }
 
-    .bigformmenu-required-filter-button {
+    .formmenu-required-filter-button {
         display: none;
     }
 
-    .bigformmenu-required-next-button {
+    .formmenu-required-next-button {
         display: inline-block;
     }
 
-    .bigformmenu-required-previous-button {
+    .formmenu-required-previous-button {
         display: inline-block;
     }
 }
@@ -150,7 +150,7 @@
     Combine this with the option to show prev/next buttons instead of filter buttons.
     */
 
-.bigformmenu {
+.formmenu {
     width: auto;
     bottom: 0;
     left: 0;
@@ -160,28 +160,28 @@
     justify-content: center;
     z-index: 500;
     // Applies to both the filter buttons and the "show menu" button
-    .bigformmenu-filter-button {
+    .formmenu-filter-button {
         margin: 7px 3px 5px 3px;
         height: 30px;
     }
 
-    .bigformmenu-filter-bar {
-        .bigformmenu-expand-all-menu-button, .bigformmenu-collapse-all-menu-button {
+    .formmenu-filter-bar {
+        .formmenu-expand-all-menu-button, .formmenu-collapse-all-menu-button {
             display: none;
         }
 
-        .bigformmenu-filter {
+        .formmenu-filter {
             height: 30px;
             width: 70px;
         }
 
-        .bigformmenu-menu-hide::after {
+        .formmenu-menu-hide::after {
             content: "\25BC";
         }
     }
 
-    .bigformmenu-open-button-bar {
-        .bigformmenu-menu-show {
+    .formmenu-open-button-bar {
+        .formmenu-menu-show {
             position: fixed;
             right: 0;
             bottom: 0;
@@ -192,11 +192,11 @@
         }
     }
 
-    ul.bigformmenu-top-menuitems {
+    ul.formmenu-top-menuitems {
         display: none;
     }
 
-    .bigformmenu-filter-bar, .bigformmenu-buttonarea {
+    .formmenu-filter-bar, .formmenu-buttonarea {
         display: inline-block;
         flex-wrap: nowrap;
     }
@@ -204,20 +204,20 @@
     // If that is the case, the button bar will disappear when the form is scrolled to the bottom.
     // If that didn't happen, you could never see the very bottom of the page, because the last 50px
     // would have been obscured by the button bar.
-    &.bigformmenu-all-buttons-visible, &.bigformmenu-scrolled-to-menu-height {
+    &.formmenu-all-buttons-visible, &.formmenu-scrolled-to-menu-height {
         animation-duration: 1.5s;
-        animation-name: bigformmenu-all-buttons-visible-animation;
+        animation-name: formmenu-all-buttons-visible-animation;
         opacity: 0;
     }
 
-    &:not(.bigformmenu-all-buttons-visible):not(.bigformmenu-scrolled-to-menu-height) {
+    &:not(.formmenu-all-buttons-visible):not(.formmenu-scrolled-to-menu-height) {
         animation-duration: 1.5s;
-        animation-name: bigformmenu-all-buttons-visible-animation-not;
+        animation-name: formmenu-all-buttons-visible-animation-not;
         opacity: 1;
     }
 }
 
-@keyframes bigformmenu-all-buttons-visible-animation {
+@keyframes formmenu-all-buttons-visible-animation {
     from {
         opacity: 1;
     }
@@ -227,7 +227,7 @@
     }
 }
 
-@keyframes bigformmenu-all-buttons-visible-animation-not {
+@keyframes formmenu-all-buttons-visible-animation-not {
     from {
         opacity: 0;
     }

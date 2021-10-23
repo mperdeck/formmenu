@@ -1,12 +1,12 @@
 /*!
  * Copyright (c) 2016-__YEAR__ Mattijs Perdeck | License: MIT
  * Version: __Version__
- * NPM: https://www.npmjs.com/package/bigformmenu
- * Source Code: https://github.com/mperdeck/bigformmenu
- * Documentation: https://bigformmenu.com
+ * NPM: https://www.npmjs.com/package/formmenu
+ * Source Code: https://github.com/mperdeck/formmenu
+ * Documentation: https://formmenu.com
 */
 
-.bigformmenu {
+.formmenu {
     position: fixed;
     // Initial size and width of the menu
     // Note that if the screen height becomes less then the height of the menu, any height property will be removed
@@ -25,7 +25,7 @@
         list-style-type: none;
         margin-left: -25px;
     }
-    // Only applies to very first ul. Place this after the .bigformmenu ul, so it overrides
+    // Only applies to very first ul. Place this after the .formmenu ul, so it overrides
     // the margin-left.
     // Note that the overflow-y scroll is on this ul, so the filter box doesn't scroll.
     // Otherwise it could scroll up and out of sight.
@@ -50,7 +50,7 @@
         }
     }
 
-    &.bigformmenu-ie > ul {
+    &.formmenu-ie > ul {
         // IE11 will not produce vertical scrollbars in the ul showing the actual menu items
         // unless that ul has a specific height.
         //TODO: in the JavaScript, dynamically adjust this when the window resizes.
@@ -66,7 +66,7 @@
         opacity: 0.5;
     }
 
-    .bigformmenu-vertical-resizer {
+    .formmenu-vertical-resizer {
         left: 0;
         right: 0;
         bottom: 0;
@@ -75,36 +75,36 @@
         display: none;
     }
 
-    .bigformmenu-left-horizontal-resizer {
+    .formmenu-left-horizontal-resizer {
         left: 0;
     }
 
-    .bigformmenu-right-horizontal-resizer {
+    .formmenu-right-horizontal-resizer {
         right: 0;
         display: none;
     }
 
-    .bigformmenu-right-horizontal-resizer, .bigformmenu-left-horizontal-resizer {
+    .formmenu-right-horizontal-resizer, .formmenu-left-horizontal-resizer {
         top: 0;
         bottom: 0;
         width: 5px;
         cursor: e-resize;
     }
 
-    .bigformmenu-right-horizontal-resizer, .bigformmenu-left-horizontal-resizer, .bigformmenu-vertical-resizer {
+    .formmenu-right-horizontal-resizer, .formmenu-left-horizontal-resizer, .formmenu-vertical-resizer {
         position: absolute;
         z-index: 1000;
     }
     // Applies to both the filter buttons and the "show menu" button
-    .bigformmenu-filter-button {
+    .formmenu-filter-button {
         margin: 2px;
     }
 
-    .bigformmenu-filter-bar {
+    .formmenu-filter-bar {
         display: flex;
         flex-wrap: wrap;
 
-        .bigformmenu-filter {
+        .formmenu-filter {
             display: inline-block;
             width: 40px;
             flex-grow: 1;
@@ -115,41 +115,41 @@
     }
     // ******************************************************
     // Form menu item
-    .bigformmenu-item {
+    .formmenu-item {
         white-space: nowrap;
         cursor: pointer;
     }
     // ******************************************************
     // Form menu expand / collapse
-    // Give bigformmenu-expand a width, so menu item captions align nicely even if one has an open/close
+    // Give formmenu-expand a width, so menu item captions align nicely even if one has an open/close
     // and the other doesn't.
-    .bigformmenu-expand {
+    .formmenu-expand {
         display: inline-block;
         width: 10px;
         white-space: nowrap;
     }
 
-    .bigformmenu-expand, .bigformmenu-caption {
+    .formmenu-expand, .formmenu-caption {
         color: black;
         text-decoration: none;
     }
 
-    .bigformmenu-caption {
+    .formmenu-caption {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: clip;
     }
 
-    .bigformmenu-has-caption {
-        .bigformmenu-caption {
+    .formmenu-has-caption {
+        .formmenu-caption {
             font-weight: bold;
         }
     }
-    // Make sure there is a character in bigformmenu-expand even if you do not want to show an open/close,
+    // Make sure there is a character in formmenu-expand even if you do not want to show an open/close,
     // otherwise it won't be given the width.
     // Cannot use &nbps; in content, because then the browser just shows "nbsp". Instead, use \00a0.
     // See https://stackoverflow.com/questions/2965229/nbsp-not-working-in-css-content-tag
-    .bigformmenu-expand {
+    .formmenu-expand {
         pointer-events: none;
 
         &::after {
@@ -157,9 +157,9 @@
         }
     }
 
-    .bigformmenu-has-children {
+    .formmenu-has-children {
 
-        .bigformmenu-expand {
+        .formmenu-expand {
             pointer-events: auto;
 
             &::after {
@@ -171,8 +171,8 @@
             display: none;
         }
 
-        &.bigformmenu-item-open {
-            .bigformmenu-expand::after {
+        &.formmenu-item-open {
+            .formmenu-expand::after {
                 content: "\2212";
             }
 
@@ -183,24 +183,24 @@
     }
     // ******************************************************
     // Visible
-    .bigformmenu-is-visible .bigformmenu-caption {
+    .formmenu-is-visible .formmenu-caption {
         background-color: #c6ffb3; /* light green */
     }
     // ******************************************************
     // Form menu hide/show
-    .bigformmenu-open-button-bar {
+    .formmenu-open-button-bar {
         display: none;
     }
 
-    &.bigformmenu-hidden {
-        .bigformmenu-filter-bar, ul, .bigformmenu-buttonarea {
+    &.formmenu-hidden {
+        .formmenu-filter-bar, ul, .formmenu-buttonarea {
             display: none;
         }
 
         background-color: transparent;
         border: none;
 
-        .bigformmenu-open-button-bar {
+        .formmenu-open-button-bar {
             display: block;
 
             button {
@@ -209,35 +209,35 @@
         }
     }
 
-    .bigformmenu-menu-hide::after {
+    .formmenu-menu-hide::after {
         content: "\25B6";
     }
 
-    .bigformmenu-menu-show::after {
+    .formmenu-menu-show::after {
         content: "\25C0";
     }
     // ******************************************************
     // Filter
-    .bigformmenu-matching-filter-text {
+    .formmenu-matching-filter-text {
         background-color: yellow;
     }
 
-    .bigformmenu-is-textmatch {
+    .formmenu-is-textmatch {
     }
 
-    button.bigformmenu-filter-button-depressed {
+    button.formmenu-filter-button-depressed {
         border: 2px black solid;
     }
 
-    .bigformmenu-expand-all-menu-button::after {
+    .formmenu-expand-all-menu-button::after {
         content: "+";
     }
 
-    .bigformmenu-collapse-all-menu-button::after {
+    .formmenu-collapse-all-menu-button::after {
         content: "\2212";
     }
 
-    .bigformmenu-previous-heading-box {
+    .formmenu-previous-heading-box {
 //        display: none;
 
         &::after {
@@ -245,14 +245,14 @@
         }
     }
 
-    .bigformmenu-next-heading-box {
+    .formmenu-next-heading-box {
         // display: none;
         &::after {
             content: "\25B6";
         }
     }
 
-    .bigformmenu-buttonarea {
+    .formmenu-buttonarea {
         display: flex;
         flex-wrap: wrap;
 
@@ -266,23 +266,23 @@
 
 /* Ensure menu does not appear on printouts, etc. */
 @media not screen {
-    .bigformmenu {
+    .formmenu {
         display: none;
     }
 }
 
 /* Generates expanding circle around an item in the form itself when user clicks corresponding menu item. */
-.bigformmenu-highlighted-dom-item {
+.formmenu-highlighted-dom-item {
     position: relative;
 }
 
-.bigformmenu-matching-filter-dom-element {
+.formmenu-matching-filter-dom-element {
     background-color: #c6ffb3; /* light green */
 }
 
-.bigformmenu-highlighted-dom-item:before {
+.formmenu-highlighted-dom-item:before {
     animation-duration: 1.5s;
-    animation-name: bigformmenu-highlighted-dom-item-animation;
+    animation-name: formmenu-highlighted-dom-item-animation;
     animation-iteration-count: 1;
     content: "\00a0";
     background-color: transparent;
@@ -292,7 +292,7 @@
     position: absolute;
 }
 
-@keyframes bigformmenu-highlighted-dom-item-animation {
+@keyframes formmenu-highlighted-dom-item-animation {
     from {
         padding: 0;
         left: 0;

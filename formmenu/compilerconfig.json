@@ -1,7 +1,7 @@
 ﻿[
   {
-    "outputFile": "../dist/bigformmenu.css",
-    "inputFile": "bigformmenu.scss",
+    "outputFile": "../dist/formmenu.css",
+    "inputFile": "formmenu.scss",
     "includeInProject": false
   },
   {
@@ -10,8 +10,8 @@
     "includeInProject": false
   },
   {
-    "outputFile": "../dist/examples/html5form.bigformmenu.css",
-    "inputFile": "examples/html5form.bigformmenu.scss",
+    "outputFile": "../dist/examples/html5form.formmenu.css",
+    "inputFile": "examples/html5form.formmenu.scss",
     "includeInProject": false
   }
 ]

@@ -1,6 +1,6 @@
 ﻿[CmdletBinding()]
 Param(
-  [Parameter(Mandatory=$False, HelpMessage="Only applies when bigformmenu npm package is published. If used, increases the minor version instead of the patch version")]
+  [Parameter(Mandatory=$False, HelpMessage="Only applies when formmenu npm package is published. If used, increases the minor version instead of the patch version")]
   [switch]$BumpMinor,
 
   [Parameter(Mandatory=$False, HelpMessage="Generates everything, including JSNLog and website.")]
@@ -65,20 +65,20 @@ function Generate-NpmPackage($publishing, $version)
 
 	$tempDir = NewTempDir
 
-	# The bigformmenu.scss and .ts files contain copyright headers with place holders. 
+	# The formmenu.scss and .ts files contain copyright headers with place holders. 
 	# Copy them to a temp dir and have those place holders replaced there.
 	# Then compile the resulting files.
 
-	Copy-Item "$PSScriptRoot\bigformmenu\bigformmenu.scss" "$tempDir\bigformmenu.scss.template"
-	Copy-Item "$PSScriptRoot\bigformmenu\bigformmenu.ts" "$tempDir\bigformmenu.ts.template"
+	Copy-Item "$PSScriptRoot\formmenu\formmenu.scss" "$tempDir\formmenu.scss.template"
+	Copy-Item "$PSScriptRoot\formmenu\formmenu.ts" "$tempDir\formmenu.ts.template"
 	ProcessTemplates $tempDir $version
-	Copy-Item "$PSScriptRoot\bigformmenu\bigformmenu.d.ts" "$tempDir\bigformmenu.d.ts"
-	Copy-Item "$PSScriptRoot\bigformmenu\tsconfig.json" "$tempDir\tsconfig.json"
+	Copy-Item "$PSScriptRoot\formmenu\formmenu.d.ts" "$tempDir\formmenu.d.ts"
+	Copy-Item "$PSScriptRoot\formmenu\tsconfig.json" "$tempDir\tsconfig.json"
 
 	RemoveDirectory "$PSScriptRoot\dist"
 	EnsureDirectory "$PSScriptRoot\dist"
-	InvokeCommand "build bigformmenu.ts" "tsc --project $tempDir\tsconfig.json --outDir $PSScriptRoot\dist"
-	InvokeCommand "compile bigformmenu.scss" "node-sass $tempDir\bigformmenu.scss -out-file $PSScriptRoot\dist\bigformmenu.min.css --source-map $PSScriptRoot\dist\bigformmenu.css.map --output-style compressed"
+	InvokeCommand "build formmenu.ts" "tsc --project $tempDir\tsconfig.json --outDir $PSScriptRoot\dist"
+	InvokeCommand "compile formmenu.scss" "node-sass $tempDir\formmenu.scss -out-file $PSScriptRoot\dist\formmenu.min.css --source-map $PSScriptRoot\dist\formmenu.css.map --output-style compressed"
 
 	RemoveDirectory $tempDir
 
@@ -88,7 +88,7 @@ function Generate-NpmPackage($publishing, $version)
 	# https://github.com/google/closure-compiler
 	# documentation at
 	# https://developers.google.com/closure/compiler/docs/gettingstarted_app
-	InvokeCommand "minimize bigformmenu.js" "java.exe -jar `"C:\Utils\closure-compiler-v20170423.jar`" --js bigformmenu.js --js_output_file=bigformmenu.min.js --create_source_map bigformmenu.js.map"
+	InvokeCommand "minimize formmenu.js" "java.exe -jar `"C:\Utils\closure-compiler-v20170423.jar`" --js formmenu.js --js_output_file=formmenu.min.js --create_source_map formmenu.js.map"
 
 	cd "$PSScriptRoot"
 	
@@ -96,7 +96,7 @@ function Generate-NpmPackage($publishing, $version)
 	{ 
 		InvokeCommand "npm publish" "npm publish"
 
-		$repoUrl = 'git@github.com:mperdeck/bigformmenu.git'
+		$repoUrl = 'git@github.com:mperdeck/formmenu.git'
 
 		InvokeCommand "git add README.md" "git add README.md"
 		InvokeCommand "git add LICENSE.md" "git add LICENSE.md"

@@ -1,15 +1,15 @@
 
 /* Required */
 
-.bigformmenu-is-required .bigformmenu-caption::after {
+.formmenu-is-required .formmenu-caption::after {
     content: " *";
 }
 
-.bigformmenu-required-filter-button::after {
+.formmenu-required-filter-button::after {
     content: "\2731";
 }
 
-.bigformmenu-required-next-button {
+.formmenu-required-next-button {
     display: none;
 
     &::after {
@@ -17,7 +17,7 @@
     }
 }
 
-.bigformmenu-required-previous-button {
+.formmenu-required-previous-button {
     display: none;
 
     &::after {
@@ -27,16 +27,16 @@
 
 /* Invalid */
 
-.bigformmenu-is-invalid .bigformmenu-caption {
+.formmenu-is-invalid .formmenu-caption {
     color: red;
 }
 
-.bigformmenu-invalid-filter-button::after {
+.formmenu-invalid-filter-button::after {
     content: "\2716";
     color: red; 
 }
 
-.bigformmenu-invalid-next-button {
+.formmenu-invalid-next-button {
     display: none;
 
     &::after {
@@ -45,7 +45,7 @@
     }
 }
 
-.bigformmenu-invalid-previous-button {
+.formmenu-invalid-previous-button {
     display: none;
 
     &::after {

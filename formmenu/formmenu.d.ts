@@ -1,4 +1,4 @@
-interface iBigFormMenuConfiguration {
+interface iFormMenuConfiguration {
 
     // If false, the menu will be loaded after the page has loaded (the "load" event has fired). If true, the menu will not be loaded.
     suppressLoadOnPageLoad?: boolean;
@@ -32,7 +32,7 @@ interface iBigFormMenuConfiguration {
     filterMinimumCharacters?: number;
 
     // If true, when the filter is used, 1) the first DOM element that matches the filter is scrolled into view
-    // and 2) all DOM elements matching the filter are given class bigformmenu-filtered-dom-item
+    // and 2) all DOM elements matching the filter are given class formmenu-filtered-dom-item
     // Especially useful when using the menu as a button bar.
     highlightFilteredDomElements?: boolean;
 
@@ -76,7 +76,7 @@ interface iBigFormMenuConfiguration {
     // value: the iItemStateInfo
     //
     // This structure makes it possible to add item state infos to this structure
-    // in multiple ...bigformmenu.config.js files
+    // in multiple ...formmenu.config.js files
     itemStateInfos?: { [key: string]: iItemStateInfo};
 
     // Similar to itemStateInfos. Used to define buttons that will sit just below the menu.
@@ -88,13 +88,13 @@ interface iBigFormMenuConfiguration {
     getInputElementMethod?: (domElement: HTMLElement) => HTMLInputElement;
 }
 
-declare let bigFormMenuConfiguration: iBigFormMenuConfiguration;
+declare let formMenuConfiguration: iFormMenuConfiguration;
     
 // You can have a form menu reflect the state of the associated dom elements.
 // For example, if you include label tags in the form menu, you can show
 // for each menu item associated with a label whether its input element is valid or not.
 // 
-// To make this happen, ensure a JavaScript file is loaded with a namespace "BigFormMenu"
+// To make this happen, ensure a JavaScript file is loaded with a namespace "FormMenu"
 // containing a variable "itemStateInfos" with an array of iItemStateInfo.
 //
 // For each iItemStateInfo, a button is added to the filter bar.
@@ -151,7 +151,7 @@ interface iItemStateInfo {
 
 // Represents a button tag that will be generated below the menu
 interface iMenuButton {
-    // If given, the bigformmenu library looks elements on the page
+    // If given, the formmenu library looks elements on the page
     // that match this selector.
     // For each such element, a button will be generated:
     // * caption will be innerHTML of the element, can be overridden by caption.
@@ -174,7 +174,7 @@ interface iMenuButton {
     wireUp?: (buttonElement: HTMLButtonElement) => boolean;
 
     // The button in the form itself that is associated with this menu button.
-    // Used to determine whether to set the bigformmenu-all-buttons-visible class on the main div of the menu.
+    // Used to determine whether to set the formmenu-all-buttons-visible class on the main div of the menu.
     // That class is only set if all buttons associated with all iMenuButton elements are visible.
     // If domButton is not set, it will simply not used whether to set that class.
     domButton?: HTMLButtonElement;

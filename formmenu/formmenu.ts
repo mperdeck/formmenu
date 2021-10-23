@@ -1,26 +1,26 @@
-///<reference path="bigformmenu.d.ts" />
+///<reference path="formmenu.d.ts" />
 
 /*!
  * Copyright (c) 2016-__YEAR__ Mattijs Perdeck | License: MIT
  * Version: __Version__
- * NPM: https://www.npmjs.com/package/bigformmenu
- * Source Code: https://github.com/mperdeck/bigformmenu
- * Documentation: https://bigformmenu.com
+ * NPM: https://www.npmjs.com/package/formmenu
+ * Source Code: https://github.com/mperdeck/formmenu
+ * Documentation: https://formmenu.com
 */
 
 // "DOMContentLoaded" fires when the html has loaded, even if the stylesheets, javascript, etc are still being loaded.
 // "load" fires when the entire page has loaded, including stylesheets, etc. 
 
 document.addEventListener("load", function () { 
-    if (!BigFormMenu.bigFormMenuConfiguration.suppressLoadOnPageLoad) {
-        BigFormMenu.pageLoadedHandler();
+    if (!FormMenu.formMenuConfiguration.suppressLoadOnPageLoad) {
+        FormMenu.pageLoadedHandler();
     }
 });
 
-namespace BigFormMenu {
+namespace FormMenu {
     const _levelNonHeadingMenuItem: number = 9000;
 
-    let defaultConfiguration: iBigFormMenuConfiguration = {
+    let defaultConfiguration: iFormMenuConfiguration = {
         skipFirstHeading: true,
 
         defaultOpenAtLevel: _levelNonHeadingMenuItem + 1,
@@ -36,12 +36,12 @@ namespace BigFormMenu {
         filterMinimumCharacters: 2,
         highlightFilteredDomElements: true,
 
-        classMenuShowButton: 'bigformmenu-menu-show',
-        classMenuHideButton: 'bigformmenu-menu-hide',
-        classExpandAllMenuButton: 'bigformmenu-expand-all-menu-button',
-        classCollapseAllMenuButton: 'bigformmenu-collapse-all-menu-button',
-        classPreviousHeadingBox: 'bigformmenu-previous-heading-box',
-        classNextHeadingBox: 'bigformmenu-next-heading-box',
+        classMenuShowButton: 'formmenu-menu-show',
+        classMenuHideButton: 'formmenu-menu-hide',
+        classExpandAllMenuButton: 'formmenu-expand-all-menu-button',
+        classCollapseAllMenuButton: 'formmenu-collapse-all-menu-button',
+        classPreviousHeadingBox: 'formmenu-previous-heading-box',
+        classNextHeadingBox: 'formmenu-next-heading-box',
 
         titleMenuShowButton: 'Show menu',
         titleMenuHideButton: 'Hide menu',
@@ -59,12 +59,12 @@ namespace BigFormMenu {
         getInputElementMethod: getInputElementDefaultMethod
     }
 
-    // Create empty bigFormMenuConfiguration here, to make it easier to write
-    // ...bigformmenu.config.js files that set properties on this object.
+    // Create empty formMenuConfiguration here, to make it easier to write
+    // ...formmenu.config.js files that set properties on this object.
     //
     // Do not use let here, because that doesn't allow you to declare a variable 
     // multiple times.
-    export var bigFormMenuConfiguration: iBigFormMenuConfiguration = {};
+    export var formMenuConfiguration: iFormMenuConfiguration = {};
 
     class MenuElementInfo {
 
@@ -202,7 +202,7 @@ namespace BigFormMenu {
         return boundingRectangle.height;
     }
 
-    // Sets the bigformmenu-scrolled-to-menu-height class on the main menu div
+    // Sets the formmenu-scrolled-to-menu-height class on the main menu div
     // if the distance from bottom of the window to the bottom of the document is less than
     // the height of the menu.
     // 
@@ -212,7 +212,7 @@ namespace BigFormMenu {
     // the very bottom of the document.
     function setScrolledToMenuHeightClass(): void {
         const scrollBottomWithinMenuHeight = scrollDistanceToBottom() <= _mainMenuElementHeight;
-        setClass(_mainMenuElement, 'bigformmenu-scrolled-to-menu-height', scrollBottomWithinMenuHeight);
+        setClass(_mainMenuElement, 'formmenu-scrolled-to-menu-height', scrollBottomWithinMenuHeight);
     }
 
     // Finds a MenuElementInfo given the DOM element it points at.
@@ -289,16 +289,16 @@ namespace BigFormMenu {
     }
 
     function getConfigValue(itemName: string): any {
-        // bigFormMenuConfiguration may have been created by loading .js file that defines that variable.
+        // formMenuConfiguration may have been created by loading .js file that defines that variable.
         // First try to get the value from there. Otherwise get it from the default config.
         // Note that you want to check against undefined specifically, because for example false
         // is a valid value.
 
-        // Do not use "if (bigFormMenuConfiguration)", because then you'll get a run time reference error
+        // Do not use "if (formMenuConfiguration)", because then you'll get a run time reference error
         // if the variable does not exist already.
-        if (typeof bigFormMenuConfiguration !== 'undefined') {
-            if (typeof bigFormMenuConfiguration[itemName] !== 'undefined') {
-                return bigFormMenuConfiguration[itemName];
+        if (typeof formMenuConfiguration !== 'undefined') {
+            if (typeof formMenuConfiguration[itemName] !== 'undefined') {
+                return formMenuConfiguration[itemName];
             }
         }
 
@@ -354,8 +354,8 @@ namespace BigFormMenu {
     function flashElement(domElement: HTMLElement) {
         // See https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations
         domElement.addEventListener("animationend",
-            function () { domElement.classList.remove('bigformmenu-highlighted-dom-item'); }, false);
-        domElement.classList.add('bigformmenu-highlighted-dom-item');
+            function () { domElement.classList.remove('formmenu-highlighted-dom-item'); }, false);
+        domElement.classList.add('formmenu-highlighted-dom-item');
     }
 
     function scrollDomElementIntoView(domElement: HTMLElement) {
@@ -399,7 +399,7 @@ namespace BigFormMenu {
             setHasFocus(menuElementInfo);
         }
 
-        setClass(menuElementInfo.menuElement, 'bigformmenu-has-caption', hasFocus);
+        setClass(menuElementInfo.menuElement, 'formmenu-has-caption', hasFocus);
     }
 
     function setOnFocusHandlers(menuElementInfo: MenuElementInfo) {
@@ -455,12 +455,12 @@ namespace BigFormMenu {
             return null;
         }
 
-        let menuElementClass = 'bigformmenu-' + domElement.tagName;
+        let menuElementClass = 'formmenu-' + domElement.tagName;
 
         // If a menu item gets clicked, scroll the associated dom element into view if it is not already
         // visible. If it is already visible, do not scroll it.
         //
-        // Also give it the bigformmenu-highlighted-dom-item for a short time, to point out where
+        // Also give it the formmenu-highlighted-dom-item for a short time, to point out where
         // it is.
         let onClickHandler = (e: MouseEvent) => {
             e.preventDefault();
@@ -554,7 +554,7 @@ namespace BigFormMenu {
     }
 
     function onExpandClicked(menuElementInfo: MenuElementInfo) {
-        toggleClass(menuElementInfo.menuElement, 'bigformmenu-item-open')
+        toggleClass(menuElementInfo.menuElement, 'formmenu-item-open')
         menuElementInfo.isExpanded = !menuElementInfo.isExpanded;
         ensureMenuBottomVisible();
         return false;
@@ -565,7 +565,7 @@ namespace BigFormMenu {
 
         let expandElement: HTMLAnchorElement = document.createElement("a");
         expandElement.href = "#";
-        expandElement.classList.add("bigformmenu-expand");
+        expandElement.classList.add("formmenu-expand");
         expandElement.onclick = (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -575,13 +575,13 @@ namespace BigFormMenu {
 
         let captionElement: HTMLAnchorElement = document.createElement("a");
         captionElement.href = "#";
-        captionElement.classList.add("bigformmenu-caption");
+        captionElement.classList.add("formmenu-caption");
         captionElement.innerHTML = menuElementInfo.caption;
         captionElement.onclick = onClickHandler;
         menuElement.appendChild(captionElement);
 
         setClass(menuElement, cssClass);
-        menuElement.classList.add("bigformmenu-item");
+        menuElement.classList.add("formmenu-item");
 
         return menuElement;
     }
@@ -594,7 +594,7 @@ namespace BigFormMenu {
         return captionSpanElement;
     }
 
-    // Sets the bigformmenu-matching-filter-dom-element class on all DOM elements that match the current filter.
+    // Sets the formmenu-matching-filter-dom-element class on all DOM elements that match the current filter.
     // Scrolls the first matching DOM element into view if the filter is active.
     //
     // Resets it on those that do not match the filter.
@@ -607,7 +607,7 @@ namespace BigFormMenu {
             let highlightDomElement = filterIsActive && (matchesSearchFilter(_menuElementInfos[i]) !== -1);
             let domElement = _menuElementInfos[i].domElement;
 
-            setClass(domElement, 'bigformmenu-matching-filter-dom-element', highlightDomElement);
+            setClass(domElement, 'formmenu-matching-filter-dom-element', highlightDomElement);
 
             if (highlightDomElement && !firstFound) {
                 firstFound = true;
@@ -621,20 +621,20 @@ namespace BigFormMenu {
     // For example:
     // s: abcdefgi, startIndex: 2, spanLength: 3
     // Result:
-    // ab<span class='bigformmenu-matching-filter-text'>cde</span>fgi
+    // ab<span class='formmenu-matching-filter-text'>cde</span>fgi
     function insertMatchingFilterTextSpan(s: string, startIndex: number, spanLength: number): string {
         const part1 = s.substring(0, startIndex);
         const part2 = s.substring(startIndex, startIndex + spanLength);
         const part3 = s.substring(startIndex + spanLength);
 
-        const result = part1 + "<span class='bigformmenu-matching-filter-text'>" + part2 + "</span>" + part3;
+        const result = part1 + "<span class='formmenu-matching-filter-text'>" + part2 + "</span>" + part3;
         return result;
     }
 
     function onChangeFilter(e: Event): void {
         _searchTerm = (<HTMLInputElement>(e.currentTarget)).value;
 
-        setClass(_mainMenuElement, 'bigformmenu-textmatch-filter-is-active', searchFilterIsActive());
+        setClass(_mainMenuElement, 'formmenu-textmatch-filter-is-active', searchFilterIsActive());
 
         let highlightFilteredDomElements = getConfigValue("highlightFilteredDomElements") as boolean;
         if (highlightFilteredDomElements) {
@@ -648,7 +648,7 @@ namespace BigFormMenu {
         let menuElement: HTMLInputElement = document.createElement("input");
 
         menuElement.type = "search";
-        menuElement.className = 'bigformmenu-filter';
+        menuElement.className = 'formmenu-filter';
 
         let filterPlaceholder = getConfigValue("filterPlaceholder");
         if (filterPlaceholder) {
@@ -674,22 +674,22 @@ namespace BigFormMenu {
     }
 
     function storeDimensions(width: number, height: number): void {
-        localSetItem('bigformmenu-width', width.toString());
-        localSetItem('bigformmenu-height', height.toString());
+        localSetItem('formmenu-width', width.toString());
+        localSetItem('formmenu-height', height.toString());
     }
 
     function storeWidth(width: number): void {
-        localSetItem('bigformmenu-width', width.toString());
+        localSetItem('formmenu-width', width.toString());
     }
 
     function storeHeight(height: number): void {
-        localSetItem('bigformmenu-height', height.toString());
+        localSetItem('formmenu-height', height.toString());
     }
 
     function getDimensions(): { width: number, height: number } {
         const result = {
-            width: parseInt(localGetItem('bigformmenu-width')),
-            height: parseInt(localGetItem('bigformmenu-height'))
+            width: parseInt(localGetItem('formmenu-width')),
+            height: parseInt(localGetItem('formmenu-height'))
         };
 
         return result;
@@ -707,17 +707,17 @@ namespace BigFormMenu {
         }
     }
 
-    // If bigformmenu-bottom has not been set, figures out the distance between the bottom of the
-    // menu and the bottom of the screen and stores that under bigformmenu-bottom.
+    // If formmenu-bottom has not been set, figures out the distance between the bottom of the
+    // menu and the bottom of the screen and stores that under formmenu-bottom.
     function storeMenuBottom(): void {
 
-        if (localGetItem("bigformmenu-bottom") !== null) { return; }
+        if (localGetItem("formmenu-bottom") !== null) { return; }
 
         const boundingRectangle = _mainMenuElement.getBoundingClientRect();
         const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
         const formBottom = windowHeight - boundingRectangle.bottom;
 
-        localSetItem('bigformmenu-bottom', formBottom.toString());
+        localSetItem('formmenu-bottom', formBottom.toString());
     }
 
     // If the user resizes the window, reducing it height, at some point the menu
@@ -730,11 +730,11 @@ namespace BigFormMenu {
     function ensureMenuBottomVisible(): void {
 
         // If menu has never been resized, nothing that can be done here
-        const storedHeightString = localGetItem('bigformmenu-height');
+        const storedHeightString = localGetItem('formmenu-height');
         if (storedHeightString === null) { return; }
 
         // formBottom should always be there, seeing it is set when the component is loaded.
-        const formBottom = parseInt(localGetItem('bigformmenu-bottom'));
+        const formBottom = parseInt(localGetItem('formmenu-bottom'));
 
         const boundingRectangle = _mainMenuElement.getBoundingClientRect();
         const menuHeightWanted = boundingRectangle.top + parseInt(storedHeightString) + formBottom;
@@ -756,13 +756,13 @@ namespace BigFormMenu {
     }
 
     function hideMenu(): void {
-        _mainMenuElement.classList.add('bigformmenu-hidden');
-        localSetItem('bigformmenu-hidden', "1");
+        _mainMenuElement.classList.add('formmenu-hidden');
+        localSetItem('formmenu-hidden', "1");
     }
 
     function showMenu(): void {
-        _mainMenuElement.classList.remove('bigformmenu-hidden');
-        localRemoveItem('bigformmenu-hidden');
+        _mainMenuElement.classList.remove('formmenu-hidden');
+        localRemoveItem('formmenu-hidden');
     }
 
     function onMenuHideButtonClicked(e: MouseEvent): void {
@@ -879,7 +879,7 @@ namespace BigFormMenu {
         filterButton.type = "button";
 
         setClass(filterButton, cssClass);
-        filterButton.classList.add('bigformmenu-filter-button');
+        filterButton.classList.add('formmenu-filter-button');
 
         if (title) {
             filterButton.title = title;
@@ -892,8 +892,8 @@ namespace BigFormMenu {
 
     function createMainMenuElement(): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
-        menuElement.classList.add('bigformmenu');
-        menuElement.id = 'bigformmenu';
+        menuElement.classList.add('formmenu');
+        menuElement.id = 'formmenu';
 
         return menuElement;
     }
@@ -901,11 +901,11 @@ namespace BigFormMenu {
     function addMenuBody(_mainMenuElement: HTMLElement, menuElementInfos: MenuElementInfo[]): void {
 
         _mainMenuElement.appendChild(verticalResizeDiv());
-        _mainMenuElement.appendChild(horizontalResizeDiv('bigformmenu-left-horizontal-resizer', 1));
-        _mainMenuElement.appendChild(horizontalResizeDiv('bigformmenu-right-horizontal-resizer', -1));
+        _mainMenuElement.appendChild(horizontalResizeDiv('formmenu-left-horizontal-resizer', 1));
+        _mainMenuElement.appendChild(horizontalResizeDiv('formmenu-right-horizontal-resizer', -1));
 
         let openButtonBar: HTMLElement = document.createElement("div");
-        openButtonBar.classList.add('bigformmenu-open-button-bar');
+        openButtonBar.classList.add('formmenu-open-button-bar');
 
         addFilterButton('classMenuShowButton', onMenuShowButtonClicked,
             "titleMenuShowButton", openButtonBar);
@@ -913,7 +913,7 @@ namespace BigFormMenu {
         _mainMenuElement.appendChild(openButtonBar);
 
         let filterBar: HTMLElement = document.createElement("div");
-        filterBar.classList.add('bigformmenu-filter-bar');
+        filterBar.classList.add('formmenu-filter-bar');
 
         addFilterButton('classMenuHideButton', onMenuHideButtonClicked,
             "titleMenuHideButton", filterBar);
@@ -975,8 +975,8 @@ namespace BigFormMenu {
     function createButtonsArea(): HTMLDivElement {
 
         let buttonArea: HTMLDivElement = document.createElement("div");
-        buttonArea.classList.add('bigformmenu-buttonarea');
-        buttonArea.id = 'bigformmenu-buttonarea';
+        buttonArea.classList.add('formmenu-buttonarea');
+        buttonArea.id = 'formmenu-buttonarea';
 
         visitAllMenuButtonInfos((menuButtonInfo: iMenuButton) => {
 
@@ -1015,7 +1015,7 @@ namespace BigFormMenu {
             }
         }
 
-        setClass(_mainMenuElement, "bigformmenu-all-buttons-visible", allButtonsVisible);
+        setClass(_mainMenuElement, "formmenu-all-buttons-visible", allButtonsVisible);
     }
 
     function createButton(buttonArea: HTMLDivElement, menuButtonInfo: iMenuButton,
@@ -1088,7 +1088,7 @@ namespace BigFormMenu {
 
     function verticalResizeDiv(): HTMLDivElement {
         let resizeDiv: HTMLDivElement = document.createElement("div");
-        resizeDiv.classList.add('bigformmenu-vertical-resizer');
+        resizeDiv.classList.add('formmenu-vertical-resizer');
         resizeDiv.innerHTML = "&nbsp;";
 
         resizeDiv.addEventListener('mousedown', function (e) {
@@ -1144,7 +1144,7 @@ namespace BigFormMenu {
     // filterButton - filter button associated with the item state
     function setItemStateStatus(active: boolean, itemStateInfo: iItemStateInfo, filterButton: HTMLElement): void {
         setClass(_mainMenuElement, itemStateInfo.stateFilterActiveClass, active);
-        setClass(filterButton, 'bigformmenu-filter-button-depressed', active);
+        setClass(filterButton, 'formmenu-filter-button-depressed', active);
 
         // Update _itemStateInfoActiveFilters array
 
@@ -1346,16 +1346,16 @@ namespace BigFormMenu {
         menuElement.menuElement.classList.add(classThisItem);
     }
 
-    // Sets the bigformmenu-is-visible of an item.
-    // Note that this doesn't reset the bigformmenu-is-visible etc. classes of items that are not visible.
+    // Sets the formmenu-is-visible of an item.
+    // Note that this doesn't reset the formmenu-is-visible etc. classes of items that are not visible.
     function setVisibility(menuElement: MenuElementInfo, setIt: boolean = true): void {
-        setClass(menuElement.menuElement, 'bigformmenu-is-visible', setIt);
+        setClass(menuElement.menuElement, 'formmenu-is-visible', setIt);
     }
 
     function removeVisibilityForMenu(): void {
         let count = _menuElementInfos.length;
         for (let i = 0; i < count; i++) {
-            _menuElementInfos[i].menuElement.classList.remove('bigformmenu-is-visible');
+            _menuElementInfos[i].menuElement.classList.remove('formmenu-is-visible');
         }
     }
 
@@ -1535,7 +1535,7 @@ namespace BigFormMenu {
 
         // Restore the caption to its original state
         captionElement.innerHTML = menuElementInfo.caption;
-        menuElementInfo.menuElement.classList.remove('bigformmenu-is-textmatch');
+        menuElementInfo.menuElement.classList.remove('formmenu-is-textmatch');
 
         if (!searchFilterIsActive()) {
             return true;
@@ -1550,7 +1550,7 @@ namespace BigFormMenu {
             menuElementInfo.caption, foundIndex, _searchTerm.length);
         captionElement.innerHTML = captionWithFilterTextSpan;
 
-        menuElementInfo.menuElement.classList.add('bigformmenu-is-textmatch');
+        menuElementInfo.menuElement.classList.add('formmenu-is-textmatch');
 
         return true;
     }
@@ -1568,7 +1568,7 @@ namespace BigFormMenu {
 
     function getMenuElementsUl(menuElementInfo: MenuElementInfo): HTMLUListElement {
         let ulElement: HTMLUListElement = document.createElement("ul");
-        ulElement.classList.add('bigformmenu-top-menuitems');
+        ulElement.classList.add('formmenu-top-menuitems');
 
         for (let i = 0; i < menuElementInfo.children.length; i++) {
             const childMenuElement = menuElementInfo.children[i];
@@ -1591,7 +1591,7 @@ namespace BigFormMenu {
         const ulElement: HTMLUListElement = getMenuElementsUl(menuElementInfo);
         let hasChildren = (ulElement.children.length > 0);
 
-        setClass(menuElementInfo.menuElement, 'bigformmenu-has-children', hasChildren);
+        setClass(menuElementInfo.menuElement, 'formmenu-has-children', hasChildren);
 
         if ((!passesSearchFilter(menuElementInfo)) && (!hasChildren)) { return null; }
         if ((!passesItemStateFilters(menuElementInfo)) && (!hasChildren)) { return null; }
@@ -1603,7 +1603,7 @@ namespace BigFormMenu {
         if (hasChildren) {
             liElement.appendChild(ulElement);
 
-            setClass(menuElementInfo.menuElement, "bigformmenu-item-open", menuElementInfo.isExpanded)
+            setClass(menuElementInfo.menuElement, "formmenu-item-open", menuElementInfo.isExpanded)
         }
 
         return liElement;
@@ -1785,12 +1785,12 @@ namespace BigFormMenu {
         // setActive may be called while the menu is being created.
         _mainMenuElement = createMainMenuElement();
 
-        if (localGetItem('bigformmenu-hidden')) {
-            _mainMenuElement.classList.add('bigformmenu-hidden');
+        if (localGetItem('formmenu-hidden')) {
+            _mainMenuElement.classList.add('formmenu-hidden');
         }
 
         if (runningIE()) {
-            _mainMenuElement.classList.add('bigformmenu-ie');
+            _mainMenuElement.classList.add('formmenu-ie');
         }
 
         addMenuBody(_mainMenuElement, _menuElementInfos);
@@ -1836,7 +1836,7 @@ namespace BigFormMenu {
             // not only when the document itself is scrolled. So only take action if the target of the event is the document.
 
             if (e.target !== document) { return; }
-            BigFormMenu.scrollHandler();
+            FormMenu.scrollHandler();
         }, {
             passive: true
         });
@@ -1844,7 +1844,7 @@ namespace BigFormMenu {
         // The resize event only gets triggered on the window object, and doesn't bubble.
         // See https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event
         window.addEventListener("resize", function () {
-            BigFormMenu.resizeHandler();
+            FormMenu.resizeHandler();
         });
     }
 }

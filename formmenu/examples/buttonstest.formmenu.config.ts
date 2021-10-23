@@ -1,19 +1,19 @@
-///<reference path="..\bigformmenu.d.ts" />
+///<reference path="..\formmenu.d.ts" />
 
 // -----------------------------------
-// Always load the bigformmenu.js file before any ...bigformmenu.config.js files
+// Always load the formmenu.js file before any ...formmenu.config.js files
 // -----------------------------------
 
-namespace BigFormMenu {
-    export var bigFormMenuConfiguration: iBigFormMenuConfiguration;
+namespace FormMenu {
+    export var formMenuConfiguration: iFormMenuConfiguration;
 
     // Will hold reference to the Save button generated below the form
     export var menuSaveButton: HTMLButtonElement;
 
     // if menuButtons is undefined, set it now
-    if (!bigFormMenuConfiguration.menuButtons) { bigFormMenuConfiguration.menuButtons = {}; }
+    if (!formMenuConfiguration.menuButtons) { formMenuConfiguration.menuButtons = {}; }
 
-    bigFormMenuConfiguration.menuButtons["saveButton"] = {
+    formMenuConfiguration.menuButtons["saveButton"] = {
         caption: 'Save',
         onClick: () => { console.log('####### Save button clicked'); },
         cssClass: 'btn  btn-success btn-sm',
@@ -23,19 +23,19 @@ namespace BigFormMenu {
         }
     };
 
-    bigFormMenuConfiguration.menuButtons["duplicateButton"] = {
+    formMenuConfiguration.menuButtons["duplicateButton"] = {
         caption: 'Duplicate',
         onClick: () => { console.log('####### Duplicate button clicked'); },
         cssClass: 'btn btn-primary btn-sm'
     };
 
-    bigFormMenuConfiguration.menuButtons["deleteButton"] = {
+    formMenuConfiguration.menuButtons["deleteButton"] = {
         caption: 'Delete',
         onClick: () => { console.log('####### Delete button clicked'); },
         cssClass: 'btn btn-danger btn-sm'
     };
 
-    bigFormMenuConfiguration.menuButtons["doNotShowButton"] = {
+    formMenuConfiguration.menuButtons["doNotShowButton"] = {
         caption: 'Do not show',
         onClick: () => { console.log('####### Do not show'); },
         wireUp: (createdSaveButton) => {
@@ -43,13 +43,13 @@ namespace BigFormMenu {
         }
     };
 
-    bigFormMenuConfiguration.menuButtons["cancelButton"] = {
+    formMenuConfiguration.menuButtons["cancelButton"] = {
         caption: 'Cancel',
         onClick: () => { console.log('####### Cancel button clicked'); },
         cssClass: 'btn btn-link'
     }
 
-    bigFormMenuConfiguration.menuButtons["buttonsbar"] = {
+    formMenuConfiguration.menuButtons["buttonsbar"] = {
         cssSelector: '.buttonsbar > button',
         wireUp: (createdSaveButton) => {
             createdSaveButton.className = createdSaveButton.className + ' btn-sm';
@@ -57,7 +57,7 @@ namespace BigFormMenu {
         }
     }
 
-    bigFormMenuConfiguration.menuButtons["buttonsbar2"] = {
+    formMenuConfiguration.menuButtons["buttonsbar2"] = {
         cssSelector: '.buttonsbar2 > button',
         cssClass: 'btn btn-warning'
     }
