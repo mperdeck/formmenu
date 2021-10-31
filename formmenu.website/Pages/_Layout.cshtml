@@ -1,5 +1,18 @@
-﻿@*@using ssg.Library.External
-@inject IParameterService _parameterService*@
+﻿@using ssg.Library.External
+@inject IParameterService _parameterService
+
+@{
+    string version = _parameterService.GetValue("version").ToText();
+
+    string cssUrl = "/formmenu.min.css";
+    string jsUrl = "/formmenu.js";
+
+    if (version != null)
+    {
+        cssUrl = $"https://cdn.jsdelivr.net/npm/formmenu@{version}/dist/formmenu.min.css";
+        jsUrl = $"https://cdn.jsdelivr.net/npm/formmenu@{version}/dist/formmenu.min.js";
+    }
+}
 
 <!DOCTYPE html>
 <html>
@@ -7,27 +20,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!--
-    <parameter name="version" />
-        -->
-
-    @{
-        string version = "4.4.5";
-
-        string cssUrl = "formmenu.min.css";
-        if (version != null)
-        {
-            cssUrl = $"https://cdn.jsdelivr.net/npm/formmenu@{version}/dist/formmenu.min.css";
-        }
-    }
-
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="@cssUrl" crossorigin="anonymous">
 </head>
 <body>
     @RenderBody()
 
-    <script src="https://cdn.jsdelivr.net/npm/formmenu@1.4.2/dist/formmenu.min.js"></script>
+    <script src="@jsUrl"></script>
 </body>
 </html>
