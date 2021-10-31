@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "sourceMap": true
+    "sourceMap": true,
+    "outDir": "../dist"
   },
   "compileOnSave": true,
   "include": [ "*.ts" ]
