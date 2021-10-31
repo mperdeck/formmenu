@@ -95,42 +95,35 @@
             </div>
         </div>
 
-        <H3>Mexico</H3>
-        <p>
-            aliquam euismod sit magna dolore diam tincidunt tincidunt nonummy diam ipsum lorem nonummy nibh laoreet amet euismod dolore nonummy erat sed magna ipsum nibh elit elit euismod elit elit dolore.
-            sit amet sit amet elit lorem consectetuer ut diam ut dolor ut nonummy ipsum nibh amet dolore consectetuer ut nonummy elit sed adipiscing magna consectetuer ipsum nonummy nibh diam diam.
-            dolore consectetuer consectetuer tincidunt adipiscing magna magna consectetuer sit laoreet aliquam magna adipiscing dolore magna ut adipiscing erat lorem dolor nonummy elit tincidunt magna sed ut aliquam adipiscing erat consectetuer.
-            diam tincidunt amet erat magna dolore sed dolore laoreet ut elit nonummy ipsum aliquam nibh nonummy dolor nonummy erat nibh ut nibh nibh elit erat diam nibh sed consectetuer nibh.
-            erat nonummy adipiscing magna adipiscing amet euismod adipiscing aliquam lorem consectetuer diam amet consectetuer laoreet lorem adipiscing laoreet consectetuer aliquam euismod elit adipiscing elit nibh magna dolor magna lorem sed.
+        <p style='margin-top: 15px'>
+            <button class="btn btn-primary" type="button" id="add-mexico" onclick="addMexico()">
+                Add Mexico section to DOM
+            </button>
+            <button class="btn btn-primary" type="button" id="remove-mexico" style="display:none" onclick="removeMexico()">
+                Remove Mexico section from DOM
+            </button>
         </p>
 
-        <H4>Mexico City</H4>
-        <p>
-            erat laoreet amet aliquam nibh laoreet tincidunt amet adipiscing tincidunt sed adipiscing elit amet sed elit consectetuer amet ut erat nibh tincidunt sed.
-            sed sit lorem consectetuer erat elit elit sit amet consectetuer sit magna consectetuer magna amet amet consectetuer diam sit dolor aliquam amet tincidunt.
-            aliquam lorem ut nonummy euismod euismod diam magna erat adipiscing elit dolore laoreet nibh diam tincidunt dolore erat diam amet ipsum sit adipiscing.
-            dolor diam lorem lorem diam diam elit nibh nonummy amet diam ipsum consectetuer consectetuer dolore laoreet nibh ut elit amet nibh aliquam ipsum.
-            diam tincidunt laoreet laoreet adipiscing sit sed lorem nibh laoreet ut nibh lorem nibh nibh lorem elit nibh laoreet magna euismod consectetuer diam.
-        </p>
-        <p>
-            amet sed lorem sit magna diam tincidunt erat laoreet amet sed nibh elit tincidunt ut lorem elit ipsum amet aliquam adipiscing nibh tincidunt.
-            laoreet sit erat ut lorem euismod dolore ipsum diam sit sit nibh elit adipiscing erat nonummy nonummy magna laoreet aliquam adipiscing euismod lorem.
-            amet adipiscing tincidunt nibh elit laoreet elit elit dolor tincidunt ut amet lorem aliquam ut tincidunt adipiscing erat sit erat sed sit dolor.
-            elit tincidunt sed nonummy tincidunt lorem nonummy euismod adipiscing sit dolor laoreet elit elit ipsum sed consectetuer ipsum laoreet lorem aliquam tincidunt dolor.
-            aliquam euismod laoreet amet diam erat sit euismod euismod lorem amet consectetuer magna aliquam consectetuer ut elit euismod lorem elit lorem magna sit.
-        </p>
+        <script>
+            var mexicoContent =
+                "<div id='mexico-content' class='card card-body' style='margin-top: 15px'>" +
+                "<H3>Mexico</H3><p>aliquam euismod sit magna dolore diam tincidunt tincidunt nonummy diam ipsum lorem nonummy nibh laoreet</p>" +
+                "<H4>Mexico City</H4><p>erat laoreet amet aliquam nibh laoreet tincidunt amet adipiscing tincidunt sed adipiscing elit amet sed elit</p>" +
+                "<H4>Monterrey</H4><p>amet sed lorem sit magna diam tincidunt erat laoreet amet sed nibh elit tincidunt ut lorem elit ipsum amet aliquam adipiscing</p>" +
+                "</div>";
 
-        <H4>Monterrey</H4>
-        <p>
-            dolore erat lorem euismod sit dolor laoreet euismod tincidunt erat elit amet laoreet dolor nonummy ipsum laoreet sed tincidunt.
-            aliquam elit laoreet magna euismod dolor magna nonummy tincidunt laoreet nibh sed erat laoreet lorem aliquam amet dolore sed.
-            nibh dolor dolor dolor adipiscing sed lorem magna adipiscing sit consectetuer consectetuer ipsum diam aliquam sed erat ipsum dolor.
-        </p>
-        <p>
-            sed diam adipiscing nibh dolor dolore ipsum nonummy sed diam laoreet sit consectetuer amet adipiscing dolore nonummy dolore consectetuer.
-            sed sed euismod amet nibh elit sed nonummy nonummy erat lorem elit lorem magna dolor sed erat consectetuer nibh.
-            lorem consectetuer amet aliquam nibh sed nibh erat erat lorem ut tincidunt sed euismod ut euismod tincidunt laoreet amet.
-        </p>
+            function addMexico() {
+                $("#add-mexico").hide();
+                $("#remove-mexico").show();
+                $(mexicoContent).insertAfter("#remove-mexico");
+            }
+
+            function removeMexico() {
+                $("#mexico-content").remove();
+                $("#add-mexico").show();
+                $("#remove-mexico").hide();
+            }
+        </script>
 
         <H2>Europe</H2>
         <p>
