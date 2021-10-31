@@ -210,11 +210,11 @@
     }
 
     .formmenu-menu-hide::after {
-        content: "\25B6";
+        content: "\25B3";
     }
 
     .formmenu-menu-show::after {
-        content: "\25C0";
+        content: "\25BD";
     }
     // ******************************************************
     // Filter
@@ -238,17 +238,17 @@
     }
 
     .formmenu-previous-heading-box {
-//        display: none;
+        //        display: none;
 
         &::after {
-            content: "\25C0";
+            content: "\25B7";
         }
     }
 
     .formmenu-next-heading-box {
         // display: none;
         &::after {
-            content: "\25B6";
+            content: "\25C1";
         }
     }
 
