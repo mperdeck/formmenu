@@ -1,0 +1,75 @@
+﻿
+<p>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Collapse/Expand Canada section using Bootstrap 4 component
+    </button>
+</p>
+<div class="collapse" id="collapseExample">
+    <div class="card card-body">
+        <H3>Canada</H3>
+        <p>
+            sed dolor magna magna adipiscing dolor tincidunt nonummy nibh euismod nibh elit dolore lorem ipsum aliquam consectetuer ipsum sit nibh.
+            consectetuer sit ipsum nonummy erat lorem sed sed amet nibh dolore erat nibh dolore erat diam dolor lorem dolore amet.
+        </p>
+
+        <H4>Toronto</H4>
+        <p>
+            ipsum euismod consectetuer sit elit consectetuer amet ipsum nibh magna adipiscing aliquam aliquam elit consectetuer lorem euismod laoreet adipiscing elit dolore lorem dolor aliquam aliquam elit consectetuer.
+            dolore consectetuer dolor adipiscing dolore ipsum aliquam consectetuer sit magna ipsum nonummy consectetuer erat euismod elit nonummy consectetuer dolore dolor adipiscing amet consectetuer dolor laoreet dolor elit.
+            laoreet lorem diam elit consectetuer lorem lorem sed laoreet diam nonummy nonummy magna erat dolor ipsum sit nonummy amet ipsum elit sit tincidunt nibh tincidunt ipsum consectetuer.
+            aliquam nibh lorem erat nibh tincidunt tincidunt sit amet tincidunt diam laoreet nonummy consectetuer nibh magna aliquam lorem ut erat dolor sit dolor dolor nibh nonummy ipsum.
+        </p>
+        <p>
+            lorem nibh elit aliquam ut sit laoreet ipsum dolore laoreet diam aliquam dolore sit dolore aliquam elit tincidunt laoreet ut laoreet laoreet adipiscing laoreet nonummy aliquam dolor.
+            dolor ut sed magna sed lorem euismod euismod nibh dolore laoreet ut euismod laoreet amet laoreet ipsum sed dolor aliquam laoreet consectetuer consectetuer ut diam dolore dolore.
+            consectetuer consectetuer amet euismod elit dolore ipsum euismod adipiscing sed aliquam ipsum magna sit nibh amet ipsum euismod aliquam dolor aliquam nibh lorem amet adipiscing sed erat.
+            elit dolore diam tincidunt sed euismod sit adipiscing elit elit amet sed aliquam nonummy dolor magna adipiscing sit elit amet ut amet lorem amet dolor nonummy tincidunt.
+        </p>
+
+        <H4>Montreal</H4>
+        <p>
+            laoreet dolor euismod dolore amet lorem aliquam adipiscing magna lorem sit diam consectetuer.
+            ipsum erat diam sit adipiscing nonummy elit erat tincidunt ipsum aliquam sed euismod.
+            nonummy sit dolor adipiscing diam ut sed diam amet sed adipiscing lorem diam.
+            erat dolore diam laoreet dolor adipiscing erat nonummy ipsum aliquam ut sed erat.
+            euismod euismod amet dolor ipsum tincidunt elit euismod nonummy ut sit nonummy nonummy.
+        </p>
+        <p>
+            sed lorem dolore dolore nibh sit dolor dolore nibh nonummy nonummy magna aliquam.
+            nibh sed ipsum sed amet sed magna diam dolor dolore amet dolor elit.
+            euismod euismod magna sed ipsum consectetuer consectetuer nibh magna erat ut consectetuer elit.
+            nibh consectetuer sit lorem ipsum tincidunt consectetuer dolor ipsum erat nonummy ipsum nonummy.
+            laoreet tincidunt ipsum adipiscing amet nibh tincidunt amet nonummy nonummy aliquam dolor sed.
+        </p>
+    </div>
+</div>
+
+<p style='margin-top: 15px'>
+    <button class="btn btn-primary" type="button" id="add-mexico" onclick="addMexico()">
+        Add Mexico section to DOM
+    </button>
+    <button class="btn btn-primary" type="button" id="remove-mexico" style="display:none" onclick="removeMexico()">
+        Remove Mexico section from DOM
+    </button>
+</p>
+
+<script>
+    var mexicoContent =
+        "<div id='mexico-content' class='card card-body' style='margin-top: 15px'>" +
+        "<H3>Mexico</H3><p>aliquam euismod sit magna dolore diam tincidunt tincidunt nonummy diam ipsum lorem nonummy nibh laoreet</p>" +
+        "<H4>Mexico City</H4><p>erat laoreet amet aliquam nibh laoreet tincidunt amet adipiscing tincidunt sed adipiscing elit amet sed elit</p>" +
+        "<H4>Monterrey</H4><p>amet sed lorem sit magna diam tincidunt erat laoreet amet sed nibh elit tincidunt ut lorem elit ipsum amet aliquam adipiscing</p>" +
+        "</div>";
+
+    function addMexico() {
+        $("#add-mexico").hide();
+        $("#remove-mexico").show();
+        $(mexicoContent).insertAfter("#remove-mexico");
+    }
+
+    function removeMexico() {
+        $("#mexico-content").remove();
+        $("#add-mexico").show();
+        $("#remove-mexico").hide();
+    }
+</script>
