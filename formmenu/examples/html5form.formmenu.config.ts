@@ -10,7 +10,16 @@ namespace FormMenu {
 
     export var formMenuConfiguration: iFormMenuConfiguration;
 
-    formMenuConfiguration.cssMenuItemSelector = "h1,h2,h3,h4,h5,h6,label";
+    formMenuConfiguration.domElementClasses = [
+        // Note that HTML only has these heading tags. There is no h7, etc.
+        { getItemCaption: null, level: 1, cssSelector: "h1" },
+        { getItemCaption: null, level: 2, cssSelector: "h2" },
+        { getItemCaption: null, level: 3, cssSelector: "h3" },
+        { getItemCaption: null, level: 4, cssSelector: "h4" },
+        { getItemCaption: null, level: 5, cssSelector: "h5" },
+        { getItemCaption: null, level: 6, cssSelector: "h6" },
+        { getItemCaption: null, level: 6, cssSelector: "label" }
+    ];
 
     formMenuConfiguration.rebuildOnClickedSelector = "#show-hide-field2";
 

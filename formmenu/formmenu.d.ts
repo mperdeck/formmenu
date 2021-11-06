@@ -50,26 +50,15 @@ interface iFormMenuConfiguration {
     titlePreviousHeadingBox?: string;
     titleNextHeadingBox?: string;
 
-    // CSS selector used to select the DOM elements that will be represented in the menu
-    cssMenuItemSelector?: string;
+    // Describes the DOM elements that will be represented in the menu.
+    // The CSS selector in each dom element class is used to find those DOM elements.
+    domElementClasses?: iDomElementClass[];
 
     // CSS selector used to select the tags that when clicked trigger a rebuild of the menu.
     // If you support IE11, make sure they captures all DOM elements that when clicked show or hide an item that you want to appear in the menu.
     // Same for any browser, if you show or hide elements by setting visibility to hidden (instead of setting display none). 
     // This because intersection observers do not get triggered when visibility is changed, maybe because those elements still take visible space on the page.
     rebuildOnClickedSelector?: string;
-
-    // If provided, the getItemCaption method is used to get the menu item caption from the corresponding dom item.
-    // If this returns falsy, the menu item is not generated.
-    // If this method is not given, the default behaviour is to simply get the innerText from the dom element. 
-    getItemCaption?: (domElement: HTMLElement) => string;
-
-    // Method that takes a tag name and works out the level of that tag.
-    // Level determines position in the menu (whether it is a child or a sibling).
-    // Items with lower levels are parents of items with higher levels.
-    // If this method is not given, the default behaviour is to give headers a level equal to their header level.
-    // So h1 has level 1, h2 has level 2, etc. non-headers get a very high level.
-    tagNameToLevelMethod?: (tagName: string) => number;
 
     // Used to do additional processing for each menu item. See iItemStateInfo.
     // key: name of the iItemStateInfo. Pretty much a dummy.
@@ -89,7 +78,23 @@ interface iFormMenuConfiguration {
 }
 
 declare let formMenuConfiguration: iFormMenuConfiguration;
-    
+
+// Represents a class of DOM elements. 
+interface iDomElementClass {
+
+    // If provided, the getItemCaption method is used to get the menu item caption from the corresponding dom item.
+    // If this returns falsy, the menu item is not generated.
+    // If this method is not given, the default behaviour is to simply get the innerText from the dom element. 
+    getItemCaption?: (domElement: HTMLElement) => string;
+
+    // Level of the menu item. For example, a H1 has level 1, H2 has level 2.
+    // Menu items that are not associated with a heading have a very high level.
+    level?: number;
+
+    // CSS selector used to select the DOM elements that will be represented in the menu that belong to this class of elements
+    cssSelector?: string;
+}
+
 // You can have a form menu reflect the state of the associated dom elements.
 // For example, if you include label tags in the form menu, you can show
 // for each menu item associated with a label whether its input element is valid or not.

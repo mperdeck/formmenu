@@ -50,10 +50,16 @@ namespace FormMenu {
         titlePreviousHeadingBox: 'Previous section',
         titleNextHeadingBox: 'Next section',
 
-        // Note that HTML only has these heading tags. There is no h7, etc.
-        cssMenuItemSelector: "h1,h2,h3,h4,h5,h6",
+        domElementClasses: [
+            // Note that HTML only has these heading tags. There is no h7, etc.
+            { getItemCaption: null, level: 1, cssSelector: "h1" },
+            { getItemCaption: null, level: 2, cssSelector: "h2" },
+            { getItemCaption: null, level: 3, cssSelector: "h3" },
+            { getItemCaption: null, level: 4, cssSelector: "h4" },
+            { getItemCaption: null, level: 5, cssSelector: "h5" },
+            { getItemCaption: null, level: 6, cssSelector: "h6" }
+        ],
 
-        tagNameToLevelMethod: tagNameToLevelDefaultMethod,
         itemStateInfos: {},
         menuButtons: {},
         getInputElementMethod: getInputElementDefaultMethod
@@ -66,6 +72,16 @@ namespace FormMenu {
     // multiple times.
     export var formMenuConfiguration: iFormMenuConfiguration = {};
 
+    class DomElementInfo {
+        constructor(
+            // The heading, etc. in the actual DOM (not in the menu)
+            public element: HTMLElement,
+
+            // class of this element
+            public domElementClass: iDomElementClass,
+        ) { }
+    }
+
     class MenuElementInfo {
 
         constructor(
@@ -77,7 +93,10 @@ namespace FormMenu {
 
             // Level of the menu item. For example, a H1 has level 1, H2 has level 2.
             // Menu items that are not associated with a heading have a very high level.
-            public level: number
+            public level: number,
+
+            // CSS selector that found the DOM element that is represented by this menu element
+            public cssSelector: string
         ) { }
 
         // The item in the menu
@@ -121,7 +140,7 @@ namespace FormMenu {
     // Use the children property of this element to easily generate the ul tag
     // containing the menu items.
     // Must have a level lower than 1.
-    let _menuElementInfosRoot: MenuElementInfo = new MenuElementInfo(null, null, 0);
+    let _menuElementInfosRoot: MenuElementInfo = new MenuElementInfo(null, null, 0, null);
 
     // The div that contains the entire menu
     let _mainMenuElement: HTMLElement;
@@ -251,18 +270,6 @@ namespace FormMenu {
         return filterIsActive;
     }
 
-    function tagNameToLevelDefaultMethod(tagName: string): number {
-        switch (tagName.toLowerCase()) {
-            case 'h1': return 1;
-            case 'h2': return 2;
-            case 'h3': return 3;
-            case 'h4': return 4;
-            case 'h5': return 5;
-            case 'h6': return 6;
-            default: return _levelNonHeadingMenuItem;
-        }
-    }
-
     function getInputElementDefaultMethod(domElement: HTMLElement): HTMLInputElement {
         if (domElement.tagName.toLowerCase() !== 'label') { return null; }
         let labelElement: HTMLLabelElement = domElement as HTMLLabelElement;
@@ -306,18 +313,26 @@ namespace FormMenu {
     }
 
     // Returns all dom elements to be represented in the menu
-    function getAllDomElements(): NodeListOf<Element> {
-        let cssMenuItemSelector: string = getConfigValue("cssMenuItemSelector");
+    function getAllDomElements(): DomElementInfo[] {
+        let domElementInfos: DomElementInfo[] = [];
+        let domElementClasses: iDomElementClass[] = getConfigValue("domElementClasses");
 
-        let allDomElements = document.querySelectorAll(cssMenuItemSelector);
-        return allDomElements;
+        for (let i = 0; i < domElementClasses.length; i++) {
+            let domElements = document.querySelectorAll(domElementClasses[i].cssSelector);
+
+            for (let j = 0; j < domElements.length; j++) {
+                domElementInfos.push(new DomElementInfo(domElements[j] as HTMLElement, domElementClasses[i]));
+            }
+        }
+
+        return domElementInfos;
     }
 
     // Returns true if all dom elements are visible.
     // See notes for hideForSmallForms option.
-    function allDomElementsVisible(domElements: NodeListOf<Element>): boolean {
+    function allDomElementsVisible(domElements: DomElementInfo[]): boolean {
         for (let i = 0; i < domElements.length; i++) {
-            let visibilityResult = elementIsVisible(domElements[i] as HTMLElement);
+            let visibilityResult = elementIsVisible(domElements[i].element as HTMLElement);
 
             // Disregard items that are not shown on the page (display none), because it is not
             // clear if they will ever become shown - and if so how. For example, they could be popup menus.
@@ -333,15 +348,14 @@ namespace FormMenu {
     }
 
     // Converts a list of DOM elements to MenuElements.
-    // Skips the first heading if config item skipFirstHeading is true.
-    function domElementsToMenuElements(domElements: NodeListOf<Element>): MenuElementInfo[] {
+    function domElementsToMenuElements(domElements: DomElementInfo[]): MenuElementInfo[] {
         let _menuElementInfos: MenuElementInfo[] = [];
 
         let count = domElements.length;
         for (let i = 0; i < count; i++) {
             let value = domElements[i];
 
-            let menuElement = domElementToMenuElement(value as HTMLElement);
+            let menuElement = domElementToMenuElement(value);
             if (menuElement) {
                 _menuElementInfos.push(menuElement);
             }
@@ -441,21 +455,22 @@ namespace FormMenu {
         return null;
     }
 
-    function domElementToMenuElement(domElement: HTMLElement): MenuElementInfo {
-        let getItemCaption = getConfigValue("getItemCaption") as (domElement: HTMLElement) => string;
+    function domElementToMenuElement(domElement: DomElementInfo): MenuElementInfo {
+        let element = domElement.element;
+        let getItemCaption = domElement.domElementClass.getItemCaption;
         let caption;
 
         if (getItemCaption) {
-            caption = getItemCaption(domElement);
+            caption = getItemCaption(element);
         } else {
-            caption = domElement.innerText;
+            caption = element.innerText;
         }
 
         if (!caption) {
             return null;
         }
 
-        let menuElementClass = 'formmenu-' + domElement.tagName;
+        let menuElementClass = 'formmenu-' + element.tagName;
 
         // If a menu item gets clicked, scroll the associated dom element into view if it is not already
         // visible. If it is already visible, do not scroll it.
@@ -466,15 +481,16 @@ namespace FormMenu {
             e.preventDefault();
             e.stopPropagation();
 
-            showAndFlashElement(domElement);
+            showAndFlashElement(element);
             return false;
         };
 
-        let level: number = tagNameToLevel(domElement.tagName);
+        let level: number = domElement.domElementClass.level;
         let menuElementInfo = new MenuElementInfo(
-            domElement,
+            element,
             caption,
-            level);
+            level,
+            domElement.domElementClass.cssSelector);
 
         let menuElementDiv = createMenuElementDiv(menuElementInfo, menuElementClass, onClickHandler);
         menuElementInfo.menuElement = menuElementDiv;
@@ -1724,8 +1740,8 @@ namespace FormMenu {
         }
     }
 
-    function loadDomElements(domElements: NodeListOf<Element>): void {
-        _menuElementInfosRoot = new MenuElementInfo(null, null, 0);
+    function loadDomElements(domElements: DomElementInfo[]): void {
+        _menuElementInfosRoot = new MenuElementInfo(null, null, 0, null);
         _menuElementInfos = domElementsToMenuElements(domElements);
 
         let skipFirstHeading: boolean = getConfigValue("skipFirstHeading");
