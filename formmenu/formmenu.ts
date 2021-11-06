@@ -1750,7 +1750,9 @@ namespace FormMenu {
     }
 
     // Raises an event against the main div, as referred to in _mainMenuElement.
-    // _mainMenuElement must have been set before calling this!
+    // Before calling this:
+    // 1) _mainMenuElement must have been set to refer to the top level div;
+    // 2) the top level div must have been added to the DOM.
     function raiseEvent(eventName: string, eventSubName?: string, details?: any) {
         let fullName = "formmenu-" + eventName;
         if (eventSubName) { fullName += "-" + eventSubName; }
@@ -1809,6 +1811,11 @@ namespace FormMenu {
         // setActive may be called while the menu is being created.
         _mainMenuElement = createMainMenuElement();
 
+        // Add main menu element (the top level div) to the DOM before firing any events.
+        // If you don't, the event will not make it to any listeners.
+        let bodyElement = document.getElementsByTagName("BODY")[0];
+        bodyElement.appendChild(_mainMenuElement);
+
         raiseEvent("loading");
 
         loadDomElements(allDomElements);
@@ -1824,9 +1831,6 @@ namespace FormMenu {
         addMenuBody(_mainMenuElement, _menuElementInfos);
 
         setDimensionsFromLocalStorage();
-
-        let bodyElement = document.getElementsByTagName("BODY")[0];
-        bodyElement.appendChild(_mainMenuElement);
 
         storeMenuBottom();
 
