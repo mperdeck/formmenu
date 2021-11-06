@@ -1749,6 +1749,20 @@ namespace FormMenu {
         }, 50);
     }
 
+    // Raises an event against the main div, as referred to in _mainMenuElement.
+    // _mainMenuElement must have been set before calling this!
+    function raiseEvent(eventName: string, eventSubName?: string, details?: any) {
+        let fullName = "formmenu-" + eventName;
+        if (eventSubName) { fullName += "-" + eventSubName; }
+
+        let event = new CustomEvent(fullName, {
+            bubbles: true,
+            detail: details
+        });
+
+        _mainMenuElement.dispatchEvent(event);
+    }
+
     export function scrollHandler(): void {
 
         let currentYOffset = window.pageYOffset;
@@ -1765,6 +1779,18 @@ namespace FormMenu {
 
     export function pageLoadedHandler(): void {
 
+        // CustomEvent polyfill for IE. See https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+        if (typeof window.CustomEvent !== "function") {
+            function CustomEvent(event, params) {
+                params = params || { bubbles: false, cancelable: false, detail: null };
+                var evt = document.createEvent('CustomEvent');
+                evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+                return evt;
+            }
+
+            (<any>window).CustomEvent = CustomEvent;
+        }
+
         _lastPageYOffset = window.pageYOffset;
 
         let allDomElements = getAllDomElements();
@@ -1779,11 +1805,13 @@ namespace FormMenu {
             }
         }
 
-        loadDomElements(allDomElements);
-
         // Set _mainMenuElement early, because it will be used if setActive is called (part of itemStateInfo).
         // setActive may be called while the menu is being created.
         _mainMenuElement = createMainMenuElement();
+
+        raiseEvent("loading");
+
+        loadDomElements(allDomElements);
 
         if (localGetItem('formmenu-hidden')) {
             _mainMenuElement.classList.add('formmenu-hidden');
@@ -1846,5 +1874,7 @@ namespace FormMenu {
         window.addEventListener("resize", function () {
             FormMenu.resizeHandler();
         });
+
+        raiseEvent("loaded");
     }
 }
