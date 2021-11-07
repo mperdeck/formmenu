@@ -905,6 +905,15 @@ namespace FormMenu {
         focusPreviousNextItemFromIndex(indexNextHeader, 1, elementIsInputByIndex);
     }
 
+    // Adds a button to the menu.
+    // Returns a reference to the generated buttom element.
+    export function AddButton(menuButtonInfo: iMenuButtonInfo): HTMLButtonElement {
+        setVisibilityForMenu();
+        ensureMenuBottomVisible();
+    }
+
+
+
     // Add a filter button to the filter bar (the bit of space left of the filter).
     // cssClassConfigName - name of config item holding css class of the button.
     // onClickHandler - runs when button is clicked.
@@ -932,7 +941,6 @@ namespace FormMenu {
         filterButton.type = "button";
 
         setClass(filterButton, cssClass);
-        filterButton.classList.add('formmenu-filter-button');
 
         if (title) {
             filterButton.title = title;
@@ -958,7 +966,7 @@ namespace FormMenu {
         _mainMenuElement.appendChild(horizontalResizeDiv('formmenu-right-horizontal-resizer', -1));
 
         _closedButtonBar = document.createElement("div");
-        _closedButtonBar.classList.add('formmenu-open-button-bar');
+        _closedButtonBar.classList.add('formmenu-closed-button-bar');
 
         addFilterButton('classMenuShowButton', onMenuShowButtonClicked,
             "titleMenuShowButton", openButtonBar);
@@ -966,7 +974,7 @@ namespace FormMenu {
         _mainMenuElement.appendChild(_closedButtonBar);
 
         _topButtonBar = document.createElement("div");
-        _topButtonBar.classList.add('formmenu-filter-bar');
+        _topButtonBar.classList.add('formmenu-top-button-bar');
 
         addFilterButton('classMenuHideButton', onMenuHideButtonClicked,
             "titleMenuHideButton", filterBar);
@@ -984,8 +992,8 @@ namespace FormMenu {
             'titleNextHeadingBox', filterBar);
 
         let _bottomButtonBar: HTMLDivElement = document.createElement("div");
-        _bottomButtonBar.classList.add('formmenu-buttonarea');
-        _bottomButtonBar.id = 'formmenu-buttonarea';
+        _bottomButtonBar.classList.add('formmenu-bottom-button-bar');
+        _bottomButtonBar.id = 'formmenu-bottom-button-bar';
 
         processAllItemStateInfos(_topButtonBar, menuElementInfos);
 

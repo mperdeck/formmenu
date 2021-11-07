@@ -96,11 +96,11 @@
         z-index: 1000;
     }
     // Applies to both the filter buttons and the "show menu" button
-    .formmenu-filter-button {
+    .formmenu-top-button-bar button, .formmenu-closed-button-bar button {
         margin: 2px;
     }
 
-    .formmenu-filter-bar {
+    .formmenu-top-button-bar {
         display: flex;
         flex-wrap: wrap;
 
@@ -188,19 +188,19 @@
     }
     // ******************************************************
     // Form menu hide/show
-    .formmenu-open-button-bar {
+    .formmenu-closed-button-bar {
         display: none;
     }
 
     &.formmenu-hidden {
-        .formmenu-filter-bar, ul, .formmenu-buttonarea {
+        .formmenu-top-button-bar, ul, .formmenu-bottom-button-bar {
             display: none;
         }
 
         background-color: transparent;
         border: none;
 
-        .formmenu-open-button-bar {
+        .formmenu-closed-button-bar {
             display: block;
 
             button {
@@ -252,7 +252,7 @@
         }
     }
 
-    .formmenu-buttonarea {
+    .formmenu-bottom-button-bar {
         display: flex;
         flex-wrap: wrap;
 

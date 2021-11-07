@@ -82,7 +82,7 @@
     }
 
     &.formmenu-hidden {
-        .formmenu-open-button-bar {
+        .formmenu-closed-button-bar {
             button {
                 float: left;
             }
@@ -102,7 +102,7 @@
 // If you did not add filter buttons, no need to do anything.
 */
 
-.formmenu .formmenu-filter-bar button.formmenu-filter-button-depressed {
+.formmenu .formmenu-top-button-bar button.formmenu-filter-button-depressed {
     box-shadow: 4px 4px 4px #888888;
 }
 
@@ -160,12 +160,12 @@
     justify-content: center;
     z-index: 500;
     // Applies to both the filter buttons and the "show menu" button
-    .formmenu-filter-button {
+    .formmenu-top-button-bar button, .formmenu-closed-button-bar button {
         margin: 7px 3px 5px 3px;
         height: 30px;
     }
 
-    .formmenu-filter-bar {
+    .formmenu-top-button-bar {
         .formmenu-expand-all-menu-button, .formmenu-collapse-all-menu-button {
             display: none;
         }
@@ -180,7 +180,7 @@
         }
     }
 
-    .formmenu-open-button-bar {
+    .formmenu-closed-button-bar {
         .formmenu-menu-show {
             position: fixed;
             right: 0;
@@ -196,7 +196,7 @@
         display: none;
     }
 
-    .formmenu-filter-bar, .formmenu-buttonarea {
+    .formmenu-top-button-bar, .formmenu-bottom-button-bar {
         display: inline-block;
         flex-wrap: nowrap;
     }
