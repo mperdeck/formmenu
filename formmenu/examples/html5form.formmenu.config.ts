@@ -12,13 +12,13 @@ namespace FormMenu {
 
     formMenuConfiguration.domElementClasses = [
         // Note that HTML only has these heading tags. There is no h7, etc.
-        { getItemCaption: null, level: 1, cssSelector: "h1" },
-        { getItemCaption: null, level: 2, cssSelector: "h2" },
-        { getItemCaption: null, level: 3, cssSelector: "h3" },
-        { getItemCaption: null, level: 4, cssSelector: "h4" },
-        { getItemCaption: null, level: 5, cssSelector: "h5" },
-        { getItemCaption: null, level: 6, cssSelector: "h6" },
-        { getItemCaption: null, level: 6, cssSelector: "label" }
+        { level: 1, cssSelector: "h1" },
+        { level: 2, cssSelector: "h2" },
+        { level: 3, cssSelector: "h3" },
+        { level: 4, cssSelector: "h4" },
+        { level: 5, cssSelector: "h5" },
+        { level: 6, cssSelector: "h6" },
+        { cssSelector: "label" }
     ];
 
     formMenuConfiguration.rebuildOnClickedSelector = "#show-hide-field2";

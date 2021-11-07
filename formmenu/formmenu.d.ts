@@ -88,6 +88,7 @@ interface iDomElementClass {
     getItemCaption?: (domElement: HTMLElement) => string;
 
     // Level of the menu item. For example, a H1 has level 1, H2 has level 2.
+    // Do not set to 0 or lower.
     // Menu items that are not associated with a heading have a very high level.
     level?: number;
 
