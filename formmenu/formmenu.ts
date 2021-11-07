@@ -1732,6 +1732,7 @@ namespace FormMenu {
 
         let event = new CustomEvent(fullName, {
             bubbles: true,
+            cancelable: true,
             detail: details
         });
 
