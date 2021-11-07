@@ -177,12 +177,6 @@ namespace FormMenu {
 
     let _buttonElementInfos: ButtonElementInfo[] = [];
 
-    let _buttonsIntersectionObserver: IntersectionObserver;
-
-    function allMenuElementInfos(callback: () => void) {
-
-    }
-
     // Returns true if the browser is IE
     function runningIE(): boolean {
         const ua = window.navigator.userAgent;
@@ -247,19 +241,6 @@ namespace FormMenu {
             let menuElementInfo = _menuElementInfos[i];
             if (menuElementInfo.domElement === domElement) {
                 return menuElementInfo;
-            }
-        }
-
-        return null;
-    }
-
-    // Finds a ButtonElementInfo given the DOM element it points at.
-    // If no such ButtonElementInfo is found, returns null.
-    function buttonElementInfoByDomButton(domButton: HTMLButtonElement): ButtonElementInfo {
-        for (let i = 0; i < _buttonElementInfos.length; i++) {
-            let buttonElementInfo = _buttonElementInfos[i];
-            if (buttonElementInfo.domButton === domButton) {
-                return buttonElementInfo;
             }
         }
 
@@ -1063,25 +1044,6 @@ namespace FormMenu {
         })
 
         return buttonArea;
-    }
-
-    function buttonIntersectionHandler(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
-        const nbrEntries = entries.length;
-
-        for (let i = 0; i < nbrEntries; i++) {
-            const buttonElementInfo: ButtonElementInfo = buttonElementInfoByDomButton(entries[i].target as HTMLButtonElement);
-            buttonElementInfo.isVisible = entries[i].isIntersecting;
-        }
-
-        let allButtonsVisible = true;
-        for (let i = 0; i < _buttonElementInfos.length; i++) {
-            if (!_buttonElementInfos[i].isVisible) {
-                allButtonsVisible = false;
-                break;
-            }
-        }
-
-        setClass(_mainMenuElement, "formmenu-all-buttons-visible", allButtonsVisible);
     }
 
     function createButton(buttonArea: HTMLDivElement, menuButtonInfo: iMenuButton,
@@ -1916,13 +1878,6 @@ namespace FormMenu {
 
             for (let i = 0; i < _menuElementInfos.length; i++) {
                 _intersectionObserver.observe(_menuElementInfos[i].domElement);
-            }
-
-            // Threshold 0 means invoke the handler if even one pixel becomes visible
-            _buttonsIntersectionObserver = new IntersectionObserver(buttonIntersectionHandler, { threshold: 0 });
-
-            for (let i = 0; i < _buttonElementInfos.length; i++) {
-                _buttonsIntersectionObserver.observe(_buttonElementInfos[i].domButton);
             }
         }
 
