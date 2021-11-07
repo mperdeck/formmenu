@@ -166,23 +166,15 @@ interface iItemStateInfo {
     buttonTitlePrevious?: string;
 }
 
-declare enum ButtonBar {
-    // The tiny button bar that shows when the menu is closed. Normally used for just the open button.
-    Closed = 0,
-
-    // Button bar showing above the menu.
-    Top,
-
-    // Button bar showing below the menu.
-    Bottom
-}
-
 interface iMenuButtonInfo {
     // Used when generating the id of the button and event names.
     buttonName: string;
 
-    // Button bar to which the button will be added.
-    buttonBar: ButtonBar;
+    // Button bar to which the button will be added. Use one of these values:
+    // * "Closed" - The tiny button bar that shows when the menu is closed. Normally used for just the open button.
+    // * "Top" - Button bar showing above the menu.
+    // * "Bottom" - Button bar showing below the menu.
+    buttonBar: string;
 
     caption?: string;
 

@@ -178,7 +178,7 @@ namespace FormMenu {
 
     export let showButtonInfo: iMenuButtonInfo = {
         buttonName: "show-menu",
-        buttonBar: ButtonBar.Closed,
+        buttonBar: "Closed",
         title: 'Show menu',
         onClick: showMenu,
         cssClass: 'formmenu-menu-show'
@@ -186,7 +186,7 @@ namespace FormMenu {
 
     export let hideButtonInfo: iMenuButtonInfo = {
         buttonName: "hide-menu",
-        buttonBar: ButtonBar.Top,
+        buttonBar: "Top",
         title: 'Hide menu',
         onClick: hideMenu,
         cssClass: 'formmenu-menu-hide'
@@ -194,7 +194,7 @@ namespace FormMenu {
 
     export let expandAllButtonInfo: iMenuButtonInfo = {
         buttonName: "expand-all",
-        buttonBar: ButtonBar.Top,
+        buttonBar: "Top",
         title: 'Expand all',
         onClick: expandAllMenuItems,
         cssClass: 'formmenu-expand-all-menu-button'
@@ -202,7 +202,7 @@ namespace FormMenu {
 
     export let collapseAllButtonInfo: iMenuButtonInfo = {
         buttonName: "collapse-all",
-        buttonBar: ButtonBar.Top,
+        buttonBar: "Top",
         title: 'Collapse all',
         onClick: collapseAllMenuItems,
         cssClass: 'formmenu-collapse-all-menu-button'
@@ -919,13 +919,13 @@ namespace FormMenu {
         focusPreviousNextItemFromIndex(indexNextHeader, 1, elementIsInputByIndex);
     }
 
-    function buttonBarElement(buttonBar: ButtonBar): HTMLElement {
+    function buttonBarElement(buttonBar: string): HTMLElement {
         switch (buttonBar) {
-            case ButtonBar.Closed:
+            case "Closed":
                 return _closedButtonBar;
-            case ButtonBar.Top:
+            case "Top":
                 return _topButtonBar;
-            case ButtonBar.Bottom:
+            case "Bottom":
                 return _bottomButtonBar;
             default:
                 console.error('Unknown button bar: ' + buttonBar);
