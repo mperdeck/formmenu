@@ -36,20 +36,6 @@ namespace FormMenu {
         filterMinimumCharacters: 2,
         highlightFilteredDomElements: true,
 
-        classMenuShowButton: 'formmenu-menu-show',
-        classMenuHideButton: 'formmenu-menu-hide',
-        classExpandAllMenuButton: 'formmenu-expand-all-menu-button',
-        classCollapseAllMenuButton: 'formmenu-collapse-all-menu-button',
-        classPreviousHeadingBox: 'formmenu-previous-heading-box',
-        classNextHeadingBox: 'formmenu-next-heading-box',
-
-        titleMenuShowButton: 'Show menu',
-        titleMenuHideButton: 'Hide menu',
-        titleExpandAllMenuButton: 'Expand all',
-        titleCollapseAllMenuButton: 'Collapse all',
-        titlePreviousHeadingBox: 'Previous section',
-        titleNextHeadingBox: 'Next section',
-
         domElementClasses: [
             // Note that HTML only has these heading tags. There is no h7, etc.
             { level: 1, cssSelector: "h1" },
@@ -182,6 +168,45 @@ namespace FormMenu {
     let _domScrolling = false;
 
     let _intersectionObserver: IntersectionObserver;
+
+    // Definitions of standard buttons.
+    // If you want to change these, listen for the formmenu-loading event and then update these definitions.
+    // To suppress creation of a button, set the property to null.
+
+    // To add buttons, listen for formmenu-loaded (as in, after the form menu has loaded), and then
+    // call AddButton to add buttons.
+
+    export let showButtonInfo: iMenuButtonInfo = {
+        buttonName: "show-menu",
+        buttonBar: ButtonBar.Closed,
+        title: 'Show menu',
+        onClick: showMenu,
+        cssClass: 'formmenu-menu-show'
+    };
+
+    export let hideButtonInfo: iMenuButtonInfo = {
+        buttonName: "hide-menu",
+        buttonBar: ButtonBar.Top,
+        title: 'Hide menu',
+        onClick: hideMenu,
+        cssClass: 'formmenu-menu-hide'
+    };
+
+    export let expandAllButtonInfo: iMenuButtonInfo = {
+        buttonName: "expand-all",
+        buttonBar: ButtonBar.Top,
+        title: 'Expand all',
+        onClick: expandAllMenuItems,
+        cssClass: 'formmenu-expand-all-menu-button'
+    };
+
+    export let collapseAllButtonInfo: iMenuButtonInfo = {
+        buttonName: "collapse-all",
+        buttonBar: ButtonBar.Top,
+        title: 'Collapse all',
+        onClick: collapseAllMenuItems,
+        cssClass: 'formmenu-collapse-all-menu-button'
+    };
 
     // Returns true if the browser is IE
     function runningIE(): boolean {
@@ -808,29 +833,17 @@ namespace FormMenu {
         }
     }
 
-    function hideMenu(): void {
+    export function hideMenu(): void {
         _mainMenuElement.classList.add('formmenu-hidden');
         localSetItem('formmenu-hidden', "1");
     }
 
-    function showMenu(): void {
+    export function showMenu(): void {
         _mainMenuElement.classList.remove('formmenu-hidden');
         localRemoveItem('formmenu-hidden');
     }
 
-    function onMenuHideButtonClicked(e: MouseEvent): void {
-        e.preventDefault();
-        e.stopPropagation();
-        hideMenu();
-    }
-
-    function onMenuShowButtonClicked(e: MouseEvent): void {
-        e.preventDefault();
-        e.stopPropagation();
-        showMenu();
-    }
-
-    function onExpandAllMenuClicked(e: MouseEvent): void {
+    export function expandAllMenuItems(): void {
         let count = _menuElementInfos.length;
         for (let i = 0; i < count; i++) {
             let menuElementInfo = _menuElementInfos[i];
@@ -840,7 +853,7 @@ namespace FormMenu {
         rebuildMenuList(false);
     }
 
-    function onCollapseAllMenuClicked(e: MouseEvent): void {
+    export function collapseAllMenuItems(): void {
         let count = _menuElementInfos.length;
         for (let i = 0; i < count; i++) {
             let menuElementInfo = _menuElementInfos[i];
@@ -859,7 +872,8 @@ namespace FormMenu {
         rebuildMenuList(false);
     }
 
-    function onPreviousSection(e: MouseEvent): void {
+    // Sets the focus on the previous section
+    export function focusPreviousSection(): void {
         // If the currently focused element is not already a header,
         // first find the header above the currently focused element. This is the "current" header.
 
@@ -888,7 +902,7 @@ namespace FormMenu {
         focusPreviousNextItemFromIndex(indexPreviousHeader, 1, elementIsInputByIndex);
     }
 
-    function onNextSection(e: MouseEvent): void {
+    export function focusNextSection(): void {
 
         let itemIndex = lastFocusedItemIndex();
         if (itemIndex == null) { itemIndex = 0; }
@@ -968,8 +982,6 @@ namespace FormMenu {
         return buttonElement;
     }
 
-
-
     // Add a filter button to the filter bar (the bit of space left of the filter).
     // cssClassConfigName - name of config item holding css class of the button.
     // onClickHandler - runs when button is clicked.
@@ -1024,28 +1036,26 @@ namespace FormMenu {
         _closedButtonBar = document.createElement("div");
         _closedButtonBar.classList.add('formmenu-closed-button-bar');
 
-        addFilterButton('classMenuShowButton', onMenuShowButtonClicked,
-            "titleMenuShowButton", openButtonBar);
+        if (showButtonInfo) {
+            AddButton(showButtonInfo);
+        }
 
         _mainMenuElement.appendChild(_closedButtonBar);
 
         _topButtonBar = document.createElement("div");
         _topButtonBar.classList.add('formmenu-top-button-bar');
 
-        addFilterButton('classMenuHideButton', onMenuHideButtonClicked,
-            "titleMenuHideButton", filterBar);
+        if (hideButtonInfo) {
+            AddButton(hideButtonInfo);
+        }
 
-        addFilterButton('classExpandAllMenuButton', onExpandAllMenuClicked,
-            'titleExpandAllMenuButton', filterBar);
+        if (expandAllButtonInfo) {
+            AddButton(expandAllButtonInfo);
+        }
 
-        addFilterButton('classCollapseAllMenuButton', onCollapseAllMenuClicked,
-            'titleCollapseAllMenuButton', filterBar);
-
-        addFilterButton('classPreviousHeadingBox', onPreviousSection,
-            'titlePreviousHeadingBox', filterBar);
-
-        addFilterButton('classNextHeadingBox', onNextSection,
-            'titleNextHeadingBox', filterBar);
+        if (collapseAllButtonInfo) {
+            AddButton(collapseAllButtonInfo);
+        }
 
         let _bottomButtonBar: HTMLDivElement = document.createElement("div");
         _bottomButtonBar.classList.add('formmenu-bottom-button-bar');
@@ -1061,7 +1071,6 @@ namespace FormMenu {
         _mainUlElement = document.createElement("ul");
         _mainMenuElement.appendChild(_mainUlElement);
 
-        // Create buttons area
         _mainMenuElement.appendChild(_bottomButtonBar);
 
         rebuildMenuList(false);
