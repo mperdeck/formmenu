@@ -1791,6 +1791,9 @@ namespace FormMenu {
     // Before calling this:
     // 1) _mainMenuElement must have been set to refer to the top level div;
     // 2) the top level div must have been added to the DOM.
+    //
+    // Returns false if event is cancelable and at least one of the event handlers which received 
+    // event called Event.preventDefault().Otherwise it returns true.
     function raiseEvent(eventName: string, eventSubName?: string, details?: any) {
         let fullName = "formmenu-" + eventName;
         if (eventSubName) { fullName += "-" + eventSubName; }
@@ -1800,7 +1803,8 @@ namespace FormMenu {
             detail: details
         });
 
-        _mainMenuElement.dispatchEvent(event);
+        const eventNotCanceled: boolean = _mainMenuElement.dispatchEvent(event);
+        return eventNotCanceled;
     }
 
     export function scrollHandler(): void {
@@ -1854,7 +1858,11 @@ namespace FormMenu {
         let bodyElement = document.getElementsByTagName("BODY")[0];
         bodyElement.appendChild(_mainMenuElement);
 
-        raiseEvent("loading");
+        if (!raiseEvent("loading")) {
+            // loading event was canceled
+            bodyElement.removeChild(_mainMenuElement);
+            return;
+        }
 
         loadDomElements(allDomElements);
 
