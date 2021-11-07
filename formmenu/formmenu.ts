@@ -110,6 +110,9 @@ namespace FormMenu {
         // If this element has children, then if true the element is expanded
         public isExpanded: boolean = false;
 
+        // If true, the menu element will be given +- buttons, even if it has no children
+        public forceExpandable: boolean = false;
+
         // True if this element was the last menu item whose associated input element received the focus.
         // Note that this means it may not have the focus right now. This could happen if the element that currently has focus
         // is not an input element associated with a menu item (for example, this could be a previous / next button).
@@ -458,6 +461,7 @@ namespace FormMenu {
     function domElementToMenuElement(domElement: DomElementInfo): MenuElementInfo {
         let element = domElement.element;
         let getItemCaption = domElement.domElementClass.getItemCaption;
+
         let caption;
 
         if (getItemCaption) {
@@ -491,6 +495,13 @@ namespace FormMenu {
             caption,
             level,
             domElement.domElementClass.cssSelector);
+
+        let getForceExpandable = domElement.domElementClass.getForceExpandable;
+        menuElementInfo.forceExpandable = false;
+
+        if (getForceExpandable) {
+            menuElementInfo.forceExpandable = getForceExpandable(element);
+        }
 
         let menuElementDiv = createMenuElementDiv(menuElementInfo, menuElementClass,
             domElement.domElementClass.anchorCssClass, onClickHandler);
@@ -1607,7 +1618,7 @@ namespace FormMenu {
     // Returns falsy if the menu element should not be shown (because it doesn't pass a filter).
     function getMenuElementLi(menuElementInfo: MenuElementInfo): HTMLElement {
         const ulElement: HTMLUListElement = getMenuElementsUl(menuElementInfo);
-        let hasChildren = (ulElement.children.length > 0);
+        let hasChildren = (ulElement.children.length > 0) || menuElementInfo.forceExpandable;
 
         setClass(menuElementInfo.menuElement, 'formmenu-has-children', hasChildren);
 

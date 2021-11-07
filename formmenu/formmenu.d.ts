@@ -87,6 +87,17 @@ interface iDomElementClass {
     // If this method is not given, the default behaviour is to simply get the innerText from the dom element. 
     getItemCaption?: (domElement: HTMLElement) => string;
 
+    // If provided, the getForceExpandable method is used to determine whether to always generate +- buttons
+    // for a menu item, even it has no children in the DOM.
+    // Use this in React like scenarios where the children may not now be in the DOM, but there is a UI
+    // element that causes the children to be added to the DOM if clicked. You could then
+    // listen for clicked events from the + and - buttons, and click that UI element when they are clicked.
+    //
+    // domElement - DOM element that the menu element represents.
+    // If returns falsy or method not given, +- buttons only generated when the item has children.
+    // If returns truthy, +- buttons always generated.
+    getForceExpandable?: (domElement: HTMLElement) => boolean;
+
     // Level of the menu item. For example, a H1 has level 1, H2 has level 2.
     // Do not set to 0 or lower.
     // Menu items that are not associated with a heading have a very high level.
