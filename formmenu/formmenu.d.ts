@@ -169,7 +169,7 @@ interface iItemStateInfo {
     buttonTitlePrevious?: string;
 }
 
-export enum ButtonBar {
+declare enum ButtonBar {
     // The tiny button bar that shows when the menu is closed. Normally used for just the open button.
     Closed = 0,
 
@@ -180,7 +180,7 @@ export enum ButtonBar {
     Bottom
 }
 
-interface iMenuButton {
+interface iMenuButtonInfo {
     // Used when generating the id of the button and event names.
     buttonName?: string;
 
