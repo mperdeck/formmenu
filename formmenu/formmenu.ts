@@ -61,7 +61,6 @@ namespace FormMenu {
         ],
 
         itemStateInfos: {},
-        menuButtons: {},
         getInputElementMethod: getInputElementDefaultMethod
     }
 
@@ -1005,10 +1004,6 @@ namespace FormMenu {
         visitKeyedConfigItems<iItemStateInfo>("itemStateInfos", callback);
     }
 
-    function visitAllMenuButtonInfos(callback: (menuButtonInfo: iMenuButton) => void): void {
-        visitKeyedConfigItems<iMenuButton>("menuButtons", callback);
-    }
-
     function visitKeyedConfigItems<T>(configValueName: string, callback: (configItem: T) => void): void {
         let configItems: { [key: string]: T } = getConfigValue(configValueName);
         let keys = Object.keys(configItems);
@@ -1017,62 +1012,6 @@ namespace FormMenu {
         for (let i = 0; i < count; i++) {
             let key = keys[i];
             callback(configItems[key]);
-        }
-    }
-
-    // Creates a button area div. Visits all menu button infos
-    // and adds the button to the button area div. Returns the button area div.
-    function createButtonsArea(): HTMLDivElement {
-
-        let buttonArea: HTMLDivElement = document.createElement("div");
-        buttonArea.classList.add('formmenu-buttonarea');
-        buttonArea.id = 'formmenu-buttonarea';
-
-        visitAllMenuButtonInfos((menuButtonInfo: iMenuButton) => {
-
-            if (menuButtonInfo.cssSelector) {
-                let allButtonElements = document.querySelectorAll(menuButtonInfo.cssSelector);
-
-                for (let i = 0; i < allButtonElements.length; i++) {
-                    let currentButtonElement = allButtonElements[i] as HTMLButtonElement;
-                    let caption = currentButtonElement.innerHTML;
-                    let onClick = () => { currentButtonElement.click(); };
-                    let cssClass = currentButtonElement.className;
-
-                    createButton(buttonArea, menuButtonInfo, caption, onClick, cssClass, currentButtonElement);
-                }
-            } else {
-                createButton(buttonArea, menuButtonInfo);
-            }
-        })
-
-        return buttonArea;
-    }
-
-    function createButton(buttonArea: HTMLDivElement, menuButtonInfo: iMenuButton,
-        caption?: string, onClick?: () => void, cssClass?: string, domButton?: HTMLButtonElement) {
-
-        let button: HTMLButtonElement = document.createElement("button");
-
-        button.type = "button";
-        button.innerHTML = menuButtonInfo.caption || caption;
-        button.onclick = menuButtonInfo.onClick || onClick;
-        setClass(button, menuButtonInfo.cssClass || cssClass);
-
-        const currentDomButton = menuButtonInfo.domButton || domButton;
-
-        let generateButton = true;
-
-        if (menuButtonInfo.wireUp) {
-            generateButton = menuButtonInfo.wireUp(button);
-        }
-
-        if (generateButton) {
-            buttonArea.appendChild(button);
-
-            if (currentDomButton) {
-                _buttonElementInfos.push(new ButtonElementInfo(currentDomButton));
-            }
         }
     }
 
