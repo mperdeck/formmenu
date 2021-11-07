@@ -155,6 +155,10 @@ namespace FormMenu {
     // The div that contains the entire menu
     let _mainMenuElement: HTMLElement;
 
+    let _closedButtonBar: HTMLElement;
+    let _topButtonBar: HTMLElement;
+    let _bottomButtonBar: HTMLElement;
+
     // Height of the entire menu. Set when the menu is loaded initially. Should only be used
     // when the menu height is fixed, so if it is used as a button bar instead of the full menu.
     let _mainMenuElementHeight: number;
@@ -953,16 +957,16 @@ namespace FormMenu {
         _mainMenuElement.appendChild(horizontalResizeDiv('formmenu-left-horizontal-resizer', 1));
         _mainMenuElement.appendChild(horizontalResizeDiv('formmenu-right-horizontal-resizer', -1));
 
-        let openButtonBar: HTMLElement = document.createElement("div");
-        openButtonBar.classList.add('formmenu-open-button-bar');
+        _closedButtonBar = document.createElement("div");
+        _closedButtonBar.classList.add('formmenu-open-button-bar');
 
         addFilterButton('classMenuShowButton', onMenuShowButtonClicked,
             "titleMenuShowButton", openButtonBar);
 
-        _mainMenuElement.appendChild(openButtonBar);
+        _mainMenuElement.appendChild(_closedButtonBar);
 
-        let filterBar: HTMLElement = document.createElement("div");
-        filterBar.classList.add('formmenu-filter-bar');
+        _topButtonBar = document.createElement("div");
+        _topButtonBar.classList.add('formmenu-filter-bar');
 
         addFilterButton('classMenuHideButton', onMenuHideButtonClicked,
             "titleMenuHideButton", filterBar);
@@ -979,23 +983,22 @@ namespace FormMenu {
         addFilterButton('classNextHeadingBox', onNextSection,
             'titleNextHeadingBox', filterBar);
 
-        // Create the buttons area very early on, in case processing of the item state infos
-        // or the rebuilding of the menu itself
-        // has a dependency on the buttons.
-        const buttonsArea: HTMLDivElement = createButtonsArea();
+        let _bottomButtonBar: HTMLDivElement = document.createElement("div");
+        _bottomButtonBar.classList.add('formmenu-buttonarea');
+        _bottomButtonBar.id = 'formmenu-buttonarea';
 
-        processAllItemStateInfos(filterBar, menuElementInfos);
+        processAllItemStateInfos(_topButtonBar, menuElementInfos);
 
         let filterInput = createFilterInput();
-        filterBar.appendChild(filterInput);
+        _topButtonBar.appendChild(filterInput);
 
-        _mainMenuElement.appendChild(filterBar);
+        _mainMenuElement.appendChild(_topButtonBar);
 
         _mainUlElement = document.createElement("ul");
         _mainMenuElement.appendChild(_mainUlElement);
 
         // Create buttons area
-        _mainMenuElement.appendChild(buttonsArea);
+        _mainMenuElement.appendChild(_bottomButtonBar);
 
         rebuildMenuList(false);
     }
