@@ -485,19 +485,6 @@ namespace FormMenu {
 
         let menuElementClass = 'formmenu-' + element.tagName;
 
-        // If a menu item gets clicked, scroll the associated dom element into view if it is not already
-        // visible. If it is already visible, do not scroll it.
-        //
-        // Also give it the formmenu-highlighted-dom-item for a short time, to point out where
-        // it is.
-        let onClickHandler = (e: MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-             
-            showAndFlashElement(element);
-            return false;
-        };
-
         let level: number = domElement.domElementClass.level || _levelNonHeadingMenuItem;
         let menuElementInfo = new MenuElementInfo(
             element,
@@ -511,6 +498,25 @@ namespace FormMenu {
         if (getForceExpandable) {
             menuElementInfo.forceExpandable = getForceExpandable(element);
         }
+
+        // If a menu item gets clicked, scroll the associated dom element into view if it is not already
+        // visible. If it is already visible, do not scroll it.
+        //
+        // Also give it the formmenu-highlighted-dom-item for a short time, to point out where
+        // it is.
+        let onClickHandler = (e: MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!raiseMenuItemEvent('clicking', menuElementInfo)) {
+                return false;
+            }
+
+            showAndFlashElement(element);
+
+            raiseMenuItemEvent('clicked', menuElementInfo);
+            return false;
+        };
 
         let menuElementDiv = createMenuElementDiv(menuElementInfo, menuElementClass,
             domElement.domElementClass.anchorCssClass, onClickHandler);
@@ -590,10 +596,32 @@ namespace FormMenu {
         return result;
     }
 
+    // Raises a menu item related event.
+    // Returns false if event was canceled.
+    function raiseMenuItemEvent(eventSubName: string, menuElementInfo: MenuElementInfo): boolean {
+        const notCanceled = raiseEvent('menuitem', eventSubName, {
+            isExpanded: menuElementInfo.isExpanded,
+            caption: menuElementInfo.caption,
+            level: menuElementInfo.level,
+            cssSelector: menuElementInfo.cssSelector,
+            domElement: menuElementInfo.domElement
+        });
+
+        return notCanceled;
+    }
+
     function onExpandClicked(menuElementInfo: MenuElementInfo) {
+
+        if (!raiseMenuItemEvent('expand-collapse-clicking', menuElementInfo)) {
+            return false;
+        }
+
         toggleClass(menuElementInfo.menuElement, 'formmenu-item-open')
         menuElementInfo.isExpanded = !menuElementInfo.isExpanded;
         ensureMenuBottomVisible();
+
+        raiseMenuItemEvent('expand-collapse-clicked', menuElementInfo);
+
         return false;
     }
 

@@ -12,13 +12,17 @@
     // Script to show events fired by formmenu.js in the console. Demo code only, not needed in production code.
 
     function addFormMenuEventHandler(eventName, eventDescription) {
-        document.addEventListener("formmenu-" + eventName, function () {
+        document.addEventListener("formmenu-" + eventName, function (e) {
             console.log("Fired formmenu-" + eventName + ". " + eventDescription);
         })
     }
 
     addFormMenuEventHandler("loading", "Fired when form menu is about to be loaded.");
     addFormMenuEventHandler("loaded", "Fired after form menu finished loading.");
+    addFormMenuEventHandler("menuitem-clicking", "Fired when click handling for a menu item is about to start.");
+    addFormMenuEventHandler("menuitem-clicked", "Fired after a click has been handled for a menu item.");
+    addFormMenuEventHandler("menuitem-expand-collapse-clicking", "Fired when click handling for an expand/collapse button for a menu item is about to start.");
+    addFormMenuEventHandler("menuitem-expand-collapse-clicked", "Fired after a click has been handled for an expand/collapse button for a menu item.");
 </script>
 
 
