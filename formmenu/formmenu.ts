@@ -131,14 +131,19 @@ namespace FormMenu {
         public itemStates: iItemStateInfo[] = [];
     }
 
-    // Represents a button in the DOM pointed at by a button at the bottom of the menu
-    class ButtonElementInfo {
+    // Represents a menu button
+    class MenuButton {
         constructor(
-            public domButton: HTMLButtonElement
-        ) { }
 
-        public isVisible: boolean;
+            // The button html element itself
+            public domButton: HTMLButtonElement,
+
+            // Info that was used to create this button
+            public menuButtonInfo: iMenuButtonInfo
+        ) { }
     }
+
+    let _menuButtons: MenuButton[] = [];
 
     let _menuElementInfos: MenuElementInfo[];
 
@@ -174,8 +179,6 @@ namespace FormMenu {
     let _domScrolling = false;
 
     let _intersectionObserver: IntersectionObserver;
-
-    let _buttonElementInfos: ButtonElementInfo[] = [];
 
     // Returns true if the browser is IE
     function runningIE(): boolean {
