@@ -92,6 +92,9 @@ interface iDomElementClass {
     // Menu items that are not associated with a heading have a very high level.
     level?: number;
 
+    // CSS class added to the anchor element used to create the clickable menu item
+    anchorCssClass?: string;
+
     // CSS selector used to select the DOM elements that will be represented in the menu that belong to this class of elements
     cssSelector?: string;
 }

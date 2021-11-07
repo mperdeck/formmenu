@@ -492,7 +492,8 @@ namespace FormMenu {
             level,
             domElement.domElementClass.cssSelector);
 
-        let menuElementDiv = createMenuElementDiv(menuElementInfo, menuElementClass, onClickHandler);
+        let menuElementDiv = createMenuElementDiv(menuElementInfo, menuElementClass,
+            domElement.domElementClass.anchorCssClass, onClickHandler);
         menuElementInfo.menuElement = menuElementDiv;
 
         let defaultOpen: boolean = openByDefault(menuElementInfo, "defaultOpenAtLevel");
@@ -576,7 +577,7 @@ namespace FormMenu {
         return false;
     }
 
-    function createMenuElementDiv(menuElementInfo: MenuElementInfo, cssClass: string, onClickHandler: (e: MouseEvent) => void): HTMLElement {
+    function createMenuElementDiv(menuElementInfo: MenuElementInfo, cssClass: string, anchorCssClass: string, onClickHandler: (e: MouseEvent) => void): HTMLElement {
         let menuElement: HTMLElement = document.createElement("div");
 
         let expandElement: HTMLAnchorElement = document.createElement("a");
@@ -592,6 +593,7 @@ namespace FormMenu {
         let captionElement: HTMLAnchorElement = document.createElement("a");
         captionElement.href = "#";
         captionElement.classList.add("formmenu-caption");
+        if (anchorCssClass) { captionElement.classList.add(anchorCssClass); }
         captionElement.innerHTML = menuElementInfo.caption;
         captionElement.onclick = onClickHandler;
         menuElement.appendChild(captionElement);
