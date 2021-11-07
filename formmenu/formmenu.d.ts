@@ -179,7 +179,7 @@ declare enum ButtonBar {
 
 interface iMenuButtonInfo {
     // Used when generating the id of the button and event names.
-    buttonName?: string;
+    buttonName: string;
 
     // Button bar to which the button will be added.
     buttonBar: ButtonBar;
@@ -190,7 +190,7 @@ interface iMenuButtonInfo {
     title?: string;
 
     // Will be called when this button is clicked
-    onClick?: ()=>void;
+    onClick: ()=>void;
 
     // Classes to be added to the button. If you want multiple classes, separate with a space.
     cssClass?: string;

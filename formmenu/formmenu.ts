@@ -905,11 +905,67 @@ namespace FormMenu {
         focusPreviousNextItemFromIndex(indexNextHeader, 1, elementIsInputByIndex);
     }
 
+    function buttonBarElement(buttonBar: ButtonBar): HTMLElement {
+        switch (buttonBar) {
+            case ButtonBar.Closed:
+                return _closedButtonBar;
+            case ButtonBar.Top:
+                return _topButtonBar;
+            case ButtonBar.Bottom:
+                return _bottomButtonBar;
+            default:
+                console.error('Unknown button bar: ' + buttonBar);
+        }
+    }
+
     // Adds a button to the menu.
     // Returns a reference to the generated buttom element.
+    // Returns null if the wireUp method returned false and the button was not added.
     export function AddButton(menuButtonInfo: iMenuButtonInfo): HTMLButtonElement {
-        setVisibilityForMenu();
-        ensureMenuBottomVisible();
+        let buttonElement: HTMLButtonElement = document.createElement("button");
+        buttonElement.type = "button";
+
+        buttonElement.id = 'formmenu-button-' + menuButtonInfo.buttonName;
+
+        if (menuButtonInfo.cssClass) {
+            setClass(buttonElement, menuButtonInfo.cssClass);
+        }
+
+        if (menuButtonInfo.title) {
+            buttonElement.title = menuButtonInfo.title;
+        }
+
+        if (menuButtonInfo.caption) {
+            buttonElement.innerHTML = menuButtonInfo.caption;
+        }
+
+        let onClickHandler = function (e: MouseEvent): void {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!raiseEvent(menuButtonInfo.buttonName, "button-clicking")) {
+                return;
+            }
+
+            menuButtonInfo.onClick();
+
+            raiseEvent(menuButtonInfo.buttonName, "button-clicked");
+        };
+
+        buttonElement.onclick = onClickHandler;
+
+        if (menuButtonInfo.wireUp) {
+            if (!menuButtonInfo.wireUp(buttonElement)) {
+                return null;
+            }
+        }
+
+        let menuButton = new MenuButton(buttonElement, menuButtonInfo);
+        _menuButtons.push(menuButton);
+
+        buttonBarElement(menuButtonInfo.buttonBar).appendChild(buttonElement);
+
+        return buttonElement;
     }
 
 
