@@ -79,6 +79,9 @@ namespace FormMenu {
 
             // class of this element
             public domElementClass: iDomElementClass,
+
+            // distance of this element from the top of the page
+            public top: number
         ) { }
     }
 
@@ -324,9 +327,15 @@ namespace FormMenu {
             let domElements = document.querySelectorAll(domElementClasses[i].cssSelector);
 
             for (let j = 0; j < domElements.length; j++) {
-                domElementInfos.push(new DomElementInfo(domElements[j] as HTMLElement, domElementClasses[i]));
+                const element = domElements[j] as HTMLElement;
+                const boundingRectangle = element.getBoundingClientRect();
+
+                domElementInfos.push(new DomElementInfo(element, domElementClasses[i], boundingRectangle.top));
             }
         }
+
+        // Sort the menu elements by how far the associated DOM elements are from the top of the screen.
+        domElementInfos.sort(function (e1, e2) { return e1.top - e2.top });
 
         return domElementInfos;
     }
