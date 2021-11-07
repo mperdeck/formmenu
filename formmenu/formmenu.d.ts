@@ -169,18 +169,28 @@ interface iItemStateInfo {
     buttonTitlePrevious?: string;
 }
 
-// Represents a button tag that will be generated below the menu
+export enum ButtonBar {
+    // The tiny button bar that shows when the menu is closed. Normally used for just the open button.
+    Closed = 0,
+
+    // Button bar showing above the menu.
+    Top,
+
+    // Button bar showing below the menu.
+    Bottom
+}
+
 interface iMenuButton {
-    // If given, the formmenu library looks elements on the page
-    // that match this selector.
-    // For each such element, a button will be generated:
-    // * caption will be innerHTML of the element, can be overridden by caption.
-    // * onClick will be a method that clicks the element, can be overridden by onClick.
-    // * cssClass will be the CSS class(es) of the element, can be overriden by cssClass.
-    // * wireUp will be called for each generated button if defined.
-    cssSelector?: string;
+    // Used when generating the id of the button and event names.
+    buttonName?: string;
+
+    // Button bar to which the button will be added.
+    buttonBar: ButtonBar;
 
     caption?: string;
+
+    // Text of tiny popup that appears when you hover over the button.
+    title?: string;
 
     // Will be called when this button is clicked
     onClick?: ()=>void;
@@ -192,11 +202,5 @@ interface iMenuButton {
     // If it returns falsy, the button will not be added to the menu.
     // buttonElement - the button element
     wireUp?: (buttonElement: HTMLButtonElement) => boolean;
-
-    // The button in the form itself that is associated with this menu button.
-    // Used to determine whether to set the formmenu-all-buttons-visible class on the main div of the menu.
-    // That class is only set if all buttons associated with all iMenuButton elements are visible.
-    // If domButton is not set, it will simply not used whether to set that class.
-    domButton?: HTMLButtonElement;
 }
 
