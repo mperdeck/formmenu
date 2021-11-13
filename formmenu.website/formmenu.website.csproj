@@ -5,10 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\Examples\Index.html" />
     <None Remove="Pages\Index.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Pages\Examples\Index.html" />
     <Content Include="Pages\Index.html" />
   </ItemGroup>
 
