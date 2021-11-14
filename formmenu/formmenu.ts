@@ -96,8 +96,7 @@ namespace FormMenu {
             // Menu items that are not associated with a heading have a very high level.
             public level: number,
 
-            // CSS selector that found the DOM element that is represented by this menu element
-            public cssSelector: string
+            public domElementInfo: DomElementInfo
         ) { }
 
         // The item in the menu
@@ -515,7 +514,7 @@ namespace FormMenu {
             element,
             caption,
             level,
-            domElement.domElementClass.cssSelector);
+            domElement);
 
         let getForceExpandable = domElement.domElementClass.getForceExpandable;
         menuElementInfo.forceExpandable = false;
@@ -628,7 +627,7 @@ namespace FormMenu {
             isExpanded: menuElementInfo.isExpanded,
             caption: menuElementInfo.caption,
             level: menuElementInfo.level,
-            cssSelector: menuElementInfo.cssSelector,
+            cssSelector: menuElementInfo.domElementInfo.domElementClass.cssSelector,
             domElement: menuElementInfo.domElement
         });
 
