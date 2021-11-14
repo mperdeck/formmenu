@@ -1,128 +1,206 @@
-﻿   Entity Details (Agency, name, reporting tags)
+﻿<h2>Prospect Details</h2>
+<div class="mb-3">
+    <label for="id1" class="form-label">Reference Number</label>
+    <input type="text" class="form-control" id="id1">
+</div>
 
-Entity GUIDAC560AC3-AB77-41AD-9007-56D0E7972DE2
-Entity Name *
-AAAMarquette group test Ü Canada
-Name used by the entity in day-to-day communications (not the full legal name)
-Office Location *
-Darwin NT, Australia
-Office Country *
-Australia
-Agency / Supplier *
-AAAMarquette group test Ü
-Geography (Client)
-Canada
-Is this entitiy restricted to work on a specific client geography?
-Search
-Active
-Is this an active entity?'
-Entity Administrator
-Yan Liang
-The Administrator who is responsible for maintaining and approving this Entity
-Assign to me
-Select Clear
-Internal Comments
-Maximum size is 2000 characters
+<div class="mb-3">
+    <label for="id2" class="form-label">Name</label>
+    <input type="text" class="form-control" id="id2">
+</div>
 
---------------------------------------------------------
+<div class="mb-3">
+    <label for="id3" class="form-label">Location</label>
+    <input type="text" class="form-control" id="id3">
+</div>
 
-Section 2    Contractual Details
-Contractual Status *
-Agency of Record
-Entity Legal Name *
-Legal Name测试
-Entity Legal Address *
-Legal Address测试
-HoCo / Network Legal Name
-HoCo / Network Legal Address
-MSA Start Date
-calendar   Select Clear
-The date the most recent Master Services Ageement (or similar) with this Agency.
-MSA End Date
-calendar   Select Clear
-The date the most recent Master Services Ageement (or similar) expires / terminated with this Agency.
-Contract Number
-Vendor Number
+<div class="mb-3">
+    <label for="id4" class="form-label">Country</label>
+    <input type="text" class="form-control" id="id4">
+</div>
 
--------------------------------------
-
-Section 3    Data Capture from Agency/Supplier
-Validated Validated (will be included in Entity Search Reports)
-Data Capture Mode
-Open (Edit) the agency can update their details
-Closed (Read-only) the agency can only view their record
-Last Emailed Date Never emailed
-Last Submitted Date2019-09-29 GMT
-First Name *
-eta
-Last Name *
-feroum
-Email *
-eta.forem@somewhere.xyz
-Phone
-Login ID Locked
-Is this Login ID locked? 10 incorrect logins will lock.
-Login ID10007154
-One-off PasswordTo change the one-off password please enter twice in the fields below
+<div class="mb-3">
+    <label for="id5" class="form-label">Sales Area</label>
+    <select id=id5 class="form-select" aria-label="Sales Area">
+        <option selected value="1">United States</option>
+        <option value="2">Canada</option>
+        <option value="3">Australia</option>
+    </select>
+</div>
 
 
+<fieldset class="mb-3">
+    <legend>Prospect Size</legend>
 
-------------------------------------------
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="Prospect Size" id="id6" checked>
+        <label class="form-check-label" for="id6">Corporate</label>
+    </div>
 
-Section 4    Extended Details (Advanced Option)
-Agency Details
-Website
-Number of Employees
-Year Founded
-Regional Hub
-Is your office a regional hub?
-Countries Covered
-What areas / countries does your hub cover?
-HEALTH CARE AGENCY ONLY
-Number of Medical Directors
-(if applicable)
-Number of Medical Writers
-(if applicable)
-Revenues
-Current Year Total Revenue
-0
-(USD)
-Prior Year Total Revenue
-0
-(USD)
-Current Year Revenue from Client
-0
-(USD)
-Prior Year Revenue from Client
-0
-(USD)
-Current Year Revenue from Pharmaceutical
-0
-(USD)
-Prior Year Revenue from Pharmaceutical
-0
-(USD)
-Legal / Contractual Contact
-Title
-First Name
-Last Name
-Direct Number
-Mobile
-Email
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="Prospect Size" id="id7">
+        <label class="form-check-label" for="id7">Mid Size</label>
+    </div>
 
-Section 5    Office Serving Client (Advanced Option)
-Primary
-Address
-City
-ZIP/Post Code
-State/Province
-Country
-Central Phone
-Fax
-Number of Employees
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="Prospect Size" id="id8">
+        <label class="form-check-label" for="id8">Small</label>
+    </div>
 
+</fieldset>
 
+<div class="mb-3">
+    <label for="id9" class="form-label">Sales Lead</label>
+    <input type="text" class="form-control" id="id9">
+</div>
 
+<div class="mb-3">
+    <label for="id10" class="form-label">Comments</label>
+    <textarea class="form-control" id="id10" rows="3"></textarea>
+</div>
 
+<h2>Contract Details</h2>
+<div class="mb-3">
+    <label for="id11" class="form-label">Negotiating Partner</label>
+    <input type="text" class="form-control" id="id11">
+</div>
 
+<div class="mb-3">
+    <label for="id12" class="form-label">Legal Name</label>
+    <input type="text" class="form-control" id="id12">
+</div>
 
+<div class="mb-3">
+    <label for="id13" class="form-label">Legal Address</label>
+    <textarea class="form-control" id="id13" rows="3"></textarea>
+</div>
+
+<div class="mb-3">
+    <label for="id14" class="form-label">Network Legal Name</label>
+    <input type="text" class="form-control" id="id14">
+</div>
+
+<div class="mb-3">
+    <label for="id15" class="form-label">Network Legal Address</label>
+    <textarea class="form-control" id="id15" rows="3"></textarea>
+</div>
+
+<div class="mb-3">
+    <label for="id16" class="form-label">Start Date</label>
+    <input type="date" class="form-control" id="id16">
+</div>
+
+<div class="mb-3">
+    <label for="id17" class="form-label">End Date</label>
+    <input type="date" class="form-control" id="id17">
+</div>
+
+<div class="mb-3">
+    <label for="id18" class="form-label">Contract Number</label>
+    <input type="number" class="form-control" id="id18">
+</div>
+
+<h2>Prospect Contact</h2>
+<div class="mb-3">
+    <label for="id19" class="form-label">Last Updated</label>
+    <input type="date" class="form-control" id="id19">
+</div>
+
+<div class="mb-3">
+    <label for="id20" class="form-label">First Name</label>
+    <input type="text" class="form-control" id="id20">
+</div>
+
+<div class="mb-3">
+    <label for="id21" class="form-label">Last Name</label>
+    <input type="text" class="form-control" id="id21">
+</div>
+
+<div class="mb-3">
+    <label for="id22" class="form-label">Email</label>
+    <input type="email" class="form-control" id="id22">
+</div>
+
+<div class="mb-3">
+    <label for="id23" class="form-label">Phone</label>
+    <input type="tel" class="form-control" id="id23">
+</div>
+
+<fieldset class="mb-3">
+    <legend>Self Serve Login Details</legend>
+
+    <div class="mb-3">
+        <label for="id24" class="form-label">User Name</label>
+        <input type="text" class="form-control" id="id24">
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox"  id="id25">
+        <label class="form-check-label" for="id25">Must Change Password</label>
+    </div>
+
+</fieldset>
+
+<h2>Extended Details</h2>
+<h3>Company Details</h3>
+<div class="mb-3">
+    <label for="id26" class="form-label">Website</label>
+    <input type="url" class="form-control" id="id26">
+</div>
+
+<div class="mb-3">
+    <label for="id27" class="form-label">Number Of Employees</label>
+    <input type="number" class="form-control" id="id27">
+</div>
+
+<div class="mb-3">
+    <label for="id28" class="form-label">Date Founded</label>
+    <input type="date" class="form-control" id="id28">
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox"  id="id29">
+    <label class="form-check-label" for="id29">Is Regional Headquarters</label>
+</div>
+
+<div class="mb-3">
+    <label for="id30" class="form-label">Areas Covered</label>
+    <textarea class="form-control" id="id30" rows="3"></textarea>
+</div>
+
+<h3>Revenues</h3>
+<div class="mb-3">
+    <label for="id31" class="form-label">Current Year Total Revenue</label>
+    <input type="number" class="form-control" id="id31">
+</div>
+
+<div class="mb-3">
+    <label for="id32" class="form-label">Prior Year Total Revenue</label>
+    <input type="number" class="form-control" id="id32">
+</div>
+
+<h3>Legal Contact</h3>
+<div class="mb-3">
+    <label for="id33" class="form-label">First Name</label>
+    <input type="text" class="form-control" id="id33">
+</div>
+
+<div class="mb-3">
+    <label for="id34" class="form-label">Last Name</label>
+    <input type="text" class="form-control" id="id34">
+</div>
+
+<div class="mb-3">
+    <label for="id35" class="form-label">Phone</label>
+    <input type="tel" class="form-control" id="id35">
+</div>
+
+<div class="mb-3">
+    <label for="id36" class="form-label">Mobile</label>
+    <input type="tel" class="form-control" id="id36">
+</div>
+
+<div class="mb-3">
+    <label for="id37" class="form-label">Email</label>
+    <input type="email" class="form-control" id="id37">
+</div>
