@@ -43,7 +43,17 @@ namespace FormMenu {
             { level: 3, cssSelector: "h3" },
             { level: 4, cssSelector: "h4" },
             { level: 5, cssSelector: "h5" },
-            { cssSelector: "h6" }
+            { level: 6, cssSelector: "h6" },
+            { cssSelector: "label" },
+            {
+                cssSelector: "fieldset",
+                getItemCaption: function (domElement: HTMLElement) {
+                    // Find the first legend below the fieldset
+                    var legendElement = domElement.querySelector("legend");
+                    if (legendElement) { return legendElement.innerText; }
+                    return "";
+                }
+            }
         ],
 
         itemStateInfos: {},
@@ -66,7 +76,10 @@ namespace FormMenu {
             public domElementClass: iDomElementClass,
 
             // distance of this element from the top of the page
-            public top: number
+            public top: number,
+
+            // height of this element
+            public height: number
         ) { }
     }
 
@@ -342,7 +355,7 @@ namespace FormMenu {
                 const element = domElements[j] as HTMLElement;
                 const boundingRectangle = element.getBoundingClientRect();
 
-                domElementInfos.push(new DomElementInfo(element, domElementClasses[i], boundingRectangle.top));
+                domElementInfos.push(new DomElementInfo(element, domElementClasses[i], boundingRectangle.top, boundingRectangle.height));
             }
         }
 

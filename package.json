@@ -1,8 +1,11 @@
 {
-    "name":  "formmenu",
-    "version":  "1.4.2",
-    "files":  [
-                  "dist/*.{css,js,map}",
-                  "formmenu/*.{ts,scss}"
-              ]
+    "name": "formmenu",
+    "version": "1.4.2",
+    "files": [
+        "dist/*.{css,js,map}",
+        "formmenu/*.{ts,scss}"
+    ],
+    "devDependencies": {
+        "typescript": "^4.4.4"
+    }
 }
