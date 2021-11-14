@@ -5,11 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\Bootstrap5Adjustments.css" />
     <None Remove="Pages\Examples\Index.html" />
     <None Remove="Pages\Index.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Pages\Bootstrap5Adjustments.css" />
     <Content Include="Pages\Examples\Index.html" />
     <Content Include="Pages\Index.html" />
   </ItemGroup>
