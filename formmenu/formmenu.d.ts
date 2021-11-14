@@ -100,6 +100,11 @@ interface iDomElementClass {
     // Menu items that are not associated with a heading have a very high level.
     level?: number;
 
+    // If true, this menu item acts as the parent of all items that visually sit within it.
+    // This overrides the level of the children. If an h2 (level: 2) sits visually inside a fieldset (level: high),
+    // the h2 is still a child of the fieldset.
+    isContainer?: boolean;
+
     // CSS class added to the anchor element used to create the clickable menu item
     anchorCssClass?: string;
 

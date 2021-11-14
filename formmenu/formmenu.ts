@@ -47,6 +47,7 @@ namespace FormMenu {
             { cssSelector: "label" },
             {
                 cssSelector: "fieldset",
+                isContainer: true,
                 getItemCaption: function (domElement: HTMLElement) {
                     // Find the first legend below the fieldset
                     var legendElement = domElement.querySelector("legend");
@@ -554,13 +555,24 @@ namespace FormMenu {
         return menuElementInfo;
     }
 
+    // Returns true if candidateParent is a parent of candidateChild
+    function isParent(candidateParent: MenuElementInfo, candidateChild: MenuElementInfo) {
+
+        if ((candidateChild.level > candidateParent.level)) { return true; }
+
+        const result = (candidateParent.domElementInfo.domElementClass.isContainer &&
+            (candidateChild.domElementInfo.top > candidateParent.domElementInfo.top) &&
+            (candidateChild.domElementInfo.top < (candidateParent.domElementInfo.top + candidateParent.domElementInfo.height)));
+
+        return result;
+    }
+
     // Sets the parent property in all elements in _menuElementInfos.
     // parent: set to _menuElementInfosRoot
     // i: set to 0
     function setParents(parent: MenuElementInfo, i: { value: number }, _menuElementInfos: MenuElementInfo[]): void {
-        const parentLevel: number = parent.level;
 
-        while ((i.value < _menuElementInfos.length) && (_menuElementInfos[i.value].level > parentLevel)) {
+        while ((i.value < _menuElementInfos.length) && isParent(parent, _menuElementInfos[i.value])) {
 
             let currentMenuElementInfo = _menuElementInfos[i.value];
             currentMenuElementInfo.parent = parent;
